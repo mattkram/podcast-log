@@ -56,3 +56,6 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# Directory for input data
+data/
