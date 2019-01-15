@@ -8,6 +8,7 @@ podcast-log = {editable = true, path = "."}
 
 [dev-packages]
 black = "*"
+twine = "*"
 
 [requires]
 python_version = "3.7"
