@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
-import shutil
 
 from setuptools import setup, find_packages, Command
 
@@ -15,14 +14,10 @@ with (here / "README.md").open(encoding="utf-8") as fh:
 
 about = {}
 
-with (here / "podcast_log" / "__version__.py").open() as f:
+with (here / "src" / "podcast_log" / "__version__.py").open() as f:
     exec(f.read(), about)
 
 version = about["__version__"]
-
-if sys.argv[-1] == "publish":
-    subprocess.call(["python", "setup.py", "sdist", "bdist_wheel", "upload"])
-    sys.exit()
 
 requirements = ["django"]
 test_requirements = ["pytest", "pytest-cov"]
@@ -48,7 +43,7 @@ class UploadCommand(Command):
     def run(self):
         try:
             self.status("Removing previous builds…")
-            shutil.rmtree(os.path.join(here, "dist"))
+            shutil.rmtree(here / "dist")
         except FileNotFoundError:
             pass
         self.status("Building Source distribution…")
@@ -70,8 +65,8 @@ setup(
     author="Matt Kramer",
     author_email="matthew.robert.kramer@gmail.com",
     url="https://bitbucket.org/mattkram/podcast-log",
-    packages=find_packages(),
-    # package_dir={"": "src"},
+    packages=find_packages(where="src"),
+    package_dir={"": "src"},
     install_requires=requirements,
     tests_require=test_requirements,
     # entry_points={"console_scripts": ["planingFSI=planingfsi.cli:cli"]},

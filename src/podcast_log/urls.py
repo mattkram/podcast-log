@@ -1,5 +1,5 @@
 from django.urls import path
 
-from podcast_log import views
+from src.podcast_log import views
 
 urlpatterns = [path("", views.index, name="index")]
