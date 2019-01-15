@@ -1,13 +1,17 @@
 <h1>Podcast Log</h1>
 
 {% if podcast_list %}
-    <ul>
-    {% for podcast in podcast_list %}
-        <li><a href="{% url 'podcast' podcast.id %}">{{ podcast.title }}</a></li>
-    {% endfor %}
-    </ul>
+  <ul>
+  {% for podcast in podcast_list %}
+    <li>
+      <a href="{% url 'podcast' podcast.id %}">
+        <img src="{{ podcast.image_url }}" style="width:100px">{{ podcast.title }}
+      </a>
+    </li>
+  {% endfor %}
+  </ul>
 {% else %}
-    <p>No podcasts are available.</p>
+  <p>No podcasts are available.</p>
 {% endif %}
 
 <a href="/admin">Admin</a>

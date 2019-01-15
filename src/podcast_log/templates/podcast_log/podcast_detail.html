@@ -1,1 +1,11 @@
-{{ podcast.title }}
+{% load render_table from django_tables2 %}
+
+<div>
+  <img src="{{ podcast.image_url }}" style="width:100px">
+  <h1>{{ podcast.title }}</h1>
+</div>
+
+<div>{{ podcast.summary }}</div>
+
+<div>{% render_table podcast.episode_table %}</div>
+

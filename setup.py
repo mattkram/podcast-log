@@ -19,7 +19,7 @@ with (here / "src" / "podcast_log" / "__version__.py").open() as fp:
 
 version = about["__version__"]
 
-requirements = ["django"]
+requirements = ["django", "django_tables2"]
 test_requirements = ["pytest", "pytest-cov"]
 
 
