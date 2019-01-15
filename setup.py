@@ -9,13 +9,13 @@ from setuptools import setup, find_packages, Command
 
 here = Path(__file__).parent
 
-with (here / "README.md").open(encoding="utf-8") as fh:
-    long_description = fh.read()
+with (here / "README.md").open(encoding="utf-8") as fp:
+    long_description = fp.read()
 
 about = {}
 
-with (here / "src" / "podcast_log" / "__version__.py").open() as f:
-    exec(f.read(), about)
+with (here / "src" / "podcast_log" / "__version__.py").open() as fp:
+    exec(fp.read(), about)
 
 version = about["__version__"]
 
@@ -69,7 +69,7 @@ setup(
     package_dir={"": "src"},
     install_requires=requirements,
     tests_require=test_requirements,
-    # entry_points={"console_scripts": ["planingFSI=planingfsi.cli:cli"]},
+    # entry_points={"console_scripts": ["podcast-log=podcast_log.cli:cli"]},
     license="MIT",
     classifiers=[
         "License :: OSI Approved :: MIT License",
