@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class PodcastsConfig(AppConfig):
-    name = "podcasts"
+class PodcastLogConfig(AppConfig):
+    name = "podcast_log"
