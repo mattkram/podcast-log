@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 import django_tables2 as tables
 from django.db import models
@@ -9,7 +9,7 @@ class Podcast(models.Model):
     url = models.URLField()
     image_url = models.URLField()
     summary = models.CharField(max_length=200)
-    last_refreshed = models.DateTimeField()
+    last_refreshed = models.DateTimeField(default=datetime(1, 1, 1))
     refresh_interval = models.DurationField(default=timedelta(hours=1))
 
     @property
