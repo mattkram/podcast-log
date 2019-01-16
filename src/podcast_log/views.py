@@ -4,7 +4,7 @@ from .models import Podcast
 
 
 class IndexView(generic.ListView):
-    template_name = "podcast_log/index.html"
+    template_name = "index.html"
 
     def get_queryset(self):
         """Return a list of all podcasts."""
@@ -13,3 +13,4 @@ class IndexView(generic.ListView):
 
 class DetailView(generic.DetailView):
     model = Podcast
+    template_name = "podcast_detail.html"
