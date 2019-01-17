@@ -9,11 +9,14 @@ class EpisodeTable(tables.Table):
         fields = (
             "image_url",
             "episode_number",
+            "title",
             "publication_date",
             "duration",
             "description",
         )
 
     image_url = tables.TemplateColumn(
-        '<img src="{{record.image_url}}" style="width: 100px"> ', verbose_name=""
+        '<img src="{{record.image_url}}" style="max-height: 80px"> ', verbose_name=""
     )
+    description = tables.TemplateColumn("{{record.description|truncatechars:200|safe}}")
+    # description = tables.TemplateColumn("{{record.description|safe}}")
