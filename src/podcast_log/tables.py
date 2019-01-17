@@ -13,6 +13,7 @@ class EpisodeTable(tables.Table):
             "publication_date",
             "duration",
             "description",
+            "status",
         )
 
     image_url = tables.TemplateColumn(
