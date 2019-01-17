@@ -3,7 +3,8 @@ import threading
 from django.shortcuts import render
 from django.views import generic
 
-from .models import Podcast, Episode, EpisodeTable
+from .models import Podcast, Episode
+from podcast_log.tables import EpisodeTable
 from .tasks import update_podcast_feed
 
 
