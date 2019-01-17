@@ -11,7 +11,7 @@
 
 <body>
 
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-default navbar-fixed-top">
   <div class="container-fluid">
     <div class="navbar-header">
       <a class="navbar-brand" href="{% url 'podcasts' %}">Podcast Log</a>
@@ -19,15 +19,20 @@
     <ul class="nav navbar-nav">
       <li><a href="{% url 'podcasts' %}">Podcasts</a></li>
       <li><a href="{% url 'episodes' %}">Episodes</a></li>
-      <li><a href="/admin">Admin</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
       <li><a href="/update">Update</a></li>
+      <li><a href="/admin">Admin</a></li>
     </ul>
   </div>
 </nav>
 
-<div id="content">
+<div class="container-fluid" style="margin-top:60px">
   {% block content %}{% endblock %}
 </div>
+
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
 
 </body>
 </html>
