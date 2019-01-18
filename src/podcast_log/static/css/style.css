@@ -20,3 +20,23 @@
     max-height: 80px;
     max-width: 80px;
 }
+
+.row-episode-unwatched {
+    background-color: #fadbd8;
+}
+
+.row-episode-watched {
+    background-color: #e9f7ef;
+}
+
+.row-episode-ignored {
+    background-color: #f8f9f9;
+}
+
+.row-episode-skipped {
+    background-color: #d6eaf8;
+}
+
+.row-episode-in-progress {
+    background-color: #fef9e7;
+}
