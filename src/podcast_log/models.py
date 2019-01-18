@@ -30,19 +30,19 @@ class Episode(models.Model):
     duration = models.DurationField(null=True)
     episode_number = models.IntegerField(null=True)
 
-    WATCHED = "W"
+    LISTENED = "L"
     IGNORED = "I"
     SKIPPED = "S"
     IN_PROGRESS = "P"
-    UNWATCHED = "U"
+    QUEUED = "Q"
     STATUS_CHOICES = (
-        (WATCHED, "Watched"),
+        (LISTENED, "Listened"),
         (IGNORED, "Ignored"),
         (SKIPPED, "Skipped"),
         (IN_PROGRESS, "In Progress"),
-        (UNWATCHED, "Unwatched"),
+        (QUEUED, "Queued"),
     )
-    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=UNWATCHED)
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=QUEUED)
 
     def __str__(self):
         return f"Episode {self.episode_number}"

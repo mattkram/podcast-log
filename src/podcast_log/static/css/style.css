@@ -21,11 +21,11 @@
     max-width: 80px;
 }
 
-.row-episode-unwatched {
+.row-episode-queued {
     background-color: #fadbd8;
 }
 
-.row-episode-watched {
+.row-episode-listened {
     background-color: #e9f7ef;
 }
 
