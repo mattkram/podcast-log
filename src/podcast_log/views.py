@@ -5,9 +5,9 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import generic
 
-from podcast_log.forms import AddPodcastForm
+from .forms import AddPodcastForm
 from .models import Podcast, Episode
-from podcast_log.tables import EpisodeTable
+from .tables import EpisodeListTable, PodcastDetailEpisodeTable
 from .tasks import update_podcast_feed, create_new_podcast
 
 
@@ -26,9 +26,9 @@ class PodcastDetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         episodes = Episode.objects.filter(podcast=context["podcast"]).order_by(
-            "-publication_date"
+            "-publication_timestamp"
         )
-        table = EpisodeTable(episodes)
+        table = PodcastDetailEpisodeTable(episodes)
         table.paginate(page=self.request.GET.get("page", 1), per_page=25)
         context["table"] = table
         return context
@@ -39,8 +39,8 @@ class EpisodeListView(generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        episodes = Episode.objects.order_by("-publication_date")
-        table = EpisodeTable(episodes)
+        episodes = Episode.objects.order_by("-publication_timestamp")
+        table = EpisodeListTable(episodes)
         table.paginate(page=self.request.GET.get("page", 1), per_page=25)
         context["table"] = table
         return context
