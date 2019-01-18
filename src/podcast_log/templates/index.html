@@ -4,20 +4,17 @@
 
 {% block content %}
 
-<div class="row">
-  {% for podcast in podcast_list %}
-  <div class="col-sm-1 text-center">
-    <a href="{% url 'podcast' podcast.id %}">
-      <img src="{{ podcast.image_url }}" style="width:100px">
-      {{ podcast.title }}
-    </a>
-  </div>
-  {% endfor %}
-  <div class="col-sm-1 text-center">
-    <a href="{% url 'add-podcast' %}">
-      <img src="{% static 'img/add_circle.png' %}">
-    </a>
-  </div>
+{% for podcast in podcast_list %}
+<div class="podcast-gallery text-center">
+  <a href="{% url 'podcast' podcast.id %}">
+    <img src="{{ podcast.image_url }}" style="width:100px">
+    {{ podcast.title }}
+  </a>
 </div>
+{% endfor %}
+
+<a class="btn-add-podcast" href="{% url 'add-podcast' %}">
+  <img src="{% static 'img/add_circle.png' %}" style="width: 50px;">
+</a>
 
 {% endblock %}

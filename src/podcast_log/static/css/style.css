@@ -1,3 +1,17 @@
 .podcast-title-block {
 
 }
+
+.podcast-gallery {
+    margin: 5px;
+    padding: 0;
+    display: inline-block;
+    width: 100px;
+    vertical-align: top;
+}
+
+.btn-add-podcast {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+}
