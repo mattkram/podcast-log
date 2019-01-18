@@ -39,7 +39,7 @@ def update_podcast_feed(podcast_id):
 
         episode.title = episode_dict.get("title", "")
         episode.description = episode_dict.get("description", "")
-        episode.duration = parse_duration(episode_dict["itunes_duration"])
+        episode.duration = parse_duration(episode_dict.get("itunes_duration", "0:0"))
         try:
             episode.image_url = episode_dict["image"]["href"]
         except KeyError:

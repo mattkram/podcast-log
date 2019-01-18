@@ -19,5 +19,5 @@ class EpisodeTable(tables.Table):
     image_url = tables.TemplateColumn(
         '<img src="{{record.image_url}}" style="max-height: 80px"> ', verbose_name=""
     )
-    description = tables.TemplateColumn("{{record.description|truncatechars:200|safe}}")
+    description = tables.TemplateColumn("{{record.description|truncatechars:200}}")
     # description = tables.TemplateColumn("{{record.description|safe}}")
