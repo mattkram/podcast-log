@@ -53,7 +53,7 @@ def update_podcasts(request):
             target=update_podcast_feed, args=(podcast.id,), daemon=True
         )
         thread.start()
-    return render(request, "updating.html")
+    return HttpResponseRedirect(request.META.get("HTTP_REFERER", reverse("index")))
 
 
 def add_podcast(request):
