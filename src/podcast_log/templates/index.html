@@ -1,19 +1,23 @@
 {% extends "base.html" %}
 
+{% load static %}
+
 {% block content %}
 
-{% if podcast_list %}
-<ul>
+<div class="row">
   {% for podcast in podcast_list %}
-  <li>
+  <div class="col-sm-1 text-center">
     <a href="{% url 'podcast' podcast.id %}">
-      <img src="{{ podcast.image_url }}" style="width:100px">{{ podcast.title }}
+      <img src="{{ podcast.image_url }}" style="width:100px">
+      {{ podcast.title }}
     </a>
-  </li>
+  </div>
   {% endfor %}
-</ul>
-{% else %}
-<p>No podcasts are available.</p>
-{% endif %}
+  <div class="col-sm-1 text-center">
+    <a href="{% url 'add-podcast' %}">
+      <img src="{% static 'img/add_circle.png' %}">
+    </a>
+  </div>
+</div>
 
 {% endblock %}
