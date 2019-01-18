@@ -8,6 +8,9 @@ from .models import Podcast, Episode
 
 logger = logging.getLogger("django")
 
+# TODO: Refactor to combine some functionality in update and add functions
+# TODO: Consider update_or_create when updating episodes
+
 
 def update_podcast_feed(podcast_id):
     podcast = Podcast.objects.get(id=podcast_id)
@@ -34,10 +37,13 @@ def update_podcast_feed(podcast_id):
             podcast=podcast, publication_date=publication_date
         )
 
-        episode.title = episode_dict["title"]
-        episode.description = episode_dict["description"]
+        episode.title = episode_dict.get("title", "")
+        episode.description = episode_dict.get("description", "")
         episode.duration = parse_duration(episode_dict["itunes_duration"])
-        episode.image_url = episode_dict["image"]["href"]
+        try:
+            episode.image_url = episode_dict["image"]["href"]
+        except KeyError:
+            pass
         episode.episode_number = episode_dict.get("itunes_episode")
 
         episode.save()
@@ -47,6 +53,30 @@ def update_podcast_feed(podcast_id):
     podcast.save()
 
     logger.info("Completed loading podcast")
+
+
+def create_new_podcast(feed_url: str) -> Podcast:
+    """If a podcast doesn't already exist with the same feed URL, create it by parsing the feed."""
+    # If the podcast already exists, return out of this function, else continue/pass
+    try:
+        Podcast.objects.get(url=feed_url)
+    except Podcast.DoesNotExist:
+        pass
+    else:
+        return
+
+    dict_ = feedparser.parse(feed_url)
+    feed = dict_["feed"]
+
+    podcast = Podcast()
+    podcast.title = feed["title"]
+    podcast.url = feed_url
+    podcast.image_url = feed["image"]["href"]
+    podcast.summary = feed["description"]
+
+    podcast.save()
+
+    return podcast
 
 
 def convert_structured_time(structured_time: time.struct_time) -> datetime:
