@@ -10,6 +10,7 @@ class Podcast(models.Model):
     summary = models.CharField(max_length=500)
     last_refreshed = models.DateTimeField(default=datetime(1, 1, 1))
     refresh_interval = models.DurationField(default=timedelta(hours=1))
+    episode_number_pattern = models.CharField(max_length=50, null=True)
 
     def __str__(self):
         return self.title
@@ -22,11 +23,11 @@ class Podcast(models.Model):
 
 class Episode(models.Model):
     podcast = models.ForeignKey(Podcast, on_delete=models.CASCADE)
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=200, null=True)
     publication_timestamp = models.DateTimeField(null=True)
-    audio_url = models.URLField()
-    image_url = models.URLField()
-    description = models.CharField(max_length=500)
+    audio_url = models.URLField(null=True)
+    image_url = models.URLField(null=True)
+    description = models.CharField(max_length=500, null=True)
     duration = models.DurationField(null=True)
     episode_number = models.IntegerField(null=True)
 
@@ -46,3 +47,10 @@ class Episode(models.Model):
 
     def __str__(self):
         return f"Episode {self.episode_number}"
+
+    @property
+    def publication_date(self):
+        t = self.publication_timestamp
+        if t is None:
+            return None
+        return datetime(year=t.year, month=t.month, day=t.day)

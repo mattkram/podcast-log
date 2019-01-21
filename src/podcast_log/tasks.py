@@ -1,4 +1,5 @@
 import logging
+import re
 import time
 from datetime import timedelta, datetime
 
@@ -12,10 +13,10 @@ logger = logging.getLogger("django")
 # TODO: Consider update_or_create when updating episodes
 
 
-def update_podcast_feed(podcast_id):
+def update_podcast_feed(podcast_id, force=False):
     podcast = Podcast.objects.get(id=podcast_id)
 
-    if not podcast.needs_update:
+    if not podcast.needs_update and not force:
         logger.info(
             "Podcast %s has been updated recently, doesn't need update", podcast
         )
@@ -30,11 +31,11 @@ def update_podcast_feed(podcast_id):
     for episode_dict in dict_["entries"]:
         publication_date = convert_structured_time(episode_dict["published_parsed"])
 
-        if publication_date <= podcast.last_refreshed:
+        if publication_date <= podcast.last_refreshed and not force:
             break  # Break out of loop once older episodes are reached
 
         episode, created = Episode.objects.get_or_create(
-            podcast=podcast, publication_date=publication_date
+            podcast=podcast, publication_timestamp=publication_date
         )
 
         episode.title = episode_dict.get("title", "")
@@ -44,7 +45,15 @@ def update_podcast_feed(podcast_id):
             episode.image_url = episode_dict["image"]["href"]
         except KeyError:
             pass
-        episode.episode_number = episode_dict.get("itunes_episode")
+
+        try:
+            episode.episode_number = episode_dict["itunes_episode"]
+        except KeyError:
+            match = re.search(podcast.episode_number_pattern, episode_dict["title"])
+            if match:
+                episode.episode_number = int(match.group(1))
+            else:
+                pass
 
         episode.save()
         logger.info("Saving episode: %s, %s", podcast, episode)

@@ -21,7 +21,11 @@
       <li><a href="{% url 'episodes' %}">Episodes</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
+      {% if podcast %}
+      <li><a href="{% url 'update-podcast' podcast.id %}">Update</a></li>
+      {% else %}
       <li><a href="/update">Update</a></li>
+      {% endif %}
       <li><a href="/admin">Admin</a></li>
     </ul>
   </div>

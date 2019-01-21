@@ -46,11 +46,20 @@ class EpisodeListView(generic.TemplateView):
         return context
 
 
+def update_podcast(request, pk):
+    """View to update the podcast record."""
+    thread = threading.Thread(
+        target=update_podcast_feed, args=(pk,), kwargs={"force": True}, daemon=True
+    )
+    thread.start()
+    return HttpResponseRedirect(request.META.get("HTTP_REFERER", reverse("index")))
+
+
 def update_podcasts(request):
     """View to update the podcast record."""
     for podcast in Podcast.objects.all():
         thread = threading.Thread(
-            target=update_podcast_feed, args=(podcast.id,), daemon=True
+            target=update_podcast_feed, args=(podcast.id,), kwargs={"force": True}, daemon=True
         )
         thread.start()
     return HttpResponseRedirect(request.META.get("HTTP_REFERER", reverse("index")))
