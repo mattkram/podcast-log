@@ -2,6 +2,7 @@ import logging
 import re
 import time
 from datetime import timedelta, datetime
+from typing import Optional
 
 import feedparser
 
@@ -49,11 +50,13 @@ def update_podcast_feed(podcast_id, force=False):
         try:
             episode.episode_number = episode_dict["itunes_episode"]
         except KeyError:
-            match = re.search(podcast.episode_number_pattern, episode_dict["title"])
-            if match:
-                episode.episode_number = int(match.group(1))
+            try:
+                match = re.search(podcast.episode_number_pattern, episode_dict["title"])
+            except TypeError:
+                pass  # No pattern defined
             else:
-                pass
+                if match:
+                    episode.episode_number = int(match.group(1))
 
         episode.save()
         logger.info("Saving episode: %s, %s", podcast, episode)
@@ -64,7 +67,7 @@ def update_podcast_feed(podcast_id, force=False):
     logger.info("Completed loading podcast")
 
 
-def create_new_podcast(feed_url: str) -> Podcast:
+def create_new_podcast(feed_url: str) -> Optional[Podcast]:
     """If a podcast doesn't already exist with the same feed URL, create it by parsing the feed."""
     # If the podcast already exists, return out of this function, else continue/pass
     try:
