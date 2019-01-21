@@ -9,7 +9,10 @@
     <img src="{{ podcast.image_url }}" style="max-width:100px">
   </div>
   <div class="col-sm-7">
-    <h1>{{ podcast.title }}</h1>
+    <div>
+      <h1>{{ podcast.title }}</h1>
+      <a href="{% url 'edit-podcast' pk=podcast.id %}">(Edit)</a>
+    </div>
     <div>{{ podcast.summary }}</div>
   </div>
   <div class="col-sm-4"></div>

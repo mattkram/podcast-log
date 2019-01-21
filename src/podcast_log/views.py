@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import generic
 
-from .forms import AddPodcastForm
+from .forms import AddPodcastForm, EditPodcastForm
 from .models import Podcast, Episode
 from .tables import EpisodeListTable, PodcastDetailEpisodeTable
 from .tasks import update_podcast_feed, create_new_podcast
@@ -81,3 +81,18 @@ def add_podcast(request):
         form = AddPodcastForm()
 
     return render(request, "add-podcast.html", {"form": form})
+
+
+def edit_podcast(request, pk):
+    podcast = Podcast.objects.get(pk=pk)
+    if request.method == "POST":
+        form = EditPodcastForm(request.POST, instance=podcast)
+
+        if form.is_valid():
+            form.save()
+
+            return HttpResponseRedirect(reverse("podcast", args=(podcast.id,)))
+    else:
+        form = EditPodcastForm(instance=podcast)
+
+    return render(request, "edit-podcast.html", {"podcast_id": pk, "form": form})
