@@ -33,6 +33,9 @@ class EpisodeListTable(tables.Table):
     publication_timestamp = tables.TemplateColumn(
         "{{ record.publication_timestamp.date }}", verbose_name="Date"
     )
+    edit = tables.TemplateColumn(
+        "<a href=\"{% url 'edit-episode' record.id %}\">(Edit)</a>", verbose_name=""
+    )
 
 
 class PodcastDetailEpisodeTable(EpisodeListTable):
@@ -51,6 +54,3 @@ class PodcastDetailEpisodeTable(EpisodeListTable):
 
     description = tables.TemplateColumn("{{ record.description|truncatechars:200 }}")
     podcast = None
-    edit = tables.TemplateColumn(
-        "<a href=\"{% url 'edit-episode' record.id %}\">(Edit)</a>", verbose_name=""
-    )
