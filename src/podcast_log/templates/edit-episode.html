@@ -5,6 +5,7 @@
 <h1>Edit episode details:</h1>
 <form action="{% url 'edit-episode' episode_id %}" method="post">
     {% csrf_token %}
+    <input type="submit" value="Save">
     {% for field in form %}
         <div class="form-group">
             <label>{{ field.label }}</label>
@@ -12,7 +13,6 @@
             <small class="text-danger">{{ field.errors }}</small>
         </div>
     {% endfor %}
-    <input type="submit" value="Update">
 </form>
 
 {% endblock %}

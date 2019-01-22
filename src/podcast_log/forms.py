@@ -40,6 +40,7 @@ class EditEpisodeForm(forms.ModelForm):
     class Meta:
         model = Episode
         fields = (
+            "status",
             "title",
             "episode_number",
             "publication_timestamp",
@@ -47,7 +48,6 @@ class EditEpisodeForm(forms.ModelForm):
             "image_url",
             "description",
             "duration",
-            "status",
         )
 
         widgets = {
