@@ -8,7 +8,7 @@ from django.views import generic
 from .forms import AddPodcastForm, EditPodcastForm, EditEpisodeForm
 from .models import Podcast, Episode
 from .tables import EpisodeListTable, PodcastDetailEpisodeTable
-from .tasks import update_podcast_feed, create_new_podcast
+from .tasks import update_podcast_feed, create_new_podcast, add_podcast_to_update_queue
 
 
 class PodcastListView(generic.ListView):
@@ -48,23 +48,14 @@ class EpisodeListView(generic.TemplateView):
 
 def update_podcast(request, pk):
     """View to update the podcast record."""
-    thread = threading.Thread(
-        target=update_podcast_feed, args=(pk,), kwargs={"force": True}, daemon=True
-    )
-    thread.start()
+    add_podcast_to_update_queue(pk, force=True)
     return HttpResponseRedirect(request.META.get("HTTP_REFERER", reverse("index")))
 
 
 def update_podcasts(request):
     """View to update the podcast record."""
     for podcast in Podcast.objects.all():
-        thread = threading.Thread(
-            target=update_podcast_feed,
-            args=(podcast.id,),
-            kwargs={"force": True},
-            daemon=True,
-        )
-        thread.start()
+        add_podcast_to_update_queue(podcast.id)
     return HttpResponseRedirect(request.META.get("HTTP_REFERER", reverse("index")))
 
 

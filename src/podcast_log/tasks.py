@@ -2,6 +2,8 @@ import logging
 import re
 import time
 from datetime import timedelta, datetime
+from queue import Queue
+from threading import Thread
 from typing import Optional
 
 import feedparser
@@ -14,8 +16,25 @@ logger = logging.getLogger("django")
 # TODO: Consider update_or_create when updating episodes
 
 
-def update_podcast_feed(podcast_id, force=False):
-    podcast = Podcast.objects.get(id=podcast_id)
+def _update_queued_podcasts(q):
+    """Infinite loop that will update podcasts in a queue in worker thread."""
+    while True:
+        podcast_id, force = q.get()
+        podcast = Podcast.objects.get(id=podcast_id)
+        update_podcast_feed(podcast, force=force)
+        q.task_done()
+
+
+queue = Queue()
+update_thread = Thread(target=_update_queued_podcasts, args=(queue,), daemon=True)
+update_thread.start()
+
+
+def add_podcast_to_update_queue(podcast_id, force=False):
+    queue.put((podcast_id, force))
+
+
+def update_podcast_feed(podcast, force=False):
 
     if not podcast.needs_update and not force:
         logger.info(
