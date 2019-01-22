@@ -27,7 +27,7 @@ class EpisodeListTable(tables.Table):
         '<img src="{{ record.image_url }}" class="img-episode-list"> ', verbose_name=""
     )
     podcast = tables.TemplateColumn(
-        "<a href=\"{% url 'podcast' record.podcast.id %}\">{{ record.podcast }}</a>",
+        "<a href=\"{% url 'podcast-detail' record.podcast.id %}\">{{ record.podcast }}</a>",
         verbose_name="Podcast",
     )
     publication_timestamp = tables.TemplateColumn(

@@ -6,7 +6,7 @@
 
 {% for podcast in podcast_list %}
 <div class="podcast-gallery text-center">
-  <a href="{% url 'podcast' podcast.id %}">
+  <a href="{% url 'podcast-detail' podcast.id %}">
     <img src="{{ podcast.image_url }}" style="width:100px">
     {{ podcast.title }}
   </a>
