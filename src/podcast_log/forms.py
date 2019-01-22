@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Podcast
+from .models import Podcast, Episode
 
 
 class AddPodcastForm(forms.Form):
@@ -11,4 +11,9 @@ class EditPodcastForm(forms.ModelForm):
     class Meta:
         model = Podcast
         exclude = ("id", "last_refreshed")
-        # fields
+
+
+class EditEpisodeForm(forms.ModelForm):
+    class Meta:
+        model = Episode
+        exclude = ("id", "podcast")

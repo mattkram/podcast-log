@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import generic
 
-from .forms import AddPodcastForm, EditPodcastForm
+from .forms import AddPodcastForm, EditPodcastForm, EditEpisodeForm
 from .models import Podcast, Episode
 from .tables import EpisodeListTable, PodcastDetailEpisodeTable
 from .tasks import update_podcast_feed, create_new_podcast
@@ -59,7 +59,10 @@ def update_podcasts(request):
     """View to update the podcast record."""
     for podcast in Podcast.objects.all():
         thread = threading.Thread(
-            target=update_podcast_feed, args=(podcast.id,), kwargs={"force": True}, daemon=True
+            target=update_podcast_feed,
+            args=(podcast.id,),
+            kwargs={"force": True},
+            daemon=True,
         )
         thread.start()
     return HttpResponseRedirect(request.META.get("HTTP_REFERER", reverse("index")))
@@ -87,12 +90,21 @@ def edit_podcast(request, pk):
     podcast = Podcast.objects.get(pk=pk)
     if request.method == "POST":
         form = EditPodcastForm(request.POST, instance=podcast)
-
         if form.is_valid():
             form.save()
-
             return HttpResponseRedirect(reverse("podcast", args=(podcast.id,)))
     else:
         form = EditPodcastForm(instance=podcast)
-
     return render(request, "edit-podcast.html", {"podcast_id": pk, "form": form})
+
+
+def edit_episode(request, pk):
+    episode = Episode.objects.get(pk=pk)
+    if request.method == "POST":
+        form = EditEpisodeForm(request.POST, instance=episode)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse("podcast", args=(episode.podcast.id,)))
+    else:
+        form = EditEpisodeForm(instance=episode)
+    return render(request, "edit-episode.html", {"episode_id": pk, "form": form})
