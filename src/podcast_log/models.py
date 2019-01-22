@@ -23,11 +23,11 @@ class Podcast(models.Model):
 
 class Episode(models.Model):
     podcast = models.ForeignKey(Podcast, on_delete=models.CASCADE)
-    title = models.CharField(max_length=200, null=True)
+    title = models.CharField(max_length=200, blank=True)
     publication_timestamp = models.DateTimeField(null=True)
-    audio_url = models.URLField(null=True)
-    image_url = models.URLField(null=True)
-    description = models.CharField(max_length=500, null=True)
+    audio_url = models.URLField(max_length=500, blank=True)
+    image_url = models.URLField(max_length=500, blank=True)
+    description = models.CharField(max_length=2000, blank=True)
     duration = models.DurationField(null=True)
     episode_number = models.IntegerField(null=True)
 
