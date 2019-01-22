@@ -27,7 +27,7 @@ class Episode(models.Model):
     publication_timestamp = models.DateTimeField(null=True)
     audio_url = models.URLField(max_length=500, blank=True)
     image_url = models.URLField(max_length=500, blank=True)
-    description = models.CharField(max_length=2000, blank=True)
+    description = models.CharField(max_length=5000, blank=True)
     duration = models.DurationField(null=True)
     episode_number = models.IntegerField(null=True)
 
