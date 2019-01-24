@@ -4,6 +4,9 @@
 
 {% block content %}
 
-<div>{% render_table table %}</div>
+<form action="{% url 'edit-episode-statuses' %}" method="post">
+  {% csrf_token %}
+  {% render_table table %}
+</form>
 
 {% endblock %}

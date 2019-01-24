@@ -9,6 +9,19 @@ def get_episode_class(record):
     return f"row-episode-{'-'.join(class_str.split())}"
 
 
+option_string = "\n".join(
+    (
+        "<option "
+        f' value="{short}" '
+        f' {{% if record.status == "{short}" %}}selected{{% endif %}}'
+        ">"
+        f"{long}"
+        "</option>"
+    )
+    for short, long in Episode.STATUS_CHOICES
+)
+
+
 class EpisodeListTable(tables.Table):
     class Meta:
         model = Episode
@@ -32,6 +45,19 @@ class EpisodeListTable(tables.Table):
     )
     publication_timestamp = tables.TemplateColumn(
         "{{ record.publication_timestamp.date }}", verbose_name="Date"
+    )
+    status = tables.TemplateColumn(
+        """<div class="form-group">
+            <select name="status-episode-{{ record.id }}"
+                    class="form-control"
+                    id="id_status_episode_{{ record.id }}"
+                    onchange="this.form.submit()">
+        """
+        + option_string
+        + """
+            </select>
+        </div>
+        """
     )
     edit = tables.TemplateColumn(
         "<a href=\"{% url 'edit-episode' record.id %}\">(Edit)</a>", verbose_name=""

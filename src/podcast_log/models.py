@@ -37,11 +37,11 @@ class Episode(models.Model):
     IN_PROGRESS = "P"
     QUEUED = "Q"
     STATUS_CHOICES = (
-        (LISTENED, "Listened"),
-        (IGNORED, "Ignored"),
-        (SKIPPED, "Skipped"),
-        (IN_PROGRESS, "In Progress"),
         (QUEUED, "Queued"),
+        (LISTENED, "Listened"),
+        (IN_PROGRESS, "In Progress"),
+        (SKIPPED, "Skipped"),
+        (IGNORED, "Ignored"),
     )
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=QUEUED)
 

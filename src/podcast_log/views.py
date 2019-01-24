@@ -1,3 +1,4 @@
+import re
 import threading
 
 from django.http import HttpResponseRedirect
@@ -109,4 +110,20 @@ def edit_episode(request, pk):
             "form": form,
             "next_url": request.META.get("HTTP_REFERER", "/"),
         },
+    )
+
+
+def update_episode_statuses(request):
+    if request.method == "POST":
+        for key, value in request.POST.items():
+            match = re.match(r"status-episode-(\d+)", key)
+            if match:
+                episode_id = int(match.group(1))
+                episode = Episode.objects.get(id=episode_id)
+                if episode.status != value:
+                    episode.status = value
+                    episode.save()
+
+    return HttpResponseRedirect(
+        request.META.get("HTTP_REFERER", reverse("episode-list"))
     )
