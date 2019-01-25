@@ -26,7 +26,7 @@ class Episode(models.Model):
     title = models.CharField(max_length=200, blank=True)
     publication_timestamp = models.DateTimeField(null=True)
     audio_url = models.URLField(max_length=500, blank=True)
-    image_url = models.URLField(max_length=500, blank=True)
+    _image_url = models.URLField(max_length=500, blank=True)
     description = models.CharField(max_length=5000, blank=True)
     duration = models.DurationField(null=True)
     episode_number = models.IntegerField(null=True)
@@ -54,3 +54,9 @@ class Episode(models.Model):
         if t is None:
             return None
         return datetime(year=t.year, month=t.month, day=t.day)
+
+    @property
+    def image_url(self):
+        if not self._image_url:
+            return self.podcast.image_url
+        return self._image_url
