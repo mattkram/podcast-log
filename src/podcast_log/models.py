@@ -1,4 +1,5 @@
 from datetime import timedelta, datetime
+from typing import Optional
 
 from django.db import models
 
@@ -22,14 +23,14 @@ class Podcast(models.Model):
 
 
 class Episode(models.Model):
-    podcast = models.ForeignKey(Podcast, on_delete=models.CASCADE)
-    title = models.CharField(max_length=200, blank=True)
-    publication_timestamp = models.DateTimeField(null=True)
-    audio_url = models.URLField(max_length=500, blank=True)
-    _image_url = models.URLField(max_length=500, blank=True)
-    description = models.CharField(max_length=5000, blank=True)
-    duration = models.DurationField(null=True)
-    episode_number = models.IntegerField(null=True)
+    podcast: Podcast = models.ForeignKey(Podcast, on_delete=models.CASCADE)
+    title: str = models.CharField(max_length=200, blank=True)
+    publication_timestamp: Optional[datetime] = models.DateTimeField(null=True)
+    audio_url: str = models.URLField(max_length=500, blank=True)
+    _image_url: str = models.URLField(max_length=500, blank=True)
+    description: str = models.CharField(max_length=5000, blank=True)
+    duration: Optional[timedelta] = models.DurationField(null=True)
+    episode_number: Optional[int] = models.IntegerField(null=True)
 
     LISTENED = "L"
     IGNORED = "I"
@@ -43,7 +44,7 @@ class Episode(models.Model):
         (SKIPPED, "Skipped"),
         (IGNORED, "Ignored"),
     )
-    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=QUEUED)
+    status: str = models.CharField(max_length=1, choices=STATUS_CHOICES, default=QUEUED)
 
     def __str__(self):
         return f"Episode {self.episode_number}"
