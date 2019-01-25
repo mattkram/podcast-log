@@ -20,17 +20,19 @@ class PodcastListView(generic.ListView):
         return Podcast.objects.order_by("title")
 
 
-class PodcastDetailView(generic.DetailView):
-    model = Podcast
+class PodcastDetailView(generic.TemplateView):
     template_name = "podcast-detail.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        episodes = Episode.objects.filter(podcast=context["podcast"]).order_by(
-            "-publication_timestamp"
-        )
-        table = PodcastDetailEpisodeTable(episodes)
+        podcast = Podcast.objects.get(id=context["pk"])
+        episodes = Episode.objects.filter(podcast=podcast)
+        status = kwargs.get("status", "all")
+        if status is not None and status.lower() != "all":
+            episodes = episodes.filter(status=status[0].upper())
+        table = PodcastDetailEpisodeTable(episodes.order_by("-publication_timestamp"))
         table.paginate(page=self.request.GET.get("page", 1), per_page=25)
+        context["podcast"] = podcast
         context["table"] = table
         return context
 
@@ -41,7 +43,7 @@ class EpisodeListView(generic.TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         status = kwargs.get("status", "all")
-        if status.lower() == "all":
+        if status is None or status.lower() == "all":
             episodes = Episode.objects.all()
         else:
             episodes = Episode.objects.filter(status=status[0].upper())
