@@ -21,6 +21,39 @@ class Podcast(models.Model):
         update_after = self.last_refreshed + self.refresh_interval
         return update_after <= datetime.now()
 
+    @property
+    def episodes(self):
+        return Episode.objects.filter(podcast=self)
+
+    @property
+    def statistics(self):
+        """dict: A dictionary containing podcast statistics."""
+        num_episodes = len(self.episodes)
+        num_skipped = len(self.episodes.filter(status=Episode.SKIPPED))
+        num_ignored = len(self.episodes.filter(status=Episode.IGNORED))
+        num_listened = len(self.episodes.filter(status=Episode.LISTENED))
+        num_in_progress = len(self.episodes.filter(status=Episode.IN_PROGRESS))
+        num_queued = len(self.episodes.filter(status=Episode.QUEUED))
+        num_to_listen = num_episodes - num_skipped - num_ignored
+        progress_str = (
+            f"{num_listened} / {num_to_listen} "
+            f"({100 * num_listened / num_to_listen:0.1f}%)"
+        )
+        time_listened = timedelta(seconds=0)
+        for e in self.episodes.filter(status=Episode.LISTENED):
+            time_listened += e.duration
+        dict_ = {
+            "num_episodes": num_episodes,
+            "num_skipped": num_skipped,
+            "num_ignored": num_ignored,
+            "num_listened": num_listened,
+            "num_in_progress": num_in_progress,
+            "num_queued": num_queued,
+            "progress": progress_str,
+            "time_listened": time_listened,
+        }
+        return dict_
+
 
 class Episode(models.Model):
     podcast: Podcast = models.ForeignKey(Podcast, on_delete=models.CASCADE)
