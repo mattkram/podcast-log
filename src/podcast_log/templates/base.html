@@ -31,9 +31,9 @@
     </ul>
     <ul class="nav navbar-nav navbar-right">
       {% if podcast %}
-      <li><a href="{% url 'update-podcast' podcast.id %}">Update</a></li>
+      <li><a href="{% url 'update-podcast' podcast.id %}">Update Podcast</a></li>
       {% else %}
-      <li><a href="{% url 'update-all' %}">Update</a></li>
+      <li><a href="{% url 'update-all' %}">Update All</a></li>
       {% endif %}
       <li><a href="/admin">Admin</a></li>
     </ul>
