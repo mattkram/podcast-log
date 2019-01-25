@@ -57,6 +57,11 @@ class Episode(models.Model):
 
     @property
     def image_url(self):
+        """str: Read-only property returning episode image URL, defaulting to podcast image if episode image missing."""
         if not self._image_url:
             return self.podcast.image_url
         return self._image_url
+
+    @image_url.setter
+    def image_url(self, value):
+        self._image_url = value
