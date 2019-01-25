@@ -40,8 +40,12 @@ class EpisodeListView(generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        episodes = Episode.objects.order_by("-publication_timestamp")
-        table = EpisodeListTable(episodes)
+        status = kwargs.get("status", "all")
+        if status.lower() == "all":
+            episodes = Episode.objects.all()
+        else:
+            episodes = Episode.objects.filter(status=status[0].upper())
+        table = EpisodeListTable(episodes.order_by("-publication_timestamp"))
         table.paginate(page=self.request.GET.get("page", 1), per_page=25)
         context["table"] = table
         return context

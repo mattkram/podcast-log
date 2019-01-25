@@ -11,6 +11,7 @@ urlpatterns = [
     path("podcast/<int:pk>/update/", views.update_podcast, name="update-podcast"),
     path("podcast/<int:pk>/edit/", views.edit_podcast, name="edit-podcast"),
     path("episodes/", views.EpisodeListView.as_view(), name="episode-list"),
+    path("episodes/<str:status>", views.EpisodeListView.as_view(), name="episode-list"),
     path("episode/<int:pk>/edit", views.edit_episode, name="edit-episode"),
     path(
         "episodes/update-status/",
