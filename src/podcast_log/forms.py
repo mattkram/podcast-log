@@ -36,6 +36,12 @@ class EditEpisodeForm(forms.ModelForm):
     image_url = URLField(
         required=False, widget=URLInput(attrs={"class": "form-control"})
     )
+    publication_timestamp = forms.DateTimeField(
+        required=False, widget=DateTimeInput(attrs={"class": "form-control"})
+    )
+    duration = forms.DateTimeField(
+        required=False, widget=TimeInput(attrs={"class": "form-control"})
+    )
 
     class Meta:
         model = Episode
@@ -51,11 +57,9 @@ class EditEpisodeForm(forms.ModelForm):
         )
 
         widgets = {
-            "publication_timestamp": DateTimeInput(attrs={"class": "form-control"}),
             "description": Textarea(
                 attrs={"class": "form-control", "cols": 80, "rows": 10}
             ),
-            "duration": TimeInput(attrs={"class": "form-control"}),
             "status": Select(attrs={"class": "form-control"}),
         }
 

@@ -98,7 +98,10 @@ def edit_episode(request, pk):
     if request.method == "POST":
         form = EditEpisodeForm(request.POST, instance=episode)
         if form.is_valid():
-            form.save()
+            if "episode_save" in request.POST:
+                form.save()
+            elif "episode_delete" in request.POST:
+                episode.delete()
             return HttpResponseRedirect(request.POST.get("next", "/"))
     else:
         form = EditEpisodeForm(instance=episode)

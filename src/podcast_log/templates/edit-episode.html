@@ -6,7 +6,8 @@
 <form action="{% url 'edit-episode' episode_id %}" method="post">
     {% csrf_token %}
     <input type="hidden" name="next" value="{{ next_url }}">
-    <input type="submit" value="Save">
+    <input type="submit" name="episode_save" value="Save">
+    <input type="submit" name="episode_delete" value="Delete">
     {% for field in form %}
         <div class="form-group">
             <label>{{ field.label }}</label>
@@ -14,6 +15,8 @@
             <small class="text-danger">{{ field.errors }}</small>
         </div>
     {% endfor %}
+    <input type="submit" name="episode_save" value="Save">
+    <input type="submit" name="episode_delete" value="Delete">
 </form>
 
 {% endblock %}
