@@ -41,7 +41,9 @@ class Podcast(models.Model):
         )
         time_listened = timedelta(seconds=0)
         for e in self.episodes.filter(status=Episode.LISTENED):
-            time_listened += e.duration
+            if e.duration is not None:
+                time_listened += e.duration
+
         dict_ = {
             "num_episodes": num_episodes,
             "num_skipped": num_skipped,
@@ -78,6 +80,9 @@ class Episode(models.Model):
         (IGNORED, "Ignored"),
     )
     status: str = models.CharField(max_length=1, choices=STATUS_CHOICES, default=QUEUED)
+
+    class Meta:
+        unique_together = ("podcast", "episode_number")
 
     def __str__(self):
         return f"Episode {self.episode_number}"
