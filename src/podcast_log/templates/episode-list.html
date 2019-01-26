@@ -10,6 +10,12 @@
 <li><a href="{% url 'episode-list' status='queued'%}"
        class="{% if status == 'queued' %}active{% endif %}">Queued</a>
 </li>
+<li><a href="{% url 'episode-list' status='skipped'%}"
+       class="{% if status == 'skipped' %}active{% endif %}">Skipped</a>
+</li>
+<li><a href="{% url 'episode-list' status='ignored'%}"
+       class="{% if status == 'ignored' %}active{% endif %}">Ignored</a>
+</li>
 {% endblock %}
 
 {% block content %}
