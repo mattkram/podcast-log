@@ -2,11 +2,19 @@
 
 {% load render_table from django_tables2 %}
 
-{% block content %}
+{% block episode-status-filter %}
+<li class="divider-vertical"></li>
+<li><a href="{% url 'episode-list'%}"
+       class="{% if status == 'all' %}active{% endif %}">All</a>
+</li>
+<li><a href="{% url 'episode-list' status='queued'%}"
+       class="{% if status == 'queued' %}active{% endif %}">Queued</a>
+</li>
+{% endblock %}
 
+{% block content %}
 <form action="{% url 'edit-episode-statuses' %}" method="post">
   {% csrf_token %}
   {% render_table table %}
 </form>
-
 {% endblock %}

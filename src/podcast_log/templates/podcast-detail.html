@@ -2,6 +2,20 @@
 
 {% load render_table from django_tables2 %}
 
+{% block episode-status-filter %}
+<li class="divider-vertical"></li>
+<li><a href="{% url 'podcast-detail' podcast.id %}"
+       class="{% if status == 'all' %}active{% endif %}">All</a>
+</li>
+<li><a href="{% url 'podcast-detail' pk=podcast.id status='queued'%}"
+       class="{% if status == 'queued' %}active{% endif %}">Queued</a>
+</li>
+{% endblock %}
+
+{% block update-button %}
+<li><a href="{% url 'update-podcast' podcast.id %}">Update Podcast</a></li>
+{% endblock %}
+
 {% block content %}
 
 <div class="row">

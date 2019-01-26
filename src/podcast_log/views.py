@@ -27,7 +27,7 @@ class PodcastDetailView(generic.TemplateView):
         context = super().get_context_data(**kwargs)
         podcast = Podcast.objects.get(id=context["pk"])
         episodes = Episode.objects.filter(podcast=podcast)
-        status = kwargs.get("status", "all")
+        context["status"] = status = kwargs.get("status", "all")
         if status is not None and status.lower() != "all":
             episodes = episodes.filter(status=status[0].upper())
         table = PodcastDetailEpisodeTable(episodes.order_by("-publication_timestamp"))
@@ -42,7 +42,7 @@ class EpisodeListView(generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        status = kwargs.get("status", "all")
+        context["status"] = status = kwargs.get("status", "all")
         if status is None or status.lower() == "all":
             episodes = Episode.objects.all()
         else:

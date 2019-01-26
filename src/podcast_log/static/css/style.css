@@ -47,6 +47,18 @@
     background-color: rgb(231, 231, 231);
     color: rgb(85, 85, 85);
 }
+
 li.dropdown:hover > .dropdown-menu {
     display: block;
+}
+
+.divider-vertical {
+    height: 30px;                    /* any height */
+    border-left: 1px solid gray;     /* right or left is the same */
+    opacity: 0.5;                    /* optional */
+    margin: 10px 5px;                /* optional */
+}
+
+.navbar-default .navbar-nav > li > a.active {
+    color: #337ab7;
 }

@@ -18,23 +18,13 @@
     </div>
     <ul class="nav navbar-nav">
       <li><a href="{% url 'podcast-list' %}">Podcasts</a></li>
-      <li class="dropdown">
-        <a href="{% url 'episode-list' status='queued'%}"
-           class="dropdown-toggle disabled"
-           data-toggle="dropdown">
-          Episodes<b class="caret"></b></a>
-        <ul class="dropdown-menu">
-          <li><a href="{% url 'episode-list' status='queued'%}">Queued</a></li>
-          <li><a href="{% url 'episode-list'%}">All</a></li>
-        </ul>
-      </li>
+      <li><a href="{% url 'episode-list' status='queued'%}">Episodes</a></li>
+      {% block episode-status-filter %}{% endblock %}
     </ul>
     <ul class="nav navbar-nav navbar-right">
-      {% if podcast %}
-      <li><a href="{% url 'update-podcast' podcast.id %}">Update Podcast</a></li>
-      {% else %}
+      {% block update-button %}
       <li><a href="{% url 'update-all' %}">Update All</a></li>
-      {% endif %}
+      {% endblock %}
       <li><a href="/admin">Admin</a></li>
     </ul>
   </div>
