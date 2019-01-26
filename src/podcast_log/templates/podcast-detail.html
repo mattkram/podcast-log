@@ -23,8 +23,8 @@
     <img src="{{ podcast.image_url }}" style="max-width:100px">
   </div>
   <div class="col-sm-7">
-    <div>
-      <h1><a href="{% url 'podcast-detail' podcast.id %}">{{ podcast.title }}</a></h1>
+    <div style="margin-bottom: 10px;">
+      <a href="{% url 'podcast-detail' podcast.id %}" class="h1">{{ podcast.title }}</a>
       <a href="{% url 'edit-podcast' pk=podcast.id %}">(Edit)</a>
     </div>
     <div>{{ podcast.summary }}</div>
