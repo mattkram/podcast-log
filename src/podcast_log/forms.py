@@ -1,15 +1,4 @@
 from django import forms
-from django.forms import (
-    TextInput,
-    DateTimeInput,
-    Textarea,
-    URLInput,
-    TimeInput,
-    Select,
-    NumberInput,
-    URLField,
-    CharField,
-)
 
 from .models import Podcast, Episode
 
@@ -26,21 +15,26 @@ class EditPodcastForm(forms.ModelForm):
 
 class EditEpisodeForm(forms.ModelForm):
 
-    title = CharField(widget=TextInput(attrs={"class": "form-control"}), required=False)
-    episode_number = CharField(
-        widget=NumberInput(attrs={"class": "form-control"}), required=False
+    title = forms.CharField(
+        widget=forms.TextInput(attrs={"class": "form-control"}), required=False
     )
-    audio_url = URLField(
-        required=False, widget=URLInput(attrs={"class": "form-control"})
+    episode_number = forms.CharField(
+        widget=forms.NumberInput(attrs={"class": "form-control"}), required=False
     )
-    image_url = URLField(
-        required=False, widget=URLInput(attrs={"class": "form-control"})
+    episode_part = forms.CharField(
+        widget=forms.NumberInput(attrs={"class": "form-control"}), required=False
+    )
+    audio_url = forms.URLField(
+        required=False, widget=forms.URLInput(attrs={"class": "form-control"})
+    )
+    image_url = forms.URLField(
+        required=False, widget=forms.URLInput(attrs={"class": "form-control"})
     )
     publication_timestamp = forms.DateTimeField(
-        required=False, widget=DateTimeInput(attrs={"class": "form-control"})
+        required=False, widget=forms.DateTimeInput(attrs={"class": "form-control"})
     )
-    duration = forms.DateTimeField(
-        required=False, widget=TimeInput(attrs={"class": "form-control"})
+    duration = forms.DurationField(
+        required=False, widget=forms.TimeInput(attrs={"class": "form-control"})
     )
 
     class Meta:
@@ -49,6 +43,7 @@ class EditEpisodeForm(forms.ModelForm):
             "status",
             "title",
             "episode_number",
+            "episode_part",
             "publication_timestamp",
             "audio_url",
             "image_url",
@@ -57,10 +52,10 @@ class EditEpisodeForm(forms.ModelForm):
         )
 
         widgets = {
-            "description": Textarea(
+            "description": forms.Textarea(
                 attrs={"class": "form-control", "cols": 80, "rows": 10}
             ),
-            "status": Select(attrs={"class": "form-control"}),
+            "status": forms.Select(attrs={"class": "form-control"}),
         }
 
     def save(self, commit=True):

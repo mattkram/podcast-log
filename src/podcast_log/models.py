@@ -66,6 +66,7 @@ class Episode(models.Model):
     description: str = models.CharField(max_length=5000, blank=True)
     duration: Optional[timedelta] = models.DurationField(null=True)
     episode_number: Optional[int] = models.IntegerField(null=True)
+    episode_part: int = models.IntegerField(default=1)
 
     LISTENED = "L"
     IGNORED = "I"
@@ -82,7 +83,7 @@ class Episode(models.Model):
     status: str = models.CharField(max_length=1, choices=STATUS_CHOICES, default=QUEUED)
 
     class Meta:
-        unique_together = ("podcast", "episode_number")
+        unique_together = ("podcast", "episode_number", "episode_part")
 
     def __str__(self):
         return f"Episode {self.episode_number}"
