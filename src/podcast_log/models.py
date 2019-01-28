@@ -8,7 +8,7 @@ class Podcast(models.Model):
     title = models.CharField(max_length=200)
     url = models.URLField()
     image_url = models.URLField()
-    summary = models.CharField(max_length=500)
+    summary = models.CharField(max_length=1000)
     last_refreshed = models.DateTimeField(default=datetime(1, 1, 1))
     refresh_interval = models.DurationField(default=timedelta(hours=1))
     episode_number_pattern = models.CharField(max_length=50, null=True)
