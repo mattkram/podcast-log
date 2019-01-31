@@ -34,7 +34,7 @@ class Podcast(models.Model):
         num_listened = len(self.episodes.filter(status=Episode.LISTENED))
         num_in_progress = len(self.episodes.filter(status=Episode.IN_PROGRESS))
         num_queued = len(self.episodes.filter(status=Episode.QUEUED))
-        num_to_listen = num_episodes - num_skipped - num_ignored
+        num_to_listen = num_episodes - num_ignored
         progress_str = (
             f"{num_listened} / {num_to_listen} "
             f"({100 * num_listened / num_to_listen:0.1f}%)"
