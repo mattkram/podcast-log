@@ -8,7 +8,7 @@ class Podcast(models.Model):
     title = models.CharField(max_length=200)
     url = models.URLField()
     image_url = models.URLField()
-    summary = models.CharField(max_length=1000)
+    summary = models.CharField(max_length=2000)
     last_refreshed = models.DateTimeField(default=datetime(1, 1, 1))
     refresh_interval = models.DurationField(default=timedelta(hours=1))
     episode_number_pattern = models.CharField(max_length=50, null=True)
@@ -81,6 +81,8 @@ class Episode(models.Model):
         (IGNORED, "Ignored"),
     )
     status: str = models.CharField(max_length=1, choices=STATUS_CHOICES, default=QUEUED)
+
+    needs_review: bool = models.BooleanField(default=False)
 
     class Meta:
         unique_together = ("podcast", "episode_number", "episode_part")

@@ -7,6 +7,7 @@ from threading import Thread
 from typing import Optional
 
 import feedparser
+from django.db import IntegrityError
 
 from .models import Podcast, Episode
 
@@ -77,7 +78,13 @@ def update_podcast_feed(podcast, force=False):
                 if match:
                     episode.episode_number = int(match.group(1))
 
-        episode.save()
+        try:
+            episode.save()
+        except IntegrityError:
+            episode.needs_review = True
+            episode.episode_number = None
+            episode.save()
+
         logger.info("Saving episode: %s, %s", podcast, episode)
 
     podcast.last_refreshed = datetime.now()
