@@ -1,3 +1,4 @@
+from django.contrib import admin
 from django.urls import path
 
 from . import views
@@ -27,4 +28,5 @@ urlpatterns = [
         views.update_episode_statuses,
         name="edit-episode-statuses",
     ),
+    path("admin/", admin.site.urls),
 ]
