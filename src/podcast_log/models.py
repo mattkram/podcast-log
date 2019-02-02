@@ -13,6 +13,10 @@ class Podcast(models.Model):
     refresh_interval = models.DurationField(default=timedelta(hours=1))
     episode_number_pattern = models.CharField(max_length=50, null=True)
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.statistics = PodcastStatistics(self)
+
     def __str__(self):
         return self.title
 
@@ -25,36 +29,41 @@ class Podcast(models.Model):
     def episodes(self):
         return Episode.objects.filter(podcast=self)
 
+
+class PodcastStatistics:
+    def __init__(self, podcast):
+        self.podcast = podcast
+
     @property
-    def statistics(self):
-        """dict: A dictionary containing podcast statistics."""
-        num_episodes = len(self.episodes)
-        num_skipped = len(self.episodes.filter(status=Episode.SKIPPED))
-        num_ignored = len(self.episodes.filter(status=Episode.IGNORED))
-        num_listened = len(self.episodes.filter(status=Episode.LISTENED))
-        num_in_progress = len(self.episodes.filter(status=Episode.IN_PROGRESS))
-        num_queued = len(self.episodes.filter(status=Episode.QUEUED))
-        num_to_listen = num_episodes - num_ignored
-        progress_str = (
-            f"{num_listened} / {num_to_listen} "
-            f"({100 * num_listened / num_to_listen:0.1f}%)"
+    def num_episodes(self):
+        return len(self.podcast.episodes)
+
+    def __getattr__(self, name: str):
+        if name.startswith("num_"):
+            try:
+                status = getattr(Episode, name.replace("num_", "").upper())
+            except AttributeError:
+                raise AttributeError(
+                    f"Attribute {name} cannot be accessed, no associated episode status"
+                )
+            return len(self.podcast.episodes.filter(status=status))
+        return super().__getattribute__(name)
+
+    @property
+    def progress(self):
+        num_to_listen = self.num_episodes - self.num_ignored
+        pct_listened = (
+            100 * self.num_listened / num_to_listen if num_to_listen > 0 else 0.0
         )
+        return f"{self.num_listened} / {num_to_listen} ({pct_listened:0.1f}%)"
+
+    @property
+    def time_listened(self):
         time_listened = timedelta(seconds=0)
-        for e in self.episodes.filter(status=Episode.LISTENED):
+        for e in self.podcast.episodes.filter(status=Episode.LISTENED):
             if e.duration is not None:
                 time_listened += e.duration
-
-        dict_ = {
-            "num_episodes": num_episodes,
-            "num_skipped": num_skipped,
-            "num_ignored": num_ignored,
-            "num_listened": num_listened,
-            "num_in_progress": num_in_progress,
-            "num_queued": num_queued,
-            "progress": progress_str,
-            "time_listened": time_listened,
-        }
-        return dict_
+        return time_listened
 
 
 class Episode(models.Model):

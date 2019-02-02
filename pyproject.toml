@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "podcast-log"
+version = "0.2.1"
+description = "A simple Django application for following and keeping a podcast listen log."
+license = "MIT"
+authors = ["Matt Kramer <matthew.robert.kramer@gmail.com>"]
+readme = "README.md"
+repository = "https://bitbucket.org/mattkram/podcast-log"
+packages = [
+    { include = "podcast_log", from = "src" },
+]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+django = "^2.1"
+django-tables2 = "^2.0"
+feedparser = "^5.2"
+django-configurations = "^2.1"
+
+[tool.poetry.dev-dependencies]
+black = {version = "^18.3-alpha.0",allows-prereleases = true}
+pytest = "^4.2"
+pytest-cov = "^2.6"
+pytest-django = "^3.4"
+
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
