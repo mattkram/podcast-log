@@ -89,10 +89,7 @@ def edit_podcast(request, pk):
         form = EditPodcastForm(request.POST, instance=podcast)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(
-                request.META.get("HTTP_REFERER"),
-                reverse("podcast-detail", args=(podcast.id,)),
-            )
+            return HttpResponseRedirect(reverse("podcast-detail", args=(podcast.id,)))
     else:
         form = EditPodcastForm(instance=podcast)
     return render(request, "edit-podcast.html", {"podcast_id": pk, "form": form})
