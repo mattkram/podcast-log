@@ -3,40 +3,40 @@ from django import forms
 from .models import Podcast, Episode
 
 
-class AddPodcastForm(forms.Form):
-    url = forms.CharField(label="RSS Feed URL")
+class BootstrapFormMixin(forms.Form):
+    """A simple mix-in class to add bootstrap class to field widgets."""
+
+    required_false = tuple()
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        css_class = "form-control"
+        for name, field in self.fields.items():
+            if "class" in field.widget.attrs:
+                field.widget.attrs["class"] += f" {css_class}"
+            else:
+                field.widget.attrs.update({"class": css_class})
+
+            if name in self.required_false:
+                field.required = False
 
 
-class EditPodcastForm(forms.ModelForm):
+class AddPodcastForm(forms.ModelForm, BootstrapFormMixin):
+    class Meta:
+        model = Podcast
+        fields = ("url", "episode_number_pattern")
+        labels = {"url": "RSS Feed URL"}
+
+    required_false = ("episode_number_pattern",)
+
+
+class EditPodcastForm(forms.ModelForm, BootstrapFormMixin):
     class Meta:
         model = Podcast
         exclude = ("id", "last_refreshed")
 
 
-class EditEpisodeForm(forms.ModelForm):
-
-    title = forms.CharField(
-        widget=forms.TextInput(attrs={"class": "form-control"}), required=False
-    )
-    episode_number = forms.CharField(
-        widget=forms.NumberInput(attrs={"class": "form-control"}), required=False
-    )
-    episode_part = forms.CharField(
-        widget=forms.NumberInput(attrs={"class": "form-control"}), required=False
-    )
-    audio_url = forms.URLField(
-        required=False, widget=forms.URLInput(attrs={"class": "form-control"})
-    )
-    image_url = forms.URLField(
-        required=False, widget=forms.URLInput(attrs={"class": "form-control"})
-    )
-    publication_timestamp = forms.DateTimeField(
-        required=False, widget=forms.DateTimeInput(attrs={"class": "form-control"})
-    )
-    duration = forms.DurationField(
-        required=False, widget=forms.TimeInput(attrs={"class": "form-control"})
-    )
-
+class EditEpisodeForm(forms.ModelForm, BootstrapFormMixin):
     class Meta:
         model = Episode
         fields = (
@@ -46,17 +46,22 @@ class EditEpisodeForm(forms.ModelForm):
             "episode_part",
             "publication_timestamp",
             "audio_url",
-            "image_url",
+            "_image_url",
             "description",
             "duration",
         )
+        labels = {"audio_url": "Audio URL", "_image_url": "Image URL"}
+        widgets = {"description": forms.Textarea(attrs={"cols": 80, "rows": 10})}
 
-        widgets = {
-            "description": forms.Textarea(
-                attrs={"class": "form-control", "cols": 80, "rows": 10}
-            ),
-            "status": forms.Select(attrs={"class": "form-control"}),
-        }
+    required_false = (
+        "title",
+        "episode_number",
+        "episode_part",
+        "audio_url",
+        "_image_url",
+        "publication_timestamp",
+        "duration",
+    )
 
     def save(self, commit=True):
         if not self.cleaned_data["episode_number"]:
