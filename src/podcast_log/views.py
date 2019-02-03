@@ -72,12 +72,11 @@ def add_podcast(request):
 
         if form.is_valid():
             podcast = create_new_podcast(form.cleaned_data["url"])
-            thread = threading.Thread(
-                target=update_podcast_feed, args=(podcast.id,), daemon=True
-            )
-            thread.start()
+            add_podcast_to_update_queue(podcast.id)
 
-            return HttpResponseRedirect(reverse("index"))
+            return HttpResponseRedirect(
+                reverse("podcast-detail", kwargs={"pk": podcast.id})
+            )
     else:
         form = AddPodcastForm()
 
