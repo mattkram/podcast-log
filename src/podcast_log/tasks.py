@@ -49,14 +49,23 @@ def update_podcast_feed(podcast, force=False):
     logger.info("  Parsing %d entries", len(dict_["entries"]))
     logger.debug(dict_["feed"])
 
-    for episode_dict in dict_["entries"]:
-        publication_date = convert_structured_time(episode_dict["published_parsed"])
+    # Create a list of new entries, unless forced to process all entries
+    if force:
+        entries = dict_["entries"]
+    else:
+        entries = [
+            e
+            for e in dict_["entries"]
+            if convert_structured_time(e["published_parsed"]) > podcast.last_refreshed
+        ]
 
-        if publication_date <= podcast.last_refreshed and not force:
-            break  # Break out of loop once older episodes are reached
+    for episode_dict in entries[::-1]:
+        publication_timestamp = convert_structured_time(
+            episode_dict["published_parsed"]
+        )
 
         episode, created = Episode.objects.get_or_create(
-            podcast=podcast, publication_timestamp=publication_date
+            podcast=podcast, publication_timestamp=publication_timestamp
         )
 
         episode.title = episode_dict.get("title", "")
