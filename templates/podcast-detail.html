@@ -1,25 +1,23 @@
 {% extends "base.html" %}
 
-{% load render_table from django_tables2 %}
-
-{% block episode-status-filter %}
+{% block episode_status_filter %}
 <li class="divider-vertical"></li>
-<li><a href="{% url 'podcast-detail' podcast.id %}"
+<li><a href="{{ url_for('main.podcast_detail', podcast_id=podcast.id) }}"
        class="{% if status == 'all' %}active{% endif %}">All</a>
 </li>
-<li><a href="{% url 'podcast-detail' pk=podcast.id status='queued'%}"
+<li><a href="{{ url_for('main.podcast_detail', podcast_id=podcast.id, status='queued') }}"
        class="{% if status == 'queued' %}active{% endif %}">Queued</a>
 </li>
-<li><a href="{% url 'podcast-detail' pk=podcast.id status='skipped'%}"
+<li><a href="{{ url_for('main.podcast_detail', podcast_id=podcast.id, status='skipped') }}"
        class="{% if status == 'skipped' %}active{% endif %}">Skipped</a>
 </li>
-<li><a href="{% url 'podcast-detail' pk=podcast.id status='ignored'%}"
+<li><a href="{{ url_for('main.podcast_detail', podcast_id=podcast.id, status='ignored') }}"
        class="{% if status == 'ignored' %}active{% endif %}">Ignored</a>
 </li>
 {% endblock %}
 
-{% block update-button %}
-<li><a href="{% url 'update-podcast' podcast.id %}">Update Podcast</a></li>
+{% block update_button %}
+<li><a href="{{ url_for('main.update_podcast', podcast_id=podcast.id) }}">Update Podcast</a></li>
 {% endblock %}
 
 {% block content %}
@@ -30,8 +28,8 @@
   </div>
   <div class="col-sm-7">
     <div style="margin-bottom: 10px;">
-      <a href="{% url 'podcast-detail' podcast.id %}" class="h1">{{ podcast.title }}</a>
-      <a href="{% url 'edit-podcast' pk=podcast.id %}">(Edit)</a>
+      <a href="{{ url_for('main.podcast_detail', podcast_id=podcast.id) }}" class="h1">{{ podcast.title }}</a>
+      <a href="{{ url_for('main.edit_podcast', podcast_id=podcast.id) }}">(Edit)</a>
     </div>
     <div>{{ podcast.summary }}</div>
   </div>
@@ -67,11 +65,8 @@
 
 <div class="row">
   <div class="col-sm-12">
-    <form action="{% url 'edit-episode-statuses' %}" method="post">
-      {% csrf_token %}
-      {% render_table table %}
+    <form action="" method="post">
     </form>
   </div>
 </div>
-
 {% endblock %}

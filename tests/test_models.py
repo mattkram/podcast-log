@@ -1,11 +1,18 @@
+import os
+
 import pytest
 
-from podcast_log.models import Podcast, Episode
+from podcast_log.models import Podcast, Episode, Status
 
 
-@pytest.mark.django_db(transaction=True)
-def test_podcast_statistics():
+def test_settings():
+    assert os.environ["APP_SETTINGS"] == "podcast_log.config.TestingConfig"
+
+
+def test_podcast_statistics(app):
+
     podcast = Podcast(title="Podcast title")
+    podcast.save()
     assert podcast is not None
 
     assert podcast.title == "Podcast title"
@@ -15,7 +22,8 @@ def test_podcast_statistics():
     with pytest.raises(AttributeError):
         assert podcast.statistics.num_non_existent
 
-    # episode = Episode(podcast=podcast, status=Episode.LISTENED)
-    #
-    # assert episode.status == Episode.LISTENED
-    # assert podcast.statistics.num_listened == 1
+    episode = Episode(podcast=podcast, status=Status.LISTENED)
+    episode.save()
+
+    assert episode.status == Status.LISTENED
+    assert podcast.statistics.num_listened == 1

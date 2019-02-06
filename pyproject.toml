@@ -7,21 +7,22 @@ authors = ["Matt Kramer <matthew.robert.kramer@gmail.com>"]
 readme = "README.md"
 repository = "https://bitbucket.org/mattkram/podcast-log"
 packages = [
-    { include = "podcast_log", from = "src" },
+    { include = "podcast_log" },
 ]
 
 [tool.poetry.dependencies]
 python = "^3.7"
-django = "^2.1"
-django-tables2 = "^2.0"
 feedparser = "^5.2"
-django-configurations = "^2.1"
+flask = "^1.0"
+flask-wtf = "^0.14.2"
+flask-migrate = "^2.3"
+flask-sqlalchemy = "^2.3"
 
 [tool.poetry.dev-dependencies]
 black = {version = "^18.3-alpha.0",allows-prereleases = true}
 pytest = "^4.2"
 pytest-cov = "^2.6"
-pytest-django = "^3.4"
+flask-dotenv = "^0.1.1"
 
 
 [build-system]

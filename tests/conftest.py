@@ -1,19 +1,30 @@
 import os
+from pathlib import Path
 
 import pytest
-from podcast_log import settings
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+from podcast_log import create_app
+from podcast_log.models import db
+
+BASE_DIR = Path(__file__).parent
+
+os.environ["APP_SETTINGS"] = "podcast_log.config.TestingConfig"
 
 
-# @pytest.fixture(scope="session")
-# def django_db_use_migrations(request):
-#     return True
-#
-#
-# @pytest.fixture(scope="session")
-# def django_db_setup():
-#     settings.DATABASES["default"] = {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": os.path.join(BASE_DIR, "test_db.sqlite3"),
-#     }
+@pytest.fixture(name="app")
+def create_test_app():
+    app = create_app()
+    with app.app_context():
+        db.create_all()
+        yield app
+        db.drop_all()
+
+
+@pytest.fixture
+def client(app):
+    return app.test_client()
+
+
+@pytest.fixture
+def runner(app):
+    return app.test_cli_runner()

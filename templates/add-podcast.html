@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<form action="{{ url_for('main.add_podcast') }}" method="post" class="form">
+  {{ form.csrf_token }}
+
+  {{ form.url.label }}
+  {{ form.url(class_='form-control') }}
+
+  {{ form.episode_number_pattern.label }}
+  {{ form.episode_number_pattern(class_='form-control') }}
+
+  {{ form.submit }}
+</form>
+
+{% endblock %}
