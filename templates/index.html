@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% for podcast in podcasts %}
+<div class="podcast-gallery text-center">
+  <a href="{{ url_for('main.podcast_detail', podcast_id=podcast.id) }}">
+    <img src="{{ podcast.image_url }}" style="width:100px">
+    {{ podcast.title }}
+  </a>
+</div>
+{% endfor %}
+
+<a class="btn-add-podcast" href="{{ url_for('main.add_podcast') }}">
+  <img src="{{ url_for('static', filename='img/add_circle.png') }}" style="width: 50px;">
+</a>
+
+{% endblock %}

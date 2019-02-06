@@ -7,7 +7,6 @@ from threading import Thread
 from typing import Optional
 
 import feedparser
-from django.db import IntegrityError
 
 from .models import Podcast, Episode
 
