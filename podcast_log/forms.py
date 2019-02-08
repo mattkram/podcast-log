@@ -1,6 +1,19 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
+from wtforms.ext.sqlalchemy.orm import model_form
 from wtforms.validators import InputRequired
+
+from podcast_log.models import db, Podcast
+
+
+class ModelFormBase(FlaskForm):
+    """Base class adding easy access to a list of fields for template."""
+
+    @property
+    def fields(self):
+        for name, field in self._fields.items():
+            if name != "csrf_token":
+                yield field
 
 
 class AddPodcastForm(FlaskForm):
@@ -9,12 +22,13 @@ class AddPodcastForm(FlaskForm):
     submit = SubmitField()
 
 
-# class EditPodcastForm(forms.ModelForm, BootstrapFormMixin):
-#     class Meta:
-#         model = Podcast
-#         exclude = ("id", "last_refreshed")
-#
-#
+EditPodcastForm = model_form(
+    Podcast,
+    db_session=db,
+    base_class=ModelFormBase,
+    only=["title", "url", "summary", "episode_number_pattern"],
+)
+
 # class EditEpisodeForm(forms.ModelForm, BootstrapFormMixin):
 #     class Meta:
 #         model = Episode

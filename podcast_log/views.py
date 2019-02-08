@@ -2,7 +2,7 @@ import re
 
 from flask import Blueprint, render_template, redirect, url_for
 
-from .forms import AddPodcastForm  # , EditPodcastForm, EditEpisodeForm
+from .forms import AddPodcastForm, EditPodcastForm  # , EditEpisodeForm
 
 # from .models import Podcast, Episode
 # from .tables import EpisodeListTable, PodcastDetailEpisodeTable
@@ -19,8 +19,7 @@ def index():
 
 @bp.route("/podcasts")
 def podcast_list():
-    podcasts = Podcast.query.all()
-    print(podcasts)
+    podcasts = sorted(Podcast.query.all(), key=lambda p: p.title)
     return render_template("index.html", podcasts=podcasts)
 
 
@@ -38,21 +37,12 @@ def update_all():
 def add_podcast():
     form = AddPodcastForm()
     if form.validate_on_submit():
-        podcast = Podcast(
-            url=form.url.data, episode_number_pattern=form.episode_number_pattern.data
-        )
-        podcast.save()
-        # podcast = create_new_podcast(form.url.data)
-        # create_new_podcast(form.url.data)
-        # add_podcast_to_update_queue(podcast.id)
-
-        return redirect(url_for("podcast_detail", id=podcast.id))
-
+        podcast = create_new_podcast(form.url.data, form.episode_number_pattern.data)
+        return redirect(url_for("main.podcast_detail", podcast_id=podcast.id))
     return render_template("add-podcast.html", form=form)
 
 
 @bp.route("/podcast/<int:podcast_id>")
-# @bp.route("/podcast/<int:podcast_id>/status=<status>")
 def podcast_detail(podcast_id):
     podcast = Podcast.query.get(podcast_id)
     return render_template("podcast-detail.html", podcast=podcast)
@@ -60,12 +50,21 @@ def podcast_detail(podcast_id):
 
 @bp.route("/podcast/<int:podcast_id>/update")
 def update_podcast(podcast_id):
-    pass
+    add_podcast_to_update_queue(podcast_id, force=True)
+    return redirect(url_for("main.podcast_detail", podcast_id=podcast_id))
 
 
-@bp.route("/podcast/<int:podcast_id>/edit")
+@bp.route("/podcast/<int:podcast_id>/edit", methods=("GET", "POST"))
 def edit_podcast(podcast_id):
-    pass
+    podcast = Podcast.query.get(podcast_id)
+    form = EditPodcastForm(obj=podcast)
+    if form.validate_on_submit():
+        podcast = Podcast.query.get(podcast_id)
+        form.populate_obj(podcast)
+        podcast.save()
+        return redirect(url_for("main.podcast_detail", podcast_id=podcast.id))
+    return render_template("edit-podcast.html", podcast_id=podcast_id, form=form)
+
     # def get_context_data(self, **kwargs):
     #     context = super().get_context_data(**kwargs)
     #     podcast = Podcast.objects.get(id=context["pk"])
