@@ -19,7 +19,7 @@ def index():
 
 @bp.route("/podcasts")
 def podcast_list():
-    podcasts = sorted(Podcast.query.all(), key=lambda p: p.title)
+    podcasts = Podcast.query.order_by(Podcast.title).all()
     return render_template("index.html", podcasts=podcasts)
 
 
