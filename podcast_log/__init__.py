@@ -1,4 +1,6 @@
+import logging
 import os
+import sys
 from pathlib import Path
 
 from flask import Flask
@@ -35,5 +37,9 @@ def create_app():
     views.init_app(app)
 
     # models.create_db(app)
+
+    handler = logging.StreamHandler(sys.stdout)
+    app.logger.addHandler(handler)
+    app.logger.setLevel(logging.INFO)
 
     return app

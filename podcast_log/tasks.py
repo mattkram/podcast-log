@@ -1,4 +1,3 @@
-import logging
 import re
 import time
 from datetime import timedelta, datetime
@@ -7,10 +6,11 @@ from threading import Thread
 from typing import Optional
 
 import feedparser
+from flask import current_app
+from sqlalchemy.orm.exc import NoResultFound
 
 from .models import Podcast, Episode
 
-logger = logging.getLogger("django")
 
 # TODO: Refactor to combine some functionality in update and add functions
 # TODO: Consider update_or_create when updating episodes
@@ -19,9 +19,9 @@ logger = logging.getLogger("django")
 def _update_queued_podcasts(q):
     """Infinite loop that will update podcasts in a queue in worker thread."""
     while True:
-        podcast_id, force = q.get()
-        podcast = Podcast.objects.get(id=podcast_id)
-        update_podcast_feed(podcast, force=force)
+        app, podcast_id, force = q.get()
+        with app.app_context():
+            update_podcast_feed(podcast_id, force=force)
         q.task_done()
 
 
@@ -31,10 +31,13 @@ update_thread.start()
 
 
 def add_podcast_to_update_queue(podcast_id, force=False):
-    queue.put((podcast_id, force))
+    # noinspection PyProtectedMember
+    queue.put((current_app._get_current_object(), podcast_id, force))
 
 
-def update_podcast_feed(podcast, force=False):
+def update_podcast_feed(podcast_id, force=False):
+    logger = current_app.logger
+    podcast = Podcast.query.get(podcast_id)
 
     if not podcast.needs_update and not force:
         logger.info(
@@ -63,9 +66,14 @@ def update_podcast_feed(podcast, force=False):
             episode_dict["published_parsed"]
         )
 
-        episode, created = Episode.objects.get_or_create(
-            podcast=podcast, publication_timestamp=publication_timestamp
-        )
+        try:
+            episode = Episode.query.filter_by(
+                podcast=podcast, publication_timestamp=publication_timestamp
+            ).one()
+        except NoResultFound:
+            episode = Episode(
+                podcast=podcast, publication_timestamp=publication_timestamp
+            )
 
         episode.title = episode_dict.get("title", "")
         episode.description = episode_dict.get("description", "")
@@ -86,12 +94,12 @@ def update_podcast_feed(podcast, force=False):
                 if match:
                     episode.episode_number = int(match.group(1))
 
-        try:
-            episode.save()
-        except IntegrityError:
-            episode.needs_review = True
-            episode.episode_number = None
-            episode.save()
+        # try:
+        episode.save()
+        # except IntegrityError:
+        #     episode.needs_review = True
+        #     episode.episode_number = None
+        #     episode.save()
 
         logger.info("Saving episode: %s, %s", podcast, episode)
 
@@ -101,26 +109,34 @@ def update_podcast_feed(podcast, force=False):
     logger.info("Completed loading podcast")
 
 
-def create_new_podcast(feed_url: str) -> Optional[Podcast]:
+def create_new_podcast(
+    feed_url: str, episode_number_pattern: str = None
+) -> Optional[Podcast]:
     """If a podcast doesn't already exist with the same feed URL, create it by parsing the feed."""
     # If the podcast already exists, return out of this function, else continue/pass
     try:
-        Podcast.objects.get(url=feed_url)
-    except Podcast.DoesNotExist:
+        podcast = Podcast.query.filter_by(url=feed_url).one()
+    except NoResultFound:
         pass
     else:
-        return
+        return podcast
+
+    podcast = Podcast(url=feed_url)
+
+    if episode_number_pattern:
+        podcast.episode_number_pattern = episode_number_pattern
 
     dict_ = feedparser.parse(feed_url)
     feed = dict_["feed"]
 
     podcast = Podcast()
     podcast.title = feed["title"]
-    podcast.url = feed_url
     podcast.image_url = feed["image"]["href"]
     podcast.summary = feed["description"]
 
     podcast.save()
+
+    add_podcast_to_update_queue(podcast.id)
 
     return podcast
 
