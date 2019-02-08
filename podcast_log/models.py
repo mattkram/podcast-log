@@ -108,7 +108,7 @@ class Episode(db.Model, ModelMixin):
     description = db.Column(db.String(5000), nullable=True)
     duration = db.Column(db.Interval, nullable=True)
     episode_number = db.Column(db.Integer, nullable=True)
-    episode_part: int = db.Column(db.Integer, default=1)
+    episode_part = db.Column(db.Integer, default=1)
 
     status = db.Column(db.Enum(Status), default=Status.QUEUED)
 
