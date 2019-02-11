@@ -1,13 +1,9 @@
-import re
-
-from flask import Blueprint, render_template, redirect, url_for
+from flask import Blueprint, render_template, redirect, url_for, request
 
 from .forms import AddPodcastForm, EditPodcastForm  # , EditEpisodeForm
-
-# from .models import Podcast, Episode
-# from .tables import EpisodeListTable, PodcastDetailEpisodeTable
+from .models import Podcast, Episode, STATUS_CHOICES
+from .tables import PodcastEpisodesTable
 from .tasks import create_new_podcast, add_podcast_to_update_queue
-from podcast_log.models import Podcast
 
 bp = Blueprint("main", __name__)
 
@@ -42,10 +38,16 @@ def add_podcast():
     return render_template("add-podcast.html", form=form)
 
 
+EPISODES_PER_PAGE = 20
+
+
 @bp.route("/podcast/<int:podcast_id>")
 def podcast_detail(podcast_id):
     podcast = Podcast.query.get(podcast_id)
-    return render_template("podcast-detail.html", podcast=podcast)
+    page = request.args.get("page", 1, type=int)
+    episodes = podcast.episodes.paginate(page, EPISODES_PER_PAGE, False)
+    table = PodcastEpisodesTable(episodes.items)
+    return render_template("podcast-detail.html", podcast=podcast, table=table)
 
 
 @bp.route("/podcast/<int:podcast_id>/update")
@@ -72,7 +74,7 @@ def edit_podcast(podcast_id):
     #     context["status"] = status = kwargs.get("status", "all")
     #     if status is not None and status.lower() != "all":
     #         episodes = episodes.filter(status=status[0].upper())
-    #     table = PodcastDetailEpisodeTable(episodes.order_by("-publication_timestamp"))
+    #     table = PodcastEpisodesTable(episodes.order_by("-publication_timestamp"))
     #     table.paginate(page=self.request.GET.get("page", 1), per_page=25)
     #     context["podcast"] = podcast
     #     context["table"] = table
@@ -89,7 +91,7 @@ def edit_podcast(podcast_id):
 #             episodes = Episode.objects.all()
 #         else:
 #             episodes = Episode.objects.filter(status=status[0].upper())
-#         table = EpisodeListTable(episodes.order_by("-publication_timestamp"))
+#         table = EpisodeTableBase(episodes.order_by("-publication_timestamp"))
 #         table.paginate(page=self.request.GET.get("page", 1), per_page=25)
 #         context["table"] = table
 #         return context
@@ -143,21 +145,15 @@ def edit_podcast(podcast_id):
 #         },
 #     )
 #
-#
-# def update_episode_statuses(request):
-#     if request.method == "POST":
-#         for key, value in request.POST.items():
-#             match = re.match(r"status-episode-(\d+)", key)
-#             if match:
-#                 episode_id = int(match.group(1))
-#                 episode = Episode.objects.get(id=episode_id)
-#                 if episode.status != value:
-#                     episode.status = value
-#                     episode.save()
-#
-#     return HttpResponseRedirect(
-#         request.META.get("HTTP_REFERER", reverse("episode-list"))
-#     )
+@bp.route("/episodes/<int:episode_id>/update-status/", methods=("POST",))
+def update_episode_status(episode_id):
+    episode = Episode.query.get(episode_id)
+    status = request.form["status"]
+    for key, value in STATUS_CHOICES.items():
+        if value == status:
+            episode.status = key
+            episode.save()
+    return redirect(request.referrer)
 
 
 def init_app(app):

@@ -26,6 +26,10 @@ def create_app():
             "SQLALCHEMY_DATABASE_URI"
         ] = f"sqlite:///{app.instance_path}/db.sqlite3"
 
+    handler = logging.StreamHandler(sys.stdout)
+    app.logger.addHandler(handler)
+    app.logger.setLevel(logging.INFO)
+
     Path(app.instance_path).mkdir(exist_ok=True)
 
     from . import models
@@ -37,9 +41,5 @@ def create_app():
     views.init_app(app)
 
     # models.create_db(app)
-
-    handler = logging.StreamHandler(sys.stdout)
-    app.logger.addHandler(handler)
-    app.logger.setLevel(logging.INFO)
 
     return app

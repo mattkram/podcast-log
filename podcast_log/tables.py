@@ -1,6 +1,7 @@
-import django_tables2 as tables
+from flask import url_for
+from flask_table import Table, Col, OptCol
 
-from podcast_log.models import Episode
+from podcast_log.models import STATUS_CHOICES
 
 
 def get_episode_class(record):
@@ -9,74 +10,52 @@ def get_episode_class(record):
     return f"row-episode-{'-'.join(class_str.split())}"
 
 
-option_string = "\n".join(
-    (
-        "<option "
-        f' value="{short}" '
-        f' {{% if record.status == "{short}" %}}selected{{% endif %}}'
-        ">"
-        f"{long}"
-        "</option>"
-    )
-    for short, long in Episode.STATUS_CHOICES
-)
+class ImageCol(Col):
+    def td_format(self, content):
+        return f'<img src="{content}" class="img-episode-list">'
 
 
-class EpisodeListTable(tables.Table):
-    class Meta:
-        model = Episode
-        fields = (
-            "image_url",
-            "podcast",
-            "episode_number",
-            "title",
-            "publication_timestamp",
-            "duration",
-            "status",
-        )
-        row_attrs = {"class": get_episode_class}
+class SelectStatusCol(OptCol):
+    def td_contents(self, item, attr_list):
+        content = self.td_format(self.from_attr_list(item, attr_list))
+        return f"""<form action="{url_for("main.update_episode_status", episode_id=item.id)}" method="post">
+            {content}
+        </form>"""
 
-    image_url = tables.TemplateColumn(
-        '<img src="{{ record.image_url }}" class="img-episode-list"> ', verbose_name=""
-    )
-    podcast = tables.TemplateColumn(
-        "<a href=\"{% url 'podcast-detail' record.podcast.id %}\">{{ record.podcast }}</a>",
-        verbose_name="Podcast",
-    )
-    publication_timestamp = tables.TemplateColumn(
-        "{{ record.publication_timestamp.date }}", verbose_name="Date"
-    )
-    status = tables.TemplateColumn(
-        """<div class="form-group">
-            <select name="status-episode-{{ record.id }}"
-                    class="form-control"
-                    id="id_status_episode_{{ record.id }}"
-                    onchange="this.form.submit()">
-        """
-        + option_string
-        + """
-            </select>
-        </div>
-        """
-    )
-    edit = tables.TemplateColumn(
-        "<a href=\"{% url 'edit-episode' record.id %}\">(Edit)</a>", verbose_name=""
-    )
+    def td_format(self, content):
+        option_list = []
+        for short, long in self.choices.items():
+            selected = "selected" if content == short else ""
+            option_list.append(f'<option value="{short}" {selected}>{long}</option>')
+        options = "\n".join(option_list)
+        return f"""<div class="form-group">
+                        <select name="status" onchange="this.form.submit()">
+                            {options}
+                        </select>
+                    </div>"""
 
 
-class PodcastDetailEpisodeTable(EpisodeListTable):
-    class Meta:
-        model = Episode
-        fields = (
-            "image_url",
-            "episode_number",
-            "title",
-            "publication_timestamp",
-            "duration",
-            "description",
-            "status",
-        )
-        row_attrs = {"class": get_episode_class}
+class EpisodeTableBase(Table):
+    image_url = ImageCol("Image")
+    podcast = Col("Podcast")
+    episode_number = Col("Episode")
+    title = Col("Title")
+    publication_timestamp = Col("Publication Date")
+    duration = Col("Duration")
+    description = Col("Description")
+    status = SelectStatusCol("Status", choices=STATUS_CHOICES)
 
-    description = tables.TemplateColumn("{{ record.description|truncatechars:200 }}")
+    def get_tr_attrs(self, item):
+        return {"class": f"row-episode-{str(item.status).lower()}"}
+
+    # edit = tables.TemplateColumn(
+    #     "<a href=\"{% url 'edit-episode' record.id %}\">(Edit)</a>", verbose_name=""
+    # )
+
+
+class AllEpisodesTable(EpisodeTableBase):
+    description = None
+
+
+class PodcastEpisodesTable(EpisodeTableBase):
     podcast = None
