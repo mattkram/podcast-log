@@ -3,7 +3,7 @@ from wtforms import StringField, SubmitField
 from wtforms.ext.sqlalchemy.orm import model_form
 from wtforms.validators import InputRequired
 
-from podcast_log.models import db, Podcast
+from podcast_log.models import db, Podcast, Episode
 
 
 class ModelFormBase(FlaskForm):
@@ -29,34 +29,18 @@ EditPodcastForm = model_form(
     only=["title", "url", "summary", "episode_number_pattern"],
 )
 
-# class EditEpisodeForm(forms.ModelForm, BootstrapFormMixin):
-#     class Meta:
-#         model = Episode
-#         fields = (
-#             "status",
-#             "title",
-#             "episode_number",
-#             "episode_part",
-#             "publication_timestamp",
-#             "audio_url",
-#             "_image_url",
-#             "description",
-#             "duration",
-#         )
-#         labels = {"audio_url": "Audio URL", "_image_url": "Image URL"}
-#         widgets = {"description": forms.Textarea(attrs={"cols": 80, "rows": 10})}
-#
-#     required_false = (
-#         "title",
-#         "episode_number",
-#         "episode_part",
-#         "audio_url",
-#         "_image_url",
-#         "publication_timestamp",
-#         "duration",
-#     )
-#
-#     def save(self, commit=True):
-#         if not self.cleaned_data["episode_number"]:
-#             self.instance.episode_number = None
-#         super().save(commit=commit)
+EditEpisodeForm = model_form(
+    Episode,
+    db_session=db,
+    base_class=ModelFormBase,
+    only=[
+        "title",
+        "publication_timestamp",
+        "episode_number",
+        "episode_part",
+        "description",
+        "audio_url",
+        "status",
+        "needs_review",
+    ],
+)

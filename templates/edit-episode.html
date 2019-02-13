@@ -3,16 +3,15 @@
 {% block content %}
 
 <h1>Edit episode details:</h1>
-<form action="{% url 'edit-episode' episode_id %}" method="post">
-    {% csrf_token %}
+<form action="{{ url_for('main.edit_episode', episode_id=episode_id) }}" method="post">
+    {{ form.csrf_token }}
     <input type="hidden" name="next" value="{{ next_url }}">
     <input type="submit" name="episode_save" value="Save">
     <input type="submit" name="episode_delete" value="Delete">
-    {% for field in form %}
+    {% for field in form.fields %}
         <div class="form-group">
-            <label>{{ field.label }}</label>
-            {{ field }}
-            <small class="text-danger">{{ field.errors }}</small>
+            {{ field.label }}
+            {{ field(class_="form-control") }}
         </div>
     {% endfor %}
     <input type="submit" name="episode_save" value="Save">

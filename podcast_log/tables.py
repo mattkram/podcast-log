@@ -35,6 +35,15 @@ class SelectStatusCol(OptCol):
                     </div>"""
 
 
+class EditCol(Col):
+    def td_contents(self, item, attr_list):
+        content = f"""<a href="{url_for("main.edit_episode", episode_id=item.id)}">(Edit)</a>"""
+        return self.td_format(content)
+
+    def td_format(self, content):
+        return content
+
+
 class EpisodeTableBase(Table):
     image_url = ImageCol("Image")
     podcast = Col("Podcast")
@@ -44,13 +53,10 @@ class EpisodeTableBase(Table):
     duration = Col("Duration")
     description = Col("Description")
     status = SelectStatusCol("Status", choices=STATUS_CHOICES)
+    edit = EditCol("Edit")
 
     def get_tr_attrs(self, item):
         return {"class": f"row-episode-{str(item.status).lower()}"}
-
-    # edit = tables.TemplateColumn(
-    #     "<a href=\"{% url 'edit-episode' record.id %}\">(Edit)</a>", verbose_name=""
-    # )
 
 
 class AllEpisodesTable(EpisodeTableBase):
