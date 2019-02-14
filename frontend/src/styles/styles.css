@@ -1,1 +1,64 @@
-/* You can add global styles to this file, and also import other style files */
+.podcast-title-block {
+
+}
+
+.podcast-gallery {
+    margin: 5px;
+    padding: 0;
+    display: inline-block;
+    width: 100px;
+    vertical-align: top;
+}
+
+.btn-add-podcast {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+}
+
+.img-episode-list {
+    max-height: 80px;
+    max-width: 80px;
+}
+
+.row-episode-queued {
+    background-color: #fadbd8;
+}
+
+.row-episode-listened {
+    background-color: #e9f7ef;
+}
+
+.row-episode-ignored {
+    background-color: #f8f9f9;
+}
+
+.row-episode-skipped {
+    background-color: #d6eaf8;
+}
+
+.row-episode-in-progress {
+    background-color: #fef9e7;
+}
+
+.navbar-default .navbar-nav > li.dropdown:hover > a,
+.navbar-default .navbar-nav > li.dropdown:hover > a:hover,
+.navbar-default .navbar-nav > li.dropdown:hover > a:focus {
+    background-color: rgb(231, 231, 231);
+    color: rgb(85, 85, 85);
+}
+
+li.dropdown:hover > .dropdown-menu {
+    display: block;
+}
+
+.divider-vertical {
+    height: 30px;                    /* any height */
+    border-left: 1px solid gray;     /* right or left is the same */
+    opacity: 0.5;                    /* optional */
+    margin: 10px 5px;                /* optional */
+}
+
+.navbar-default .navbar-nav > li > a.active {
+    color: #337ab7;
+}
