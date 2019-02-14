@@ -60,3 +60,26 @@ venv.bak/
 
 # Directory for input data
 data/
+
+# Node stuff
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# dependencies
+node_modules
+
+# profiling files
+chrome-profiler-events.json
+speed-measure-plugin.json
+
+# misc
+/frontend/.sass-cache
+/frontend/connect.lock
+/frontend/coverage
+/frontend/libpeerconnection.log
+npm-debug.log
+testem.log
+/frontend/typings
+
+# System Files
+.DS_Store
+Thumbs.db
