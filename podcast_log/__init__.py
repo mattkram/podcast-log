@@ -42,6 +42,10 @@ def create_app():
 
     views.init_app(app)
 
+    from . import api
+
+    api.init_app(app)
+
     # models.create_db(app)
 
     return app
