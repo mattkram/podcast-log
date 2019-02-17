@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Podcast} from "../podcast";
-import {PODCASTS} from "../mock-podcasts";
+import {PodcastsApiService} from "../podcasts-api.service";
 
 @Component({
   selector: 'app-podcasts',
@@ -10,7 +10,7 @@ import {PODCASTS} from "../mock-podcasts";
 export class PodcastsComponent implements OnInit {
   podcasts: Podcast[];
 
-  constructor() {
+  constructor(private podcastsService: PodcastsApiService) {
   }
 
   ngOnInit() {
@@ -18,7 +18,8 @@ export class PodcastsComponent implements OnInit {
   }
 
   getPodcasts(): void {
-    this.podcasts = PODCASTS;
+    this.podcastsService.getPodcasts()
+      .subscribe(podcasts => this.podcasts = podcasts);
   }
 
 }

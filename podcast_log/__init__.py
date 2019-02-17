@@ -4,6 +4,7 @@ import sys
 from pathlib import Path
 
 from flask import Flask
+from flask_cors import CORS
 
 STATIC_PATH = Path(__file__).parents[1] / "static"
 TEMPLATE_PATH = Path(__file__).parents[1] / "templates"
@@ -17,6 +18,8 @@ def create_app():
         static_folder=STATIC_PATH,
         template_folder=TEMPLATE_PATH,
     )
+    CORS(app)
+
     app.config.from_object(
         os.environ.get("APP_SETTINGS", "podcast_log.config.DefaultConfig")
     )

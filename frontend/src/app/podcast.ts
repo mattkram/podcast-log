@@ -1,5 +1,5 @@
 export class Podcast {
   id: number;
-  name: string;
-  imageUrl: string;
+  title: string;
+  image_url: string;
 }
