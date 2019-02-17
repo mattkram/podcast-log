@@ -2,7 +2,7 @@
   <table>
     <thead>
       <tr>
-        <th>Image</th>
+        <th></th>
         <th>Podcast</th>
         <th>Episode</th>
         <th>Title</th>
@@ -16,13 +16,13 @@
 
     <tbody>
       <tr *ngFor="let episode of episodes">
-        <td><img src="{{ episode.imageUrl }}" alt="Podcast image" class="img-episode-list"></td>
-        <td>{{ episode.podcastId }}</td>
-        <td></td>
+        <td><img src="{{ episode.image_url }}" alt="Podcast image" class="img-episode-list"></td>
+        <td>{{ episode.podcast.title }}</td>
+        <td>{{ episode.episode_number }}</td>
         <td>{{ episode.title }}</td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td>{{ episode.publication_timestamp | date }}</td>
+        <td>{{ episode.duration }}</td>
+        <td>{{ episode.description }}</td>
         <td>{{ episode.status }}</td>
         <td><a href="">(Edit)</a></td>
       </tr>

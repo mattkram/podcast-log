@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Episode} from "../episode";
-import {EPISODES} from "../mock-episodes";
+import {EpisodeService} from "../episode.service";
 
 @Component({
   selector: 'app-episodes',
@@ -10,7 +10,7 @@ import {EPISODES} from "../mock-episodes";
 export class EpisodesComponent implements OnInit {
   episodes: Episode[];
 
-  constructor() {
+  constructor(private episodeService: EpisodeService) {
   }
 
   ngOnInit() {
@@ -18,7 +18,8 @@ export class EpisodesComponent implements OnInit {
   }
 
   getEpisodes(): void {
-    this.episodes = EPISODES
+    this.episodeService.getAllEpisodes()
+      .subscribe(episodes => this.episodes = episodes);
   }
 
 }
