@@ -8,7 +8,7 @@ import {PodcastService} from "../podcast.service";
   styleUrls: ['./podcasts.component.css']
 })
 export class PodcastsComponent implements OnInit {
-  podcasts$: Podcast[];
+  podcasts: Podcast[];
 
   constructor(private service: PodcastService) {
   }
@@ -19,7 +19,7 @@ export class PodcastsComponent implements OnInit {
 
   getPodcasts(): void {
     this.service.getPodcasts()
-      .subscribe(podcasts => this.podcasts$ = podcasts);
+      .subscribe(podcasts => this.podcasts = podcasts);
   }
 
 }
