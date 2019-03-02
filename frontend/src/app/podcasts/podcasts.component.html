@@ -1,5 +1,5 @@
 <div *ngFor="let podcast of podcasts" class="podcast-gallery text-center">
-  <a href="">
+  <a routerLink="/podcast/{{podcast.id}}">
     <img src="{{podcast.image_url}}" alt="Podcast Image">
     {{ podcast.title }}
   </a>

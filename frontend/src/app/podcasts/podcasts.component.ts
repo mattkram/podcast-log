@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Podcast} from "../podcast";
-import {PodcastsApiService} from "../podcasts-api.service";
+import {PodcastService} from "../podcast.service";
 
 @Component({
   selector: 'app-podcasts',
@@ -8,9 +8,9 @@ import {PodcastsApiService} from "../podcasts-api.service";
   styleUrls: ['./podcasts.component.css']
 })
 export class PodcastsComponent implements OnInit {
-  podcasts: Podcast[];
+  podcasts$: Podcast[];
 
-  constructor(private podcastsService: PodcastsApiService) {
+  constructor(private service: PodcastService) {
   }
 
   ngOnInit() {
@@ -18,8 +18,8 @@ export class PodcastsComponent implements OnInit {
   }
 
   getPodcasts(): void {
-    this.podcastsService.getPodcasts()
-      .subscribe(podcasts => this.podcasts = podcasts);
+    this.service.getPodcasts()
+      .subscribe(podcasts => this.podcasts$ = podcasts);
   }
 
 }

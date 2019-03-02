@@ -8,7 +8,7 @@ import {catchError} from "rxjs/operators";
 @Injectable({
   providedIn: 'root'
 })
-export class PodcastsApiService {
+export class PodcastService {
 
   constructor(private http: HttpClient) {
   }
@@ -21,7 +21,13 @@ export class PodcastsApiService {
   getPodcasts(): Observable<Podcast[]> {
     return this.http
       .get<Podcast[]>(`${API_URL}/podcasts`)
-      .pipe(catchError(PodcastsApiService._handleError));
+      .pipe(catchError(PodcastService._handleError));
+  }
+
+  getPodcast(id: number | string): Observable<Podcast> {
+    return this.http
+      .get<Podcast>(`${API_URL}/podcasts/${id}`)
+      .pipe(catchError(PodcastService._handleError));
   }
 
 }
