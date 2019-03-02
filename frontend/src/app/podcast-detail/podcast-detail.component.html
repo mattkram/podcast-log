@@ -11,34 +11,9 @@
       </div>
       <div>{{ podcast.summary }}</div>
     </div>
-    <!--  <div class="col-sm-4 table-container">-->
-    <!--    <table class="table">-->
-    <!--      <tr>-->
-    <!--        <td>Progress:</td>-->
-    <!--        <td>{{ podcast.statistics.progress }}</td>-->
-    <!--      </tr>-->
-    <!--      <tr>-->
-    <!--        <td>In Progress:</td>-->
-    <!--        <td>{{ podcast.statistics.num_in_progress }}</td>-->
-    <!--      </tr>-->
-    <!--      <tr>-->
-    <!--        <td>Skipped:</td>-->
-    <!--        <td>{{ podcast.statistics.num_skipped }}</td>-->
-    <!--      </tr>-->
-    <!--      <tr>-->
-    <!--        <td>Ignored:</td>-->
-    <!--        <td>{{ podcast.statistics.num_ignored }}</td>-->
-    <!--      </tr>-->
-    <!--      <tr>-->
-    <!--        <td>Number of episodes:</td>-->
-    <!--        <td>{{ podcast.statistics.num_episodes }}</td>-->
-    <!--      </tr>-->
-    <!--      <tr>-->
-    <!--        <td>Time listened:</td>-->
-    <!--        <td>{{ podcast.statistics.time_listened }}</td>-->
-    <!--      </tr>-->
-    <!--    </table>-->
-    <!--  </div>-->
+
+    <app-statistics-table [statistics]="podcast.statistics" class="col-sm-4 table-container">
+    </app-statistics-table>
   </div>
 
   <div class="col-sm-12">

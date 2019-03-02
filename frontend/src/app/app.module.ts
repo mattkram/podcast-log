@@ -7,6 +7,7 @@ import { PodcastsComponent } from './podcasts/podcasts.component';
 import { EpisodesComponent } from './episodes/episodes.component';
 import {HttpClientModule} from "@angular/common/http";
 import { PodcastDetailComponent } from './podcast-detail/podcast-detail.component';
+import { StatisticsTableComponent } from './statistics-table/statistics-table.component';
 
 @NgModule({
   declarations: [
@@ -14,6 +15,7 @@ import { PodcastDetailComponent } from './podcast-detail/podcast-detail.componen
     PodcastsComponent,
     EpisodesComponent,
     PodcastDetailComponent,
+    StatisticsTableComponent,
   ],
   imports: [
     BrowserModule,
