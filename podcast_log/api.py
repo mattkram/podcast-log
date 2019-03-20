@@ -18,7 +18,7 @@ def get_podcasts():
 def get_podcast(pk):
     podcast_object = Podcast.query.get(pk)
     if podcast_object is None:
-        return jsonify({"message": "Podcast could not be found."}), 400
+        return jsonify({"message": "Podcast could not be found."}), 404
 
     schema = PodcastSchema()
     podcast = schema.dump(podcast_object)
@@ -37,7 +37,7 @@ def get_episodes():
 def get_episode(pk):
     episode_object = Episode.query.get(pk)
     if episode_object is None:
-        return jsonify({"message": "Episode could not be found."}), 400
+        return jsonify({"message": "Episode could not be found."}), 404
 
     schema = EpisodeSchema()
     episode = schema.dump(episode_object)
