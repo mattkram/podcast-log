@@ -5,6 +5,8 @@ from pathlib import Path
 
 from flask import Flask
 
+from .__version__ import __version__
+
 STATIC_PATH = Path(__file__).parents[1] / "static"
 TEMPLATE_PATH = Path(__file__).parents[1] / "templates"
 
