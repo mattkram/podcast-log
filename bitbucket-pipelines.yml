@@ -21,3 +21,8 @@ pipelines:
             --junitxml=./test-reports/junit.xml 
             --cov-report xml:./test-reports/coverage.xml 
             --cov podcast_log 
+    - step:
+         script:
+           - pip install codecov
+           - codecov -t 543cc03b-03f9-450f-aa11-d9111aeba3f4
+
