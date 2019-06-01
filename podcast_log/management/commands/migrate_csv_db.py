@@ -17,9 +17,7 @@ def get_episode(podcast, episode_number=None, publication_date=None):
 
     if publication_date is not None:
         try:
-            episodes = Episode.objects.filter(
-                podcast=podcast
-            )
+            episodes = Episode.objects.filter(podcast=podcast)
             for episode in episodes:
                 if episode.publication_date == publication_date:
                     return episode
