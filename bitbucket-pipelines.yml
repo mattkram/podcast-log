@@ -12,6 +12,6 @@ pipelines:
           - pip
         script:
           - python -m pip install --upgrade pip
-          - python -m pip install pipenv
+          - python -m pip install pipenv pytest pytest-cov
           - pipenv sync
           - pipenv run pytest --cov podcast_log 
