@@ -1,12 +1,14 @@
 import os
+import sys
 from pathlib import Path
 
 import pytest
 
+BASE_DIR = Path(__file__).parents[1]
+sys.path.insert(0, str(BASE_DIR))
+
 from podcast_log import create_app
 from podcast_log.models import db
-
-BASE_DIR = Path(__file__).parent
 
 os.environ["APP_SETTINGS"] = "podcast_log.config.TestingConfig"
 
