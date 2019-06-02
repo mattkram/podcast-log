@@ -1,5 +1,7 @@
 # podcast-log
 
+[![codecov](https://codecov.io/bb/mattkram/podcast-log/branch/master/graph/badge.svg?token=JhVZChkAR9)](https://codecov.io/bb/mattkram/podcast-log)
+
 A simple Flask application for following and keeping a podcast listen log.
 
 ## Getting started
