@@ -18,7 +18,7 @@ def test_get_podcasts_data(get_podcasts_response):
     assert len(json_data) == len(Podcast.query.all())
 
 
-@pytest.mark.parametrize("podcast_id, expected_status_code", [(1, 200), (200, 404)])
+@pytest.mark.parametrize("podcast_id, expected_status_code", [(1, 200), (200, 400)])
 def test_get_podcast_status_codes(client, podcast_id, expected_status_code):
     response = client.get(f"/api/podcasts/{podcast_id}")
     assert response.status_code == expected_status_code
@@ -39,7 +39,7 @@ def test_get_episodes_data(get_episodes_response):
 
 
 @pytest.mark.parametrize(
-    "episode_id, expected_status_code", [(1, 200), (2, 200), (3, 200), (200, 404)]
+    "episode_id, expected_status_code", [(1, 200), (2, 200), (3, 200), (200, 400)]
 )
 def test_get_episode_status_codes(client, episode_id, expected_status_code):
     response = client.get(f"/api/episodes/{episode_id}")

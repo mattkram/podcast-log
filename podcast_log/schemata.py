@@ -22,7 +22,7 @@ class PodcastStatisticsSchema(Schema):
     num_skipped = fields.Integer()
     num_in_progress = fields.Integer()
     num_queued = fields.Integer()
-    progress = fields.Number()
+    progress = fields.String()
     time_listened = fields.TimeDelta()
 
 

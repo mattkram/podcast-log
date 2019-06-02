@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, abort
+from flask import Blueprint, jsonify
 
 from podcast_log.schemata import PodcastSchema, EpisodeSchema
 from .models import Podcast, Episode
@@ -11,7 +11,7 @@ def get_podcasts():
     podcast_objects = Podcast.query.order_by(Podcast.title).all()
     schema = PodcastSchema(many=True)
     podcasts = schema.dump(podcast_objects)
-    return jsonify(podcasts.data)
+    return jsonify(podcasts)
 
 
 @bp.route("/podcasts/<int:pk>")
@@ -22,7 +22,7 @@ def get_podcast(pk):
 
     schema = PodcastSchema()
     podcast = schema.dump(podcast_object)
-    return jsonify(podcast.data)
+    return jsonify(podcast)
 
 
 @bp.route("/episodes")
@@ -30,7 +30,7 @@ def get_episodes():
     episode_objects = Episode.query.order_by(Episode.publication_timestamp).all()
     schema = EpisodeSchema(many=True)
     episodes = schema.dump(episode_objects)
-    return jsonify(episodes.data)
+    return jsonify(episodes)
 
 
 @bp.route("/episodes/<int:pk>")
@@ -41,7 +41,7 @@ def get_episode(pk):
 
     schema = EpisodeSchema()
     episode = schema.dump(episode_object)
-    return jsonify(episode.data)
+    return jsonify(episode)
 
 
 def init_app(app):
