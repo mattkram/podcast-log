@@ -7,7 +7,6 @@ verify_ssl = true
 black = "*"
 pytest = "*"
 pytest-cov = "*"
-python-dotenv = "*"
 
 [packages]
 feedparser = "*"
@@ -17,6 +16,8 @@ flask-sqlalchemy = "*"
 flask-table = "*"
 flask-wtf = "*"
 marshmallow = "*"
+psycopg2 = "*"
+python-dotenv = "*"
 
 [requires]
 python_version = "3.7"

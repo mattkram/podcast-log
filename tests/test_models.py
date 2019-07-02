@@ -27,4 +27,3 @@ def test_podcast_statistics(app):
 
     assert episode.status == Status.LISTENED
     assert podcast.statistics.num_listened == 1
-

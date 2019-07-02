@@ -3,12 +3,15 @@ import os
 import sys
 from pathlib import Path
 
+from dotenv import load_dotenv
 from flask import Flask
 
 from .__version__ import __version__
 
 STATIC_PATH = Path(__file__).parents[1] / "static"
 TEMPLATE_PATH = Path(__file__).parents[1] / "templates"
+
+load_dotenv()
 
 
 def create_app():
