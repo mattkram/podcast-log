@@ -1,4 +1,12 @@
-from flask import Blueprint, render_template, redirect, url_for, request
+from flask import (
+    Blueprint,
+    render_template,
+    redirect,
+    url_for,
+    request,
+    Response,
+    Flask,
+)
 
 from .forms import AddPodcastForm, EditPodcastForm, EditEpisodeForm
 from .models import Podcast, Episode, STATUS_CHOICES
@@ -9,23 +17,29 @@ bp = Blueprint("main", __name__)
 
 
 @bp.route("/")
-def index():
+def index() -> Response:
+    """The index redirects to the podcast list."""
     return redirect(url_for("main.podcast_list"))
 
 
 @bp.route("/podcasts")
-def podcast_list():
+def podcast_list() -> Response:
+    """Display a list of podcasts."""
     podcasts = Podcast.query.order_by(Podcast.title).all()
     return render_template("index.html", podcasts=podcasts)
 
 
 @bp.route("/podcasts/update")
-def update_all():
-    return render_template("index.html")
+def update_all() -> Response:
+    """Update all podcasts."""
+    for podcast in Podcast.query.all():
+        add_podcast_to_update_queue(podcast.id)
+    return redirect(url_for("main.podcast_list"))
 
 
 @bp.route("/podcasts/add", methods=("GET", "POST"))
-def add_podcast():
+def add_podcast() -> Response:
+    """Add a new podcast."""
     form = AddPodcastForm()
     if form.validate_on_submit():
         podcast = create_new_podcast(form.url.data, form.episode_number_pattern.data)
@@ -37,7 +51,8 @@ EPISODES_PER_PAGE = 20
 
 
 @bp.route("/podcast/<int:podcast_id>")
-def podcast_detail(podcast_id):
+def podcast_detail(podcast_id: int) -> Response:
+    """Show the details for a single podcast."""
     podcast = Podcast.query.get(podcast_id)
     page = request.args.get("page", 1, type=int)
     episodes = podcast.episodes.paginate(page, EPISODES_PER_PAGE, False)
@@ -46,13 +61,15 @@ def podcast_detail(podcast_id):
 
 
 @bp.route("/podcast/<int:podcast_id>/update")
-def update_podcast(podcast_id):
+def update_podcast(podcast_id: int) -> Response:
+    """Force update a single podcast."""
     add_podcast_to_update_queue(podcast_id, force=True)
     return redirect(url_for("main.podcast_detail", podcast_id=podcast_id))
 
 
 @bp.route("/podcast/<int:podcast_id>/edit", methods=("GET", "POST"))
-def edit_podcast(podcast_id):
+def edit_podcast(podcast_id: int) -> Response:
+    """Edit the details for a podcast."""
     podcast = Podcast.query.get(podcast_id)
     form = EditPodcastForm(obj=podcast)
     if form.validate_on_submit():
@@ -63,36 +80,14 @@ def edit_podcast(podcast_id):
     return render_template("edit-podcast.html", podcast_id=podcast_id, form=form)
 
 
-# class EpisodeListView(generic.TemplateView):
-#     template_name = "episode-list.html"
-#
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context["status"] = status = kwargs.get("status", "all")
-#         if status is None or status.lower() == "all":
-#             episodes = Episode.objects.all()
-#         else:
-#             episodes = Episode.objects.filter(status=status[0].upper())
-#         table = EpisodeTableBase(episodes.order_by("-publication_timestamp"))
-#         table.paginate(page=self.request.GET.get("page", 1), per_page=25)
-#         context["table"] = table
-#         return context
-#
-#
-# def update_podcasts(request):
-#     """View to update the podcast record."""
-#     for podcast in Podcast.objects.all():
-#         add_podcast_to_update_queue(podcast.id)
-#     return HttpResponseRedirect(request.META.get("HTTP_REFERER", reverse("index")))
-
-
 @bp.route("/episodes")
 def episode_list():
     return render_template("index.html")
 
 
 @bp.route("/episode/<int:episode_id>/edit", methods=("GET", "POST"))
-def edit_episode(episode_id):
+def edit_episode(episode_id: int) -> Response:
+    """"Edit an episodes' details."""
     episode = Episode.query.get(episode_id)
     form = EditEpisodeForm(obj=episode)
     if form.validate_on_submit():
@@ -107,7 +102,8 @@ def edit_episode(episode_id):
 
 
 @bp.route("/episode/<int:episode_id>/update-status", methods=("POST",))
-def update_episode_status(episode_id):
+def update_episode_status(episode_id: int) -> Response:
+    """Update the status of a specific episode."""
     episode = Episode.query.get(episode_id)
     status = request.form["status"]
     for key, value in STATUS_CHOICES.items():
@@ -117,5 +113,5 @@ def update_episode_status(episode_id):
     return redirect(request.referrer)
 
 
-def init_app(app):
+def init_app(app: Flask) -> None:
     app.register_blueprint(bp)
