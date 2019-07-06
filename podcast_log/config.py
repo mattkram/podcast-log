@@ -1,22 +1,17 @@
 import os
 
-basedir = os.path.abspath(os.path.dirname(__file__))
 
-
-class DefaultConfig(object):
+class ConfigBase:
     DEVELOPMENT = False
     DEBUG = False
     TESTING = False
     CSRF_ENABLED = True
     SECRET_KEY = "this-really-needs-to-be-changed"
-    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_DATABASE_URI: str  # Set in __init__.py or in config class.
 
 
-class ProductionConfig(DefaultConfig):
-    DEVELOPMENT = False
-    DEBUG = False
-    TESTING = False
+class ProductionConfig(ConfigBase):
     SECRET_KEY = os.environ.get("SECRET_KEY")
     SQLALCHEMY_DATABASE_URI = "postgresql://{}:{}@{}/{}".format(
         os.environ.get("RDS_USERNAME"),
@@ -26,17 +21,16 @@ class ProductionConfig(DefaultConfig):
     )
 
 
-class StagingConfig(DefaultConfig):
-    DEVELOPMENT = False
+class StagingConfig(ConfigBase):
     DEBUG = True
 
 
-class DevelopmentConfig(DefaultConfig):
+class DevelopmentConfig(ConfigBase):
     DEVELOPMENT = True
     DEBUG = True
 
 
-class TestingConfig(DefaultConfig):
+class TestingConfig(ConfigBase):
     TESTING = True
     SECRET_KEY = "test"
     SQLALCHEMY_DATABASE_URI = "sqlite://"

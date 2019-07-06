@@ -27,10 +27,9 @@ def create_app() -> Flask:
         os.environ.get("APP_SETTINGS", "podcast_log.config.DefaultConfig")
     )
 
-    if app.config["SQLALCHEMY_DATABASE_URI"] is None:
-        app.config[
-            "SQLALCHEMY_DATABASE_URI"
-        ] = f"sqlite:///{app.instance_path}/db.sqlite3"
+    app.config.setdefault(
+        "SQLALCHEMY_DATABASE_URI", f"sqlite:///{app.instance_path}/db.sqlite3"
+    )
 
     handler = logging.StreamHandler(sys.stdout)
     app.logger.addHandler(handler)
