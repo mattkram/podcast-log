@@ -42,9 +42,9 @@ def create_app() -> Flask:
 
     models.init_app(app)
 
-    from . import views
+    from . import routes
 
-    views.init_app(app)
+    routes.init_app(app)
 
     from . import api
 

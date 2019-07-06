@@ -19,12 +19,7 @@ def podcast_list():
     return render_template("index.html", podcasts=podcasts)
 
 
-@bp.route("/b")
-def episode_list():
-    return render_template("index.html")
-
-
-@bp.route("/c")
+@bp.route("/podcasts/update")
 def update_all():
     return render_template("index.html")
 
@@ -89,6 +84,11 @@ def edit_podcast(podcast_id):
 #     for podcast in Podcast.objects.all():
 #         add_podcast_to_update_queue(podcast.id)
 #     return HttpResponseRedirect(request.META.get("HTTP_REFERER", reverse("index")))
+
+
+@bp.route("/episodes")
+def episode_list():
+    return render_template("index.html")
 
 
 @bp.route("/episode/<int:episode_id>/edit", methods=("GET", "POST"))
