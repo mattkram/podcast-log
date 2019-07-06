@@ -4,9 +4,9 @@ from flask import (
     redirect,
     url_for,
     request,
-    Response,
     Flask,
 )
+from werkzeug.wrappers import Response
 
 from .forms import AddPodcastForm, EditPodcastForm, EditEpisodeForm
 from .models import Podcast, Episode, STATUS_CHOICES
@@ -81,7 +81,7 @@ def edit_podcast(podcast_id: int) -> Response:
 
 
 @bp.route("/episodes")
-def episode_list():
+def episode_list() -> Response:
     """Show a list of the most recent episodes."""
     page = request.args.get("page", 1, type=int)
     episodes = Episode.query.paginate(page, EPISODES_PER_PAGE, False)

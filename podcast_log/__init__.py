@@ -20,8 +20,8 @@ def create_app() -> Flask:
     app = Flask(
         __name__,
         instance_relative_config=True,
-        static_folder=STATIC_PATH,
-        template_folder=TEMPLATE_PATH,
+        static_folder=str(STATIC_PATH),
+        template_folder=str(TEMPLATE_PATH),
     )
     app.config.from_object(
         os.environ.get("APP_SETTINGS", "podcast_log.config.DefaultConfig")
