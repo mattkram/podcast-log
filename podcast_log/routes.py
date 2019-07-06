@@ -82,7 +82,11 @@ def edit_podcast(podcast_id: int) -> Response:
 
 @bp.route("/episodes")
 def episode_list():
-    return render_template("index.html")
+    """Show a list of the most recent episodes."""
+    page = request.args.get("page", 1, type=int)
+    episodes = Episode.query.paginate(page, EPISODES_PER_PAGE, False)
+    table = PodcastEpisodesTable(episodes.items)
+    return render_template("episode-list.html", table=table)
 
 
 @bp.route("/episode/<int:episode_id>/edit", methods=("GET", "POST"))
