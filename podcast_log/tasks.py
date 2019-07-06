@@ -16,7 +16,7 @@ from .models import Podcast, Episode
 # TODO: Consider update_or_create when updating episodes
 
 
-def _update_queued_podcasts(q):
+def _update_queued_podcasts(q: Queue) -> None:
     """Infinite loop that will update podcasts in a queue in worker thread."""
     while True:
         app, podcast_id, force = q.get()
@@ -25,17 +25,17 @@ def _update_queued_podcasts(q):
         q.task_done()
 
 
-queue = Queue()
+queue: Queue = Queue()
 update_thread = Thread(target=_update_queued_podcasts, args=(queue,), daemon=True)
 update_thread.start()
 
 
-def add_podcast_to_update_queue(podcast_id, force=False):
+def add_podcast_to_update_queue(podcast_id: int, force: bool = False) -> None:
     # noinspection PyProtectedMember
     queue.put((current_app._get_current_object(), podcast_id, force))
 
 
-def update_podcast_feed(podcast_id, force=False):
+def update_podcast_feed(podcast_id: int, force: bool = False) -> None:
     logger = current_app.logger
     podcast = Podcast.query.get(podcast_id)
 
@@ -109,9 +109,7 @@ def update_podcast_feed(podcast_id, force=False):
     logger.info("Completed loading podcast")
 
 
-def create_new_podcast(
-    feed_url: str, episode_number_pattern: str = None
-) -> Optional[Podcast]:
+def create_new_podcast(feed_url: str, episode_number_pattern: str = None) -> Podcast:
     """If a podcast doesn't already exist with the same feed URL, create it by parsing the feed."""
     # If the podcast already exists, return out of this function, else continue/pass
     try:
