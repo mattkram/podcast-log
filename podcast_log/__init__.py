@@ -8,14 +8,15 @@ from flask import Flask
 
 from .__version__ import __version__
 
-STATIC_PATH = Path(__file__).parents[1] / "static"
-TEMPLATE_PATH = Path(__file__).parents[1] / "templates"
-
 load_dotenv()
 
+APP_ROOT = Path(__file__).parents[1]
+STATIC_PATH = APP_ROOT / "static"
+TEMPLATE_PATH = APP_ROOT / "templates"
 
-def create_app():
-    # create and configure the app
+
+def create_app() -> Flask:
+    """Create and configure the app."""
     app = Flask(
         __name__,
         instance_relative_config=True,
@@ -48,7 +49,5 @@ def create_app():
     from . import api
 
     api.init_app(app)
-
-    # models.create_db(app)
 
     return app
