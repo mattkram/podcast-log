@@ -17,6 +17,7 @@ pipelines:
           - export VENV_HOME_DIR=$(pipenv --venv)
           - source $VENV_HOME_DIR/bin/activate
           - pip install pytest pytest-cov pytest-mypy pytest-flake8 codecov
+          - set +e
           - flake8
           - pipenv run python -m pytest
             --junitxml=./test-reports/junit.xml 
