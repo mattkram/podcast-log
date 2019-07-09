@@ -21,11 +21,11 @@ pipelines:
           - flake8
           - mypy
           - pydocstyle podcast_log tests
+          - set -e
           - python -m pytest
             --junitxml=./test-reports/junit.xml 
             --cov-report xml:./test-reports/coverage.xml 
             --cov podcast_log
             tests
-          - set -e
           - codecov -t $CODECOV_KEY
 
