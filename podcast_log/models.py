@@ -2,13 +2,10 @@ import enum
 from datetime import timedelta, datetime
 
 from flask_migrate import Migrate
-from flask_sqlalchemy import SQLAlchemy
-
-db = SQLAlchemy()
-migrate = Migrate()
+from flask_sqlalchemy import SQLAlchemy, Model
 
 
-class ModelMixin:
+class ModelBase(Model):
     def save(self):
         db.session.add(self)
         db.session.commit()
@@ -18,7 +15,11 @@ class ModelMixin:
         db.session.commit()
 
 
-class Podcast(db.Model, ModelMixin):
+db = SQLAlchemy(model_class=ModelBase)
+migrate = Migrate()
+
+
+class Podcast(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200))
     url = db.Column(db.String(500))
@@ -101,7 +102,7 @@ STATUS_CHOICES = {
 }
 
 
-class Episode(db.Model, ModelMixin):
+class Episode(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     podcast_id = db.Column(db.Integer, db.ForeignKey("podcast.id"))
 
