@@ -3,7 +3,6 @@ import time
 from datetime import timedelta, datetime
 from queue import Queue
 from threading import Thread
-from typing import Optional
 
 import feedparser
 from flask import current_app

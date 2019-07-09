@@ -6,7 +6,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from flask import Flask
 
-from .__version__ import __version__
+from .__version__ import __version__  # noqa: F401
 
 load_dotenv()
 

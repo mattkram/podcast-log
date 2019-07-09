@@ -136,7 +136,11 @@ class Episode(db.Model):
 
     @property
     def image_url(self) -> str:
-        """str: Read-only property returning episode image URL, defaulting to podcast image if episode image missing."""
+        """Read-only property returning episode image URL.
+
+        Defaults to podcast image if episode image missing.
+
+        """
         if not self._image_url:
             return self.podcast.image_url
         return self._image_url

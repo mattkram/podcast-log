@@ -1,3 +1,4 @@
+"""Global fixtures for tests."""
 from typing import Any, Generator
 
 import pytest
@@ -9,8 +10,14 @@ from podcast_log import create_app
 from podcast_log.models import db, Podcast, Episode
 
 
-@pytest.fixture(name="app")
-def create_test_app(monkeypatch: Any) -> Generator[Flask, None, None]:
+@pytest.fixture()
+def app(monkeypatch: Any) -> Generator[Flask, None, None]:
+    """Create an application with test settings.
+
+    Yields:
+        The application object with application context.
+
+    """
     monkeypatch.setenv("APP_SETTINGS", "podcast_log.config.TestingConfig")
     app = create_app()
     with app.app_context():

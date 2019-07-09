@@ -20,7 +20,8 @@ class ImageCol(Col):
 class SelectStatusCol(OptCol):
     def td_contents(self, item: Episode, attr_list: List[str]) -> str:
         content = self.td_format(self.from_attr_list(item, attr_list))
-        return f"""<form action="{url_for("main.update_episode_status", episode_id=item.id)}" method="post">
+        post_url = url_for("main.update_episode_status", episode_id=item.id)
+        return f"""<form action="{post_url}" method="post">
             {content}
         </form>"""
 
@@ -39,7 +40,8 @@ class SelectStatusCol(OptCol):
 
 class EditCol(Col):
     def td_contents(self, item: Episode, attr_list: List[str]) -> str:
-        content = f"""<a href="{url_for("main.edit_episode", episode_id=item.id)}">(Edit)</a>"""
+        link_url = url_for("main.edit_episode", episode_id=item.id)
+        content = f"""<a href="{link_url}">(Edit)</a>"""
         return self.td_format(content)
 
     def td_format(self, content: str) -> str:
