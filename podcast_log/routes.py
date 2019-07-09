@@ -1,3 +1,4 @@
+"""Define the main routes and views."""
 from flask import Blueprint, render_template, redirect, url_for, request, Flask
 from werkzeug.wrappers import Response
 
@@ -11,7 +12,7 @@ bp = Blueprint("main", __name__)
 
 @bp.route("/")
 def index() -> Response:
-    """The index redirects to the podcast list."""
+    """Redirect to the podcast list."""
     return redirect(url_for("main.podcast_list"))
 
 
@@ -84,7 +85,7 @@ def episode_list() -> Response:
 
 @bp.route("/episode/<int:episode_id>/edit", methods=("GET", "POST"))
 def edit_episode(episode_id: int) -> Response:
-    """"Edit an episodes' details."""
+    """Edit an episodes' details."""
     episode = Episode.query.get(episode_id)
     form = EditEpisodeForm(obj=episode)
     if form.validate_on_submit():
@@ -111,4 +112,5 @@ def update_episode_status(episode_id: int) -> Response:
 
 
 def init_app(app: Flask) -> None:
+    """Initialize the application routes by registering the blueprint."""
     app.register_blueprint(bp)

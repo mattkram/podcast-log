@@ -1,3 +1,4 @@
+"""Database model definitions."""
 import enum
 from datetime import timedelta, datetime
 from typing import Any, Optional
@@ -8,11 +9,15 @@ from flask_sqlalchemy import SQLAlchemy, Model
 
 
 class ModelBase(Model):
+    """Model base class, extending the default to include easy save and delete methods."""
+
     def save(self) -> None:
+        """Save the instance to the database."""
         db.session.add(self)
         db.session.commit()
 
     def delete(self) -> None:
+        """Remove the instance from the database."""
         db.session.delete(self)
         db.session.commit()
 

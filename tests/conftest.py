@@ -14,8 +14,9 @@ from podcast_log.models import db, Podcast, Episode
 def app(monkeypatch: Any) -> Generator[Flask, None, None]:
     """Create an application with test settings.
 
-    Yields:
-        The application object with application context.
+    Yields
+    ------
+    The application object with application context.
 
     """
     monkeypatch.setenv("APP_SETTINGS", "podcast_log.config.TestingConfig")
