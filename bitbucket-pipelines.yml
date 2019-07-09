@@ -19,7 +19,8 @@ pipelines:
           - pip install pytest pytest-cov pytest-mypy pytest-flake8 codecov
           - set +e
           - flake8
-          - pipenv run python -m pytest
+          - mypy
+          - python -m pytest
             --junitxml=./test-reports/junit.xml 
             --cov-report xml:./test-reports/coverage.xml 
             --cov podcast_log
