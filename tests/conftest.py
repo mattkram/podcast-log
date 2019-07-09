@@ -1,20 +1,17 @@
-import os
-import sys
-from pathlib import Path
+from typing import Any, Generator
 
 import pytest
-
-BASE_DIR = Path(__file__).parents[1]
-sys.path.insert(0, str(BASE_DIR))
+from click.testing import CliRunner
+from flask import Flask
+from flask.testing import FlaskClient
 
 from podcast_log import create_app
 from podcast_log.models import db, Podcast, Episode
 
-os.environ["APP_SETTINGS"] = "podcast_log.config.TestingConfig"
-
 
 @pytest.fixture(name="app")
-def create_test_app():
+def create_test_app(monkeypatch: Any) -> Generator[Flask, None, None]:
+    monkeypatch.setenv("APP_SETTINGS", "podcast_log.config.TestingConfig")
     app = create_app()
     with app.app_context():
         db.create_all()
@@ -23,7 +20,7 @@ def create_test_app():
 
 
 @pytest.fixture()
-def app_with_data(app):
+def app_with_data(app: Flask) -> Generator[Flask, None, None]:
     podcast = Podcast(title="Test Podcast")
     [Episode(podcast=podcast) for _ in range(3)]
     podcast.save()
@@ -31,10 +28,10 @@ def app_with_data(app):
 
 
 @pytest.fixture
-def client(app_with_data):
+def client(app_with_data: Flask) -> FlaskClient:
     return app_with_data.test_client()
 
 
 @pytest.fixture
-def runner(app):
+def runner(app: Flask) -> CliRunner:
     return app.test_cli_runner()

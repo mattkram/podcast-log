@@ -1,21 +1,23 @@
 import enum
 from datetime import timedelta, datetime
+from typing import Any, Optional
 
+from flask import Flask
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy, Model
 
 
 class ModelBase(Model):
-    def save(self):
+    def save(self) -> None:
         db.session.add(self)
         db.session.commit()
 
-    def delete(self):
+    def delete(self) -> None:
         db.session.delete(self)
         db.session.commit()
 
 
-db = SQLAlchemy(model_class=ModelBase)
+db: Any = SQLAlchemy(model_class=ModelBase)
 migrate = Migrate()
 
 
@@ -33,28 +35,28 @@ class Podcast(db.Model):
         "Episode", backref="podcast", lazy="dynamic", cascade="all, delete-orphan"
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.title
 
     @property
-    def statistics(self):
+    def statistics(self) -> "PodcastStatistics":
         return PodcastStatistics(self)
 
     @property
-    def needs_update(self):
+    def needs_update(self) -> bool:
         update_after = self.last_refreshed + self.refresh_interval
         return update_after <= datetime.now()
 
 
 class PodcastStatistics:
-    def __init__(self, podcast):
+    def __init__(self, podcast: Podcast):
         self.podcast = podcast
 
     @property
-    def num_episodes(self):
+    def num_episodes(self) -> int:
         return len(list(self.podcast.episodes))
 
-    def __getattr__(self, name: str):
+    def __getattr__(self, name: str) -> Any:
         if name.startswith("num_"):
             try:
                 status = getattr(Status, name.replace("num_", "").upper())
@@ -66,7 +68,7 @@ class PodcastStatistics:
         return super().__getattribute__(name)
 
     @property
-    def progress(self):
+    def progress(self) -> str:
         num_to_listen = self.num_episodes - self.num_ignored
         pct_listened = (
             100 * self.num_listened / num_to_listen if num_to_listen > 0 else 0.0
@@ -74,7 +76,7 @@ class PodcastStatistics:
         return f"{self.num_listened} / {num_to_listen} ({pct_listened:0.1f}%)"
 
     @property
-    def time_listened(self):
+    def time_listened(self) -> timedelta:
         time_listened = timedelta(seconds=0)
         for e in self.podcast.episodes.filter(status=Episode.LISTENED):
             if e.duration is not None:
@@ -89,7 +91,7 @@ class Status(enum.Enum):
     IN_PROGRESS = "P"
     QUEUED = "Q"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return STATUS_CHOICES[self]
 
 
@@ -122,33 +124,33 @@ class Episode(db.Model):
     # class Meta:
     #     unique_together = ("podcast", "episode_number", "episode_part")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Episode {self.episode_number}"
 
     @property
-    def publication_date(self):
+    def publication_date(self) -> Optional[datetime]:
         t = self.publication_timestamp
         if t is None:
             return None
         return datetime(year=t.year, month=t.month, day=t.day)
 
     @property
-    def image_url(self):
+    def image_url(self) -> str:
         """str: Read-only property returning episode image URL, defaulting to podcast image if episode image missing."""
         if not self._image_url:
             return self.podcast.image_url
         return self._image_url
 
     @image_url.setter
-    def image_url(self, value):
+    def image_url(self, value: str) -> None:
         self._image_url = value
 
 
-def init_app(app):
+def init_app(app: Flask) -> None:
     db.init_app(app)
     migrate.init_app(app, db)
 
 
-def create_db(app):
+def create_db(app: Flask) -> None:
     with app.app_context():
         db.create_all()

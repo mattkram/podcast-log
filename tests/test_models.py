@@ -1,15 +1,10 @@
-import os
-
 import pytest
+from flask import Flask
 
 from podcast_log.models import Podcast, Episode, Status
 
 
-def test_settings():
-    assert os.environ["APP_SETTINGS"] == "podcast_log.config.TestingConfig"
-
-
-def test_podcast_statistics(app):
+def test_podcast_statistics(app: Flask) -> None:
 
     podcast = Podcast(title="Podcast title")
     podcast.save()

@@ -17,9 +17,10 @@ pipelines:
           - export VENV_HOME_DIR=$(pipenv --venv)
           - source $VENV_HOME_DIR/bin/activate
           - pip install pytest pytest-cov codecov
-          - pytest 
+          - pipenv run python -m pytest
             --junitxml=./test-reports/junit.xml 
             --cov-report xml:./test-reports/coverage.xml 
-            --cov podcast_log 
+            --cov podcast_log
+            tests
           - codecov -t $CODECOV_KEY
 
