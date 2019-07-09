@@ -1,5 +1,7 @@
+from typing import Generator
+
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+from wtforms import StringField, SubmitField, Field
 from wtforms.ext.sqlalchemy.orm import model_form
 from wtforms.validators import InputRequired
 
@@ -10,7 +12,7 @@ class ModelFormBase(FlaskForm):
     """Base class adding easy access to a list of fields for template."""
 
     @property
-    def fields(self):
+    def fields(self) -> Generator[Field, None, None]:
         for name, field in self._fields.items():
             if name != "csrf_token":
                 yield field

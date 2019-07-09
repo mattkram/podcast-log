@@ -24,7 +24,7 @@ class SelectStatusCol(OptCol):
             {content}
         </form>"""
 
-    def td_format(self, content) -> str:
+    def td_format(self, content: str) -> str:
         option_list = []
         for short, long in self.choices.items():
             selected = "selected" if content == short else ""
@@ -42,7 +42,7 @@ class EditCol(Col):
         content = f"""<a href="{url_for("main.edit_episode", episode_id=item.id)}">(Edit)</a>"""
         return self.td_format(content)
 
-    def td_format(self, content):
+    def td_format(self, content: str) -> str:
         return content
 
 

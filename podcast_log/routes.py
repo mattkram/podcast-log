@@ -1,11 +1,4 @@
-from flask import (
-    Blueprint,
-    render_template,
-    redirect,
-    url_for,
-    request,
-    Flask,
-)
+from flask import Blueprint, render_template, redirect, url_for, request, Flask
 from werkzeug.wrappers import Response
 
 from .forms import AddPodcastForm, EditPodcastForm, EditEpisodeForm
