@@ -5,11 +5,13 @@ verify_ssl = true
 
 [dev-packages]
 black = "*"
+mypy = "*"
+pydocstyle = "*"
 pytest = "*"
 pytest-cov = "*"
+pytest-docstyle = "*"
 pytest-flake8 = "*"
 pytest-mypy = "*"
-mypy = "*"
 
 [packages]
 feedparser = "*"
