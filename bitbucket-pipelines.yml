@@ -14,10 +14,9 @@ pipelines:
           - python -m pip install --upgrade pip
           - python -m pip install pipenv
           - pipenv sync --dev
-#          - export VENV_HOME_DIR=$(pipenv --venv)
-#          - source $VENV_HOME_DIR/bin/activate
+          - export VENV_HOME_DIR=$(pipenv --venv)
+          - source $VENV_HOME_DIR/bin/activate
 #          - pip install pytest pytest-cov pytest-mypy pytest-flake8 codecov
-          - pipenv shell
           - flake8
           - mypy
           - pydocstyle podcast_log tests --add-ignore D105,D107
