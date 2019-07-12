@@ -22,7 +22,7 @@ class ImageCol(Col):
 
 
 class SelectStatusCol(OptCol):
-    """A custom table column for selecting table status and submitting a POST request to update the database."""
+    """A custom table column to select table status and update the database."""
 
     def td_contents(self, item: Episode, attr_list: List[str]) -> str:
         """Construct an HTML form for updating the episode status in the database."""
@@ -63,8 +63,8 @@ class EditCol(Col):
 class EpisodeTableBase(Table):
     """Base class for episode tables.
 
-    Defines all available columns. Specific columns can be removed for specific usages by setting any column to None
-    in a subclass.
+    Defines all available columns. Specific columns can be removed for specific usages by setting
+    any column to None in a subclass.
 
     """
 
