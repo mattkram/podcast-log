@@ -1,7 +1,10 @@
+"""Various application configurations."""
 import os
 
 
 class ConfigBase:
+    """Base configuration storing default values."""
+
     DEVELOPMENT = False
     DEBUG = False
     TESTING = False
@@ -12,6 +15,8 @@ class ConfigBase:
 
 
 class ProductionConfig(ConfigBase):
+    """Configuration for production deployment."""
+
     SECRET_KEY = os.environ.get("SECRET_KEY", "")
     SQLALCHEMY_DATABASE_URI = "postgresql://{}:{}@{}/{}".format(
         os.environ.get("RDS_USERNAME"),
@@ -22,15 +27,21 @@ class ProductionConfig(ConfigBase):
 
 
 class StagingConfig(ConfigBase):
+    """Configuration for staging deployment."""
+
     DEBUG = True
 
 
 class DevelopmentConfig(ConfigBase):
+    """Configuration for local development."""
+
     DEVELOPMENT = True
     DEBUG = True
 
 
 class TestingConfig(ConfigBase):
+    """Configuration for testing."""
+
     TESTING = True
     SECRET_KEY = "test"
     SQLALCHEMY_DATABASE_URI = "sqlite://"

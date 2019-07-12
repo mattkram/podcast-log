@@ -1,3 +1,4 @@
+"""Forms for interacting with database models."""
 from typing import Generator
 
 from flask_wtf import FlaskForm
@@ -13,12 +14,15 @@ class ModelFormBase(FlaskForm):
 
     @property
     def fields(self) -> Generator[Field, None, None]:
+        """Iterate through the form fields, ignoring the csrf_token."""
         for name, field in self._fields.items():
             if name != "csrf_token":
                 yield field
 
 
 class AddPodcastForm(FlaskForm):
+    """A form used for adding a new podcast."""
+
     url = StringField(label="URL", validators=[InputRequired()])
     episode_number_pattern = StringField("Episode Number Pattern")
     submit = SubmitField()

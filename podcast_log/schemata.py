@@ -1,7 +1,10 @@
+"""JSON schemata for serializing database models."""
 from marshmallow import Schema, fields
 
 
 class PodcastSchema(Schema):
+    """JSON schema for podcast_log.models.Podcast."""
+
     id = fields.Integer()
     title = fields.String()
     url = fields.Url()
@@ -16,6 +19,8 @@ class PodcastSchema(Schema):
 
 
 class PodcastStatisticsSchema(Schema):
+    """JSON schema for podcast_log.models.PodcastStatistics."""
+
     num_episodes = fields.Integer()
     num_listened = fields.Integer()
     num_ignored = fields.Integer()
@@ -27,6 +32,8 @@ class PodcastStatisticsSchema(Schema):
 
 
 class EpisodeSchema(Schema):
+    """JSON schema for podcast_log.models.Episode."""
+
     id = fields.Integer()
     podcast = fields.Nested("PodcastSchema", only=("id", "title"))
     title = fields.String()

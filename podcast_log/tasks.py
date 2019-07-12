@@ -1,3 +1,4 @@
+"""Background tasks for updating podcast feeds."""
 import re
 import time
 from datetime import timedelta, datetime
@@ -30,11 +31,13 @@ update_thread.start()
 
 
 def add_podcast_to_update_queue(podcast_id: int, force: bool = False) -> None:
+    """Queue a podcast to be updated."""
     # noinspection PyProtectedMember
     queue.put((current_app._get_current_object(), podcast_id, force))
 
 
 def update_podcast_feed(podcast_id: int, force: bool = False) -> None:
+    """Update a podcast by parsing its RSS feed."""
     logger = current_app.logger
     podcast = Podcast.query.get(podcast_id)
 

@@ -27,6 +27,8 @@ migrate = Migrate()
 
 
 class Podcast(db.Model):
+    """A model representing a podcast."""
+
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200))
     url = db.Column(db.String(500))
@@ -45,20 +47,25 @@ class Podcast(db.Model):
 
     @property
     def statistics(self) -> "PodcastStatistics":
+        """Listen statistics for this podcast."""
         return PodcastStatistics(self)
 
     @property
     def needs_update(self) -> bool:
+        """If true, the podcast needs to be updated."""
         update_after = self.last_refreshed + self.refresh_interval
         return update_after <= datetime.now()
 
 
 class PodcastStatistics:
+    """Listening statistics for a podcast."""
+
     def __init__(self, podcast: Podcast):
         self.podcast = podcast
 
     @property
     def num_episodes(self) -> int:
+        """Total number of podcast episodes."""
         return len(list(self.podcast.episodes))
 
     def __getattr__(self, name: str) -> Any:
@@ -74,6 +81,7 @@ class PodcastStatistics:
 
     @property
     def progress(self) -> str:
+        """Progress as a percentage of total non-ignored episodes."""
         num_to_listen = self.num_episodes - self.num_ignored
         pct_listened = (
             100 * self.num_listened / num_to_listen if num_to_listen > 0 else 0.0
@@ -82,6 +90,7 @@ class PodcastStatistics:
 
     @property
     def time_listened(self) -> timedelta:
+        """Total time listened."""
         time_listened = timedelta(seconds=0)
         for e in self.podcast.episodes.filter(status=Episode.LISTENED):
             if e.duration is not None:
@@ -90,6 +99,8 @@ class PodcastStatistics:
 
 
 class Status(enum.Enum):
+    """An enum class used to represent the status of podcast episodes."""
+
     LISTENED = "L"
     IGNORED = "I"
     SKIPPED = "S"
@@ -110,6 +121,8 @@ STATUS_CHOICES = {
 
 
 class Episode(db.Model):
+    """A model representing a podcast episode."""
+
     id = db.Column(db.Integer, primary_key=True)
     podcast_id = db.Column(db.Integer, db.ForeignKey("podcast.id"))
 
@@ -134,6 +147,7 @@ class Episode(db.Model):
 
     @property
     def publication_date(self) -> Optional[datetime]:
+        """Date on which the episode was published."""
         t = self.publication_timestamp
         if t is None:
             return None
@@ -156,10 +170,12 @@ class Episode(db.Model):
 
 
 def init_app(app: Flask) -> None:
+    """Initialize the database."""
     db.init_app(app)
     migrate.init_app(app, db)
 
 
 def create_db(app: Flask) -> None:
+    """Create all database tables."""
     with app.app_context():
         db.create_all()

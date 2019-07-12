@@ -1,3 +1,4 @@
+"""A web application for keeping track of podcasts and listening progress."""
 import logging
 import os
 import sys

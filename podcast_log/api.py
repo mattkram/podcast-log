@@ -1,3 +1,4 @@
+"""API route definitions."""
 from typing import Tuple
 
 from flask import Blueprint, jsonify, Response, Flask
@@ -10,6 +11,7 @@ bp = Blueprint("api", __name__, url_prefix="/api")
 
 @bp.route("/podcasts", methods=("GET",))
 def get_podcasts() -> Response:
+    """Get a list of all podcasts."""
     podcast_objects = Podcast.query.order_by(Podcast.title).all()
     schema = PodcastSchema(many=True)
     podcasts = schema.dump(podcast_objects)
@@ -18,6 +20,7 @@ def get_podcasts() -> Response:
 
 @bp.route("/podcasts/<int:pk>")
 def get_podcast(pk: int) -> Tuple[Response, int]:
+    """Get a single podcast by ID."""
     podcast_object = Podcast.query.get(pk)
     if podcast_object is None:
         return jsonify({"message": "Podcast could not be found."}), 400
@@ -29,6 +32,7 @@ def get_podcast(pk: int) -> Tuple[Response, int]:
 
 @bp.route("/episodes")
 def get_episodes() -> Response:
+    """Get a list of all episodes."""
     episode_objects = Episode.query.order_by(Episode.publication_timestamp).all()
     schema = EpisodeSchema(many=True)
     episodes = schema.dump(episode_objects)
@@ -37,6 +41,7 @@ def get_episodes() -> Response:
 
 @bp.route("/episodes/<int:pk>")
 def get_episode(pk: int) -> Tuple[Response, int]:
+    """Get a single episode by ID."""
     episode_object = Episode.query.get(pk)
     if episode_object is None:
         return jsonify({"message": "Episode could not be found."}), 400
@@ -47,4 +52,5 @@ def get_episode(pk: int) -> Tuple[Response, int]:
 
 
 def init_app(app: Flask) -> None:
+    """Initialize API blueprint."""
     app.register_blueprint(bp)
