@@ -80,7 +80,7 @@ class EpisodeTableBase(Table):
 
     allow_sort = False
 
-    def sort_url(self, col_id, reverse=False):
+    def sort_url(self, col_id: str, reverse: bool = False) -> str:
         """Provide a url for each column which will be called when the header is clicked to sort."""
         pass
 
