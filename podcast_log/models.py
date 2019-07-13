@@ -92,7 +92,7 @@ class PodcastStatistics:
     def time_listened(self) -> timedelta:
         """Total time listened."""
         time_listened = timedelta(seconds=0)
-        for e in self.podcast.episodes.filter(status=Episode.LISTENED):
+        for e in self.podcast.episodes.filter_by(status=Status.LISTENED):
             if e.duration is not None:
                 time_listened += e.duration
         return time_listened

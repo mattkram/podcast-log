@@ -1,24 +1,42 @@
+from typing import Generator, Any
+
 import pytest
+from datetime import timedelta
 from flask import Flask
 
 from podcast_log.models import Podcast, Episode, Status
 
 
-def test_podcast_statistics(app: Flask) -> None:
-
+@pytest.fixture()
+def podcast(app: Flask) -> Generator[Podcast, None, None]:
+    """Create a test podcast with no episodes."""
     podcast = Podcast(title="Podcast title")
     podcast.save()
-    assert podcast is not None
+    yield podcast
 
-    assert podcast.title == "Podcast title"
-    assert podcast.statistics.num_episodes == 0
-    assert podcast.statistics.num_listened == 0
 
-    with pytest.raises(AttributeError):
-        assert podcast.statistics.num_non_existent
-
-    episode = Episode(podcast=podcast, status=Status.LISTENED)
+@pytest.fixture()
+def episode(podcast: Podcast) -> Generator[Episode, None, None]:
+    """Create a test episode which whose status is listened-to."""
+    episode = Episode(
+        podcast=podcast, duration=timedelta(hours=1), status=Status.LISTENED
+    )
     episode.save()
+    yield episode
 
-    assert episode.status == Status.LISTENED
-    assert podcast.statistics.num_listened == 1
+
+class TestPodcast:
+    """Tests for the Podcast model."""
+
+    def test_podcast_title(self, podcast: Podcast) -> None:
+        """The title is set properly."""
+        assert podcast.title == "Podcast title"
+
+    @pytest.mark.parametrize(
+        "attr_name,value", [("num_listened", 1), ("time_listened", timedelta(hours=1))]
+    )
+    @pytest.mark.usefixtures("episode")
+    def test_podcast_statistics(
+        self, podcast: Podcast, attr_name: str, value: Any
+    ) -> None:
+        assert getattr(podcast.statistics, attr_name, value)
