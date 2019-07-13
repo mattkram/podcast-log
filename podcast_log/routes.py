@@ -1,5 +1,8 @@
 """Define the main routes and views."""
-from flask import Blueprint, render_template, redirect, url_for, request, Flask
+from typing import Any
+
+import flask
+from flask import Blueprint, redirect, url_for, request, Flask
 from werkzeug.wrappers import Response
 
 from .forms import AddPodcastForm, EditPodcastForm, EditEpisodeForm
@@ -8,6 +11,11 @@ from .tables import PodcastEpisodesTable
 from .tasks import create_new_podcast, add_podcast_to_update_queue
 
 bp = Blueprint("main", __name__)
+
+
+def render_template(*args: Any, **kwargs: Any) -> Response:
+    """Wrap rendered template in a Response object (for mypy)."""
+    return Response(flask.render_template(*args, **kwargs))
 
 
 @bp.route("/")
