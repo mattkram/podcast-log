@@ -17,6 +17,7 @@ pipelines:
           - export VENV_HOME_DIR=$(pipenv --venv)
           - source $VENV_HOME_DIR/bin/activate
           - pip install
+            black
             codecov
             pydocstyle
             pytest
