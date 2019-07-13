@@ -1,8 +1,7 @@
 """Define the main routes and views."""
 from typing import Any
 
-import flask
-from flask import Blueprint, redirect, url_for, request, Flask
+from flask import Blueprint, render_template, redirect, url_for, request, Flask
 from werkzeug.wrappers import Response
 
 from .forms import AddPodcastForm, EditPodcastForm, EditEpisodeForm
@@ -13,11 +12,6 @@ from .tasks import create_new_podcast, add_podcast_to_update_queue
 bp = Blueprint("main", __name__)
 
 
-def render_template(*args: Any, **kwargs: Any) -> Response:
-    """Wrap rendered template in a Response object (for mypy)."""
-    return Response(flask.render_template(*args, **kwargs))
-
-
 @bp.route("/")
 def index() -> Response:
     """Redirect to the podcast list."""
@@ -25,7 +19,7 @@ def index() -> Response:
 
 
 @bp.route("/podcasts")
-def podcast_list() -> Response:
+def podcast_list() -> str:
     """Display a list of podcasts."""
     podcasts = Podcast.query.order_by(Podcast.title).all()
     return render_template("index.html", podcasts=podcasts)
@@ -40,7 +34,7 @@ def update_all() -> Response:
 
 
 @bp.route("/podcasts/add", methods=("GET", "POST"))
-def add_podcast() -> Response:
+def add_podcast() -> Any:
     """Add a new podcast."""
     form = AddPodcastForm()
     if form.validate_on_submit():
@@ -53,7 +47,7 @@ EPISODES_PER_PAGE = 20
 
 
 @bp.route("/podcast/<int:podcast_id>")
-def podcast_detail(podcast_id: int) -> Response:
+def podcast_detail(podcast_id: int) -> str:
     """Show the details for a single podcast."""
     podcast = Podcast.query.get(podcast_id)
     page = request.args.get("page", 1, type=int)
@@ -70,7 +64,7 @@ def update_podcast(podcast_id: int) -> Response:
 
 
 @bp.route("/podcast/<int:podcast_id>/edit", methods=("GET", "POST"))
-def edit_podcast(podcast_id: int) -> Response:
+def edit_podcast(podcast_id: int) -> Any:
     """Edit the details for a podcast."""
     podcast = Podcast.query.get(podcast_id)
     form = EditPodcastForm(obj=podcast)
@@ -83,7 +77,7 @@ def edit_podcast(podcast_id: int) -> Response:
 
 
 @bp.route("/episodes")
-def episode_list() -> Response:
+def episode_list() -> str:
     """Show a list of the most recent episodes."""
     page = request.args.get("page", 1, type=int)
     episodes = Episode.query.paginate(page, EPISODES_PER_PAGE, False)
@@ -92,7 +86,7 @@ def episode_list() -> Response:
 
 
 @bp.route("/episode/<int:episode_id>/edit", methods=("GET", "POST"))
-def edit_episode(episode_id: int) -> Response:
+def edit_episode(episode_id: int) -> Any:
     """Edit an episodes' details."""
     episode = Episode.query.get(episode_id)
     form = EditEpisodeForm(obj=episode)
