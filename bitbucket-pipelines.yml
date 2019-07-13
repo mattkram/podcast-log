@@ -23,9 +23,10 @@ pipelines:
             pytest-cov
             pytest-flake8
             pytest-mypy
+          - black --check
           - flake8
-          - mypy
           - pydocstyle podcast_log tests --add-ignore D105,D107
+          - mypy
           - python -m pytest
             --junitxml=./test-reports/junit.xml 
             --cov-report xml:./test-reports/coverage.xml 
