@@ -4,6 +4,7 @@ from typing import Any
 from flask import Blueprint, render_template, redirect, url_for, request, Flask
 from werkzeug.wrappers import Response
 
+from podcast_log.pagination import Paginator
 from .forms import AddPodcastForm, EditPodcastForm, EditEpisodeForm
 from .models import Podcast, Episode, STATUS_CHOICES
 from .tables import PodcastEpisodesTable
@@ -51,10 +52,11 @@ def podcast_detail(podcast_id: int) -> str:
     """Show the details for a single podcast."""
     podcast = Podcast.query.get(podcast_id)
     page = request.args.get("page", 1, type=int)
-    episodes = podcast.episodes.order_by(Episode.publication_timestamp.desc()).paginate(
-        page, EPISODES_PER_PAGE, False
+    paginator = Paginator(podcast.episodes)
+    items = paginator.get_items(
+        page, order_by=Episode.publication_timestamp, reverse=True
     )
-    table = PodcastEpisodesTable(episodes.items)
+    table = PodcastEpisodesTable(items)
     return render_template("podcast-detail.html", podcast=podcast, table=table)
 
 
