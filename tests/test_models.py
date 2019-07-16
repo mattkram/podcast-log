@@ -28,6 +28,10 @@ def episode(podcast: Podcast) -> Generator[Episode, None, None]:
 class TestPodcast:
     """Tests for the Podcast model."""
 
+    def test_string_repr(self, podcast: Podcast) -> None:
+        """The string representation is the title."""
+        assert str(podcast) == podcast.title
+
     def test_podcast_title(self, podcast: Podcast) -> None:
         """The title is set properly."""
         assert podcast.title == "Podcast title"
