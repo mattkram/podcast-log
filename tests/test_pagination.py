@@ -1,4 +1,5 @@
 import random
+import functools
 from typing import Tuple, Any, List
 
 import pytest
@@ -21,30 +22,28 @@ def base_episode_numbers() -> EpisodeNumberList:
     return base_episode_numbers
 
 
-@pytest.fixture()
-def paginator(app: Flask, base_episode_numbers: EpisodeNumberList) -> Paginator:
+@pytest.fixture(autouse=True)
+def episodes(app: Flask, base_episode_numbers: EpisodeNumberList) -> None:
     for num in base_episode_numbers:
         episode = Episode(episode_number=num)
         episode.save()
-    return Paginator(Episode.query, items_per_page=10)
 
 
 @pytest.fixture(params=["unsorted", "increasing", "decreasing"])
 def items_and_expected_episode_numbers(
-    request: FixtureRequest,
-    paginator: Paginator,
-    base_episode_numbers: EpisodeNumberList,
+    request: FixtureRequest, base_episode_numbers: EpisodeNumberList
 ) -> ItemsAndEpisodeNumbers:
     """A parametrized fixture returning a list of episodes sorted various ways and the episode
     numbers associated with those episodes."""
 
-    # Store keyword args to be passed into Pagination.get_items
-    items = {
-        "unsorted": paginator.get_items(),
-        "increasing": paginator.get_items(order_by=Episode.episode_number),
-        "decreasing": paginator.get_items(
-            order_by=Episode.episode_number, reverse=True
-        ),
+    # Use partial to store common arguments to Paginator constructor
+    p = functools.partial(Paginator, Episode.query, items_per_page=10)
+
+    # Develop specialized arguments for different cases
+    paginator = {
+        "unsorted": p(),
+        "increasing": p(sort_column=Episode.episode_number),
+        "decreasing": p(sort_column=Episode.episode_number, reverse_sort=True),
     }[request.param]
 
     expected = {
@@ -53,7 +52,7 @@ def items_and_expected_episode_numbers(
         "decreasing": sorted(base_episode_numbers, reverse=True),
     }[request.param][: paginator.items_per_page]
 
-    return items, expected
+    return paginator.items, expected
 
 
 def test_sorting(items_and_expected_episode_numbers: ItemsAndEpisodeNumbers) -> None:

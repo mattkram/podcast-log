@@ -26,20 +26,30 @@ class Paginator:
 
     """
 
-    def __init__(self, query: BaseQuery, items_per_page: int = 20):
+    def __init__(
+        self,
+        query: BaseQuery,
+        *,
+        sort_column: Column = None,
+        reverse_sort: bool = False,
+        page: int = 1,
+        items_per_page: int = 20
+    ):
         self.query = query
+        self.page = page
         self.items_per_page = items_per_page
+        self.sort_column = sort_column
+        self.reverse_sort = reverse_sort
 
-    def get_items(
-        self, page: int = 1, order_by: Column = None, reverse: bool = False
-    ) -> List[Any]:
+    @property
+    def items(self) -> List[Any]:
         """Retrieve a list of items for a specific page, optionally sorted by a model column."""
         items = self.query
-        if order_by:
-            if reverse:
-                o = order_by.desc()
+        if self.sort_column:
+            if self.reverse_sort:
+                o = self.sort_column.desc()
             else:
-                o = order_by.asc()
+                o = self.sort_column.asc()
             items = items.order_by(o)
 
-        return items.paginate(page, self.items_per_page, False).items
+        return items.paginate(self.page, self.items_per_page, False).items

@@ -52,11 +52,13 @@ def podcast_detail(podcast_id: int) -> str:
     """Show the details for a single podcast."""
     podcast = Podcast.query.get(podcast_id)
     page = request.args.get("page", 1, type=int)
-    paginator = Paginator(podcast.episodes)
-    items = paginator.get_items(
-        page, order_by=Episode.publication_timestamp, reverse=True
+    paginator = Paginator(
+        podcast.episodes,
+        page=page,
+        sort_column=Episode.publication_timestamp,
+        reverse_sort=True,
     )
-    table = PodcastEpisodesTable(items)
+    table = PodcastEpisodesTable(paginator.items)
     return render_template("podcast-detail.html", podcast=podcast, table=table)
 
 
