@@ -46,3 +46,16 @@ def test_sorting(
     paginator = Paginator(Episode.query, items_per_page=10, **kwargs)
     expected_episode_numbers = sort_func(episode_numbers)[: paginator.items_per_page]
     assert [item.episode_number for item in paginator.items] == expected_episode_numbers
+
+
+@pytest.mark.parametrize("page, num_items", [(1, 10), (2, 10), (3, 5)])
+def test_additional_page(
+    episode_numbers: EpisodeNumberList, page: int, num_items: int
+) -> None:
+    """The contents of additional pages are correct, and have the right number of episodes."""
+    paginator = Paginator(Episode.query, page=page, items_per_page=10)
+    start = (page - 1) * paginator.items_per_page
+    end = page * paginator.items_per_page
+    result = [item.episode_number for item in paginator.items]
+    assert result == episode_numbers[start:end]
+    assert len(result) == num_items
