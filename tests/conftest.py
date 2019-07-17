@@ -10,7 +10,7 @@ from podcast_log import create_app
 from podcast_log.models import db, Podcast, Episode
 
 
-@pytest.fixture()
+@pytest.fixture(autouse=True)
 def app(monkeypatch: Any) -> Generator[Flask, None, None]:
     """Create an application with test settings.
 

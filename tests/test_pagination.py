@@ -1,14 +1,12 @@
-import random
 import functools
+import random
 from typing import Tuple, Any, List
 
 import pytest
 from _pytest.fixtures import FixtureRequest
-from flask import Flask
 
 from podcast_log.models import Episode
 from podcast_log.pagination import Paginator
-
 
 EpisodeNumberList = List[int]
 ItemsAndEpisodeNumbers = Tuple[List[Any], EpisodeNumberList]
@@ -23,7 +21,7 @@ def base_episode_numbers() -> EpisodeNumberList:
 
 
 @pytest.fixture(autouse=True)
-def episodes(app: Flask, base_episode_numbers: EpisodeNumberList) -> None:
+def episodes(base_episode_numbers: EpisodeNumberList) -> None:
     for num in base_episode_numbers:
         episode = Episode(episode_number=num)
         episode.save()
