@@ -66,6 +66,11 @@ class TestEpisode:
         """The date is extracted from the publication timestamp."""
         assert episode.publication_date == datetime(1, 1, 1)
 
+    def test_publication_date_none(self, episode: Episode) -> None:
+        """If the timestamp is None, the date is None."""
+        episode.publication_timestamp = None
+        assert episode.publication_date is None
+
     @pytest.mark.parametrize(
         "expected_image_url,set_image_url",
         [
