@@ -44,9 +44,6 @@ def add_podcast() -> Any:
     return render_template("add-podcast.html", form=form)
 
 
-EPISODES_PER_PAGE = 20
-
-
 @bp.route("/podcast/<int:podcast_id>")
 def podcast_detail(podcast_id: int) -> str:
     """Show the details for a single podcast."""
@@ -89,8 +86,16 @@ def edit_podcast(podcast_id: int) -> Any:
 def episode_list() -> str:
     """Show a list of the most recent episodes."""
     page = request.args.get("page", 1, type=int)
-    episodes = Episode.query.paginate(page, EPISODES_PER_PAGE, False)
-    table = PodcastEpisodesTable(episodes.items)
+    status = request.args.get("status")
+
+    query = Episode.query
+    if status:
+        query = query.filter_by(status=getattr(Status, status.upper()))
+
+    paginator = Paginator(
+        query, page=page, sort_column=Episode.publication_timestamp, reverse_sort=True
+    )
+    table = PodcastEpisodesTable(paginator.items)
     return render_template("episode-list.html", table=table)
 
 
