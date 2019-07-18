@@ -25,6 +25,7 @@ def episode(podcast: Podcast) -> Generator[Episode, None, None]:
         publication_timestamp=datetime(1, 1, 1, 1, 1, 1),
     )
     episode.save()
+    assert len(Episode.query.all()) == 1
     yield episode
 
 
@@ -47,6 +48,11 @@ class TestPodcast:
         self, podcast: Podcast, attr_name: str, value: Any
     ) -> None:
         assert getattr(podcast.statistics, attr_name, value)
+
+    def test_get_nonexistent_podcast_statistic(self, podcast: Podcast) -> None:
+        """An attribute error is raised when trying to obtain a nonexistent statistic."""
+        with pytest.raises(AttributeError):
+            _ = podcast.num_unknown
 
 
 class TestEpisode:
@@ -74,3 +80,8 @@ class TestEpisode:
         if set_image_url:
             episode.image_url = expected_image_url
         assert episode.image_url == expected_image_url
+
+    def test_delete_episode(self, episode: Episode) -> None:
+        """We can delete any database item via the delete() method."""
+        episode.delete()
+        assert len(Episode.query.all()) == 0
