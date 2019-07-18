@@ -7,7 +7,7 @@ from werkzeug.wrappers import Response
 from podcast_log.pagination import Paginator
 from .forms import AddPodcastForm, EditPodcastForm, EditEpisodeForm
 from .models import Podcast, Episode, STATUS_CHOICES, Status
-from .tables import PodcastEpisodesTable
+from .tables import PodcastEpisodesTable, AllEpisodesTable
 from .tasks import create_new_podcast, add_podcast_to_update_queue
 
 bp = Blueprint("main", __name__)
@@ -95,7 +95,7 @@ def episode_list() -> str:
     paginator = Paginator(
         query, page=page, sort_column=Episode.publication_timestamp, reverse_sort=True
     )
-    table = PodcastEpisodesTable(paginator.items)
+    table = AllEpisodesTable(paginator.items)
     return render_template("episode-list.html", table=table)
 
 

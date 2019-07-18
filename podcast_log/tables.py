@@ -1,16 +1,11 @@
 """Table classes."""
-from typing import List, Dict
+from typing import List, Dict, Tuple, Any
 
 from flask import url_for
-from flask_table import Table, Col, OptCol
+from flask_table import Table, Col, OptCol, LinkCol
+from flask_table.html import element
 
 from podcast_log.models import STATUS_CHOICES, Episode
-
-
-def get_episode_class(record: Episode) -> str:
-    """Return a CSS class string name for the table rows, based on episode status."""
-    class_str = record.get_status_display().lower()
-    return f"row-episode-{'-'.join(class_str.split())}"
 
 
 class ImageCol(Col):
@@ -18,7 +13,7 @@ class ImageCol(Col):
 
     def td_format(self, content: str) -> str:
         """Format table cell content with proper HTML image tag."""
-        return f'<img src="{content}" class="img-episode-list">'
+        return element("img", attrs={"src": content, "class": "img-episode-list"})
 
 
 class SelectStatusCol(OptCol):
@@ -46,18 +41,32 @@ class SelectStatusCol(OptCol):
                     </div>"""
 
 
-class EditCol(Col):
-    """A custom table column containing a hyperlink to edit the episode."""
+class PodcastLinkCol(LinkCol):
+    """Custom link column to show text as podcast title."""
 
-    def td_contents(self, item: Episode, attr_list: List[str]) -> str:
+    def text(self, item: Episode, attr_list: List[str]) -> str:
         """Format the cell contents to include a link to edit the episode."""
-        link_url = url_for("main.edit_episode", episode_id=item.id)
-        content = f"""<a href="{link_url}">(Edit)</a>"""
-        return self.td_format(content)
+        return item.podcast.title
 
-    def td_format(self, content: str) -> str:
-        """Don't escape the HTML content."""
-        return content
+
+all_columns = {
+    "image_url": ImageCol("Image"),
+    "podcast": PodcastLinkCol(
+        "Podcast", "main.podcast_detail", url_kwargs=dict(podcast_id="podcast_id")
+    ),
+    "episode_number": Col("Episode"),
+    "title": Col("Title"),
+    "publication_timestamp": Col("Publication Date"),
+    "duration": Col("Duration"),
+    "description": Col("Description"),
+    "status": SelectStatusCol("Status", choices=STATUS_CHOICES),
+    "edit": LinkCol(
+        "Edit",
+        "main.edit_episode",
+        url_kwargs=dict(episode_id="id"),
+        text_fallback="(Edit)",
+    ),
+}
 
 
 class EpisodeTableBase(Table):
@@ -68,17 +77,15 @@ class EpisodeTableBase(Table):
 
     """
 
-    image_url = ImageCol("Image")
-    podcast = Col("Podcast")
-    episode_number = Col("Episode")
-    title = Col("Title")
-    publication_timestamp = Col("Publication Date")
-    duration = Col("Duration")
-    description = Col("Description")
-    status = SelectStatusCol("Status", choices=STATUS_CHOICES)
-    edit = EditCol("Edit")
-
     allow_sort = False
+    hide_cols: Tuple[str, ...] = tuple()
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        """Override constructor to dynamically add columns to handle hidden columns."""
+        super().__init__(*args, **kwargs)
+        for col_name, col in all_columns.items():
+            if col_name not in self.hide_cols:
+                self.add_column(col_name, col)
 
     def sort_url(self, col_id: str, reverse: bool = False) -> str:
         """Provide a url for each column which will be called when the header is clicked to sort."""
@@ -96,7 +103,7 @@ class AllEpisodesTable(EpisodeTableBase):
 
     """
 
-    description = None
+    hide_cols = ("description",)
 
 
 class PodcastEpisodesTable(EpisodeTableBase):
@@ -106,4 +113,4 @@ class PodcastEpisodesTable(EpisodeTableBase):
 
     """
 
-    podcast = None
+    hide_cols = ("podcast",)
