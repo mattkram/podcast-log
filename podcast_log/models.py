@@ -173,9 +173,3 @@ def init_app(app: Flask) -> None:
     """Initialize the database."""
     db.init_app(app)
     migrate.init_app(app, db)
-
-
-def create_db(app: Flask) -> None:
-    """Create all database tables."""
-    with app.app_context():
-        db.create_all()
