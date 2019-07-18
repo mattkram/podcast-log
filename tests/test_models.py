@@ -52,7 +52,7 @@ class TestPodcast:
     def test_get_nonexistent_podcast_statistic(self, podcast: Podcast) -> None:
         """An attribute error is raised when trying to obtain a nonexistent statistic."""
         with pytest.raises(AttributeError):
-            _ = podcast.num_unknown
+            _ = podcast.statistics.num_unknown
 
 
 class TestEpisode:
