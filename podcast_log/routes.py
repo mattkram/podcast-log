@@ -6,7 +6,7 @@ from werkzeug.wrappers import Response
 
 from podcast_log.pagination import Paginator
 from .forms import AddPodcastForm, EditPodcastForm, EditEpisodeForm
-from .models import Podcast, Episode, STATUS_CHOICES
+from .models import Podcast, Episode, STATUS_CHOICES, Status
 from .tables import PodcastEpisodesTable
 from .tasks import create_new_podcast, add_podcast_to_update_queue
 
@@ -50,13 +50,16 @@ EPISODES_PER_PAGE = 20
 @bp.route("/podcast/<int:podcast_id>")
 def podcast_detail(podcast_id: int) -> str:
     """Show the details for a single podcast."""
-    podcast = Podcast.query.get(podcast_id)
     page = request.args.get("page", 1, type=int)
+    status = request.args.get("status")
+
+    podcast = Podcast.query.get(podcast_id)
+    query = podcast.episodes
+    if status:
+        query = query.filter_by(status=getattr(Status, status.upper()))
+
     paginator = Paginator(
-        podcast.episodes,
-        page=page,
-        sort_column=Episode.publication_timestamp,
-        reverse_sort=True,
+        query, page=page, sort_column=Episode.publication_timestamp, reverse_sort=True
     )
     table = PodcastEpisodesTable(paginator.items)
     return render_template("podcast-detail.html", podcast=podcast, table=table)
