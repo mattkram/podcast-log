@@ -59,7 +59,9 @@ def podcast_detail(podcast_id: int) -> str:
         query, page=page, sort_column=Episode.publication_timestamp, reverse_sort=True
     )
     table = PodcastEpisodesTable(paginator.items)
-    return render_template("podcast-detail.html", podcast=podcast, table=table)
+    return render_template(
+        "podcast-detail.html", podcast=podcast, paginator=paginator, table=table
+    )
 
 
 @bp.route("/podcast/<int:podcast_id>/update")

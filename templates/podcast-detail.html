@@ -23,49 +23,58 @@
 {% block content %}
 
 <div class="row">
-  <div class="col-sm-1">
-    <img src="{{ podcast.image_url }}" style="max-width:100px">
-  </div>
-  <div class="col-sm-7">
-    <div style="margin-bottom: 10px;">
-      <a href="{{ url_for('main.podcast_detail', podcast_id=podcast.id) }}" class="h1">{{ podcast.title }}</a>
-      <a href="{{ url_for('main.edit_podcast', podcast_id=podcast.id) }}">(Edit)</a>
+    <div class="col-sm-1">
+        <img src="{{ podcast.image_url }}" style="max-width:100px">
     </div>
-    <div>{{ podcast.summary }}</div>
-  </div>
-  <div class="col-sm-4 table-container">
-    <table class="table">
-      <tr>
-        <td>Progress:</td>
-        <td>{{ podcast.statistics.progress }}</td>
-      </tr>
-      <tr>
-        <td>In Progress:</td>
-        <td>{{ podcast.statistics.num_in_progress }}</td>
-      </tr>
-      <tr>
-        <td>Skipped:</td>
-        <td>{{ podcast.statistics.num_skipped }}</td>
-      </tr>
-      <tr>
-        <td>Ignored:</td>
-        <td>{{ podcast.statistics.num_ignored }}</td>
-      </tr>
-      <tr>
-        <td>Number of episodes:</td>
-        <td>{{ podcast.statistics.num_episodes }}</td>
-      </tr>
-      <tr>
-        <td>Time listened:</td>
-        <td>{{ podcast.statistics.time_listened }}</td>
-      </tr>
-    </table>
-  </div>
+    <div class="col-sm-7">
+        <div style="margin-bottom: 10px;">
+            <a href="{{ url_for('main.podcast_detail', podcast_id=podcast.id) }}" class="h1">{{
+                podcast.title }}</a>
+            <a href="{{ url_for('main.edit_podcast', podcast_id=podcast.id) }}">(Edit)</a>
+        </div>
+        <div>{{ podcast.summary }}</div>
+    </div>
+    <div class="col-sm-4 table-container">
+        <table class="table">
+            <tr>
+                <td>Progress:</td>
+                <td>{{ podcast.statistics.progress }}</td>
+            </tr>
+            <tr>
+                <td>In Progress:</td>
+                <td>{{ podcast.statistics.num_in_progress }}</td>
+            </tr>
+            <tr>
+                <td>Skipped:</td>
+                <td>{{ podcast.statistics.num_skipped }}</td>
+            </tr>
+            <tr>
+                <td>Ignored:</td>
+                <td>{{ podcast.statistics.num_ignored }}</td>
+            </tr>
+            <tr>
+                <td>Number of episodes:</td>
+                <td>{{ podcast.statistics.num_episodes }}</td>
+            </tr>
+            <tr>
+                <td>Time listened:</td>
+                <td>{{ podcast.statistics.time_listened }}</td>
+            </tr>
+        </table>
+    </div>
 </div>
 
+
+<ul class="pagination">
+    {% for page in paginator.pages %}
+    <li class="page-item {{ page.status }}">
+        <a class="page-link" href="{{ page.url }}">{{ page.text }}</a>
+    </li>
+    {% endfor %}
+</ul>
 <div class="row">
-  <div class="col-sm-12">
-      {{ table }}
-  </div>
+    <div class="col-sm-12">
+        {{ table }}
+    </div>
 </div>
 {% endblock %}

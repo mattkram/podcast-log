@@ -1,21 +1,10 @@
-"""Simple pagination utilities.
+"""Simple pagination utilities."""
+from typing import Any, List, Dict
 
-<ul class="pagination">
-    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-    <li class="page-item"><a class="page-link" href="#">1</a></li>
-    <li class="page-item"><a class="page-link" href="#">2</a></li>
-    <li class="page-item"><a class="page-link" href="#">3</a></li>
-    <li class="page-item"><a class="page-link" href="#">...</a></li>
-    <li class="page-item"><a class="page-link" href="#">98</a></li>
-    <li class="page-item"><a class="page-link" href="#">99</a></li>
-    <li class="page-item"><a class="page-link" href="#">100</a></li>
-    <li class="page-item"><a class="page-link" href="#">Next</a></li>
-</ul>
-"""
-from typing import Any, List
-
+from flask import request
 from flask_sqlalchemy import BaseQuery
 from sqlalchemy import Column
+from werkzeug.urls import url_encode
 
 
 class Paginator:
@@ -33,7 +22,7 @@ class Paginator:
         sort_column: Column = None,
         reverse_sort: bool = False,
         page: int = 1,
-        items_per_page: int = 20
+        items_per_page: int = 20,
     ):
         self.query = query
         self.page = page
@@ -53,3 +42,28 @@ class Paginator:
             items = items.order_by(o)
 
         return items.paginate(self.page, self.items_per_page, False).items
+
+    @property
+    def pages(self) -> List[Dict[str, str]]:
+        """Construct pagination buttons."""
+        total_pages = len(self.query.all()) // self.items_per_page + 1
+        previous_page = max(self.page - 1, 1)
+        next_page = min(self.page + 1, total_pages)
+
+        def make_url(page_num: int) -> str:
+            args = request.args.copy()
+            args["page"] = page_num
+            return f"{request.path}?{url_encode(args)}"
+
+        page_buttons = [{"url": make_url(previous_page), "text": "Previous"}]
+        for page in range(1, total_pages + 1):
+            page_buttons.append({"url": make_url(page), "text": f"{page}"})
+        page_buttons.append({"url": make_url(next_page), "text": "Next"})
+
+        page_buttons[self.page]["status"] = "active"
+        if self.page == 1:
+            page_buttons[0]["status"] = "disabled"
+        if self.page == total_pages:
+            page_buttons[-1]["status"] = "disabled"
+
+        return page_buttons
