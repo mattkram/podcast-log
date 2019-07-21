@@ -103,7 +103,7 @@ class AllEpisodesTable(EpisodeTableBase):
 
     """
 
-    hide_cols = ("description",)
+    # hide_cols = ("description",)
 
 
 class PodcastEpisodesTable(EpisodeTableBase):

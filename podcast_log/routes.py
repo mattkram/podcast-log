@@ -98,7 +98,7 @@ def episode_list() -> str:
         query, page=page, sort_column=Episode.publication_timestamp, reverse_sort=True
     )
     table = AllEpisodesTable(paginator.items)
-    return render_template("episode-list.html", table=table)
+    return render_template("episode-list.html", paginator=paginator, table=table)
 
 
 @bp.route("/episode/<int:episode_id>/edit", methods=("GET", "POST"))
