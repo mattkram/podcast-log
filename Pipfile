@@ -5,6 +5,7 @@ verify_ssl = true
 
 [dev-packages]
 black = "==19.3b0"
+fabric3 = "*"
 mypy = "*"
 pydocstyle = "*"
 pytest = "*"
