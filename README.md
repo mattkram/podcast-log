@@ -41,20 +41,3 @@ FLASK_APP=podcast_log && flask run
         IdentityFile ~/.ssh/lightsail.pem
     ```
 1. I can now connect with `ssh lightsail`
-
-```bash
-
-# Nginx service
-sudo ln -s /etc/nginx/sites-available/$SITENAME /etc/nginx/sites-enabled/$SITENAME
-sudo rm /etc/nginx/sites-enabled/default 
-sudo systemctl start nginx
-sudo systemctl reload nginx
-
-# Gunicorn service
-sudo vim /etc/systemd/gunicorn-podcast_log-matt-kramer.com.service
-sudo systemctl daemon-reload
-sudo systemctl enable gunicorn-podcast_log-matt-kramer.com
-sudo systemctl start gunicorn-podcast_log-matt-kramer.com
-sudo systemctl reload-or-restart gunicorn-podcast_log-matt-kramer.com.service 
-
-```

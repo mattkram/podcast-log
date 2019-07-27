@@ -1,7 +1,9 @@
 import os
 import random
 import string
+from tempfile import TemporaryFile
 
+import jinja2
 from dotenv import load_dotenv
 from invoke import run, task
 from patchwork.files import append, exists, contains
@@ -10,6 +12,8 @@ load_dotenv()
 
 REPO_URL = os.environ["REPO_URL"]
 PYTHON = "python3.7"
+template_loader = jinja2.FileSystemLoader(searchpath="./deploy_tools/")
+template_env = jinja2.Environment(loader=template_loader)
 
 
 @task
@@ -26,6 +30,8 @@ def deploy(c):
         _update_virtualenv(c)
         _create_or_update_dotenv(c)
         _update_database(c)
+        _prepare_nginx_config(c)
+        _prepare_gunicorn_config(c)
 
 
 def _update_system_dependencies(connection):
@@ -76,3 +82,47 @@ def _create_or_update_dotenv(connection):
 def _update_database(connection):
     with connection.prefix(". venv/bin/activate"):
         connection.run("python -m flask db upgrade")
+
+
+def _prepare_nginx_config(connection):
+    template = template_env.get_template("nginx_template")
+    output_text = template.render(
+        application_name="podcast_log", hostname=connection.host
+    )
+    filename = f"nginx-{connection.host}"
+    with TemporaryFile(mode="r+") as fp:
+        fp.write(output_text)
+        connection.put(fp, f"{connection.cwd}/{filename}")
+    connection.run(f"sudo mv {filename} /etc/nginx/sites-available/{connection.host}")
+
+    connection.run(
+        " ".join(
+            [
+                "sudo ln -fs",
+                f"/etc/nginx/sites-available/{connection.host}",
+                f"/etc/nginx/sites-enabled/{connection.host}",
+            ]
+        )
+    )
+    connection.run(f"sudo systemctl start nginx")
+    connection.run(f"sudo systemctl reload nginx")
+
+
+def _prepare_gunicorn_config(connection):
+    template = template_env.get_template("gunicorn_template.service")
+    output_text = template.render(
+        application_name="podcast_log",
+        username=connection.user,
+        hostname=connection.host,
+        deploy_dir=connection.cwd,
+    )
+    service_name = f"gunicorn-{connection.host}-podcast_log"
+    filename = f"{service_name}.service"
+    with TemporaryFile(mode="r+") as fp:
+        fp.write(output_text)
+        connection.put(fp, f"{connection.cwd}/{filename}")
+    connection.run(f"sudo mv {filename} /etc/systemd/system")
+    connection.run("sudo systemctl daemon-reload")
+    connection.run(f"sudo systemctl enable {service_name}")
+    connection.run(f"sudo systemctl start {service_name}")
+    connection.run(f"sudo systemctl reload-or-restart {service_name}")
