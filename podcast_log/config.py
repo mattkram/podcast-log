@@ -17,7 +17,7 @@ class ConfigBase:
 class ProductionConfig(ConfigBase):
     """Configuration for production deployment."""
 
-    SECRET_KEY = os.environ.get("SECRET_KEY")
+    SECRET_KEY = os.environ.get("SECRET_KEY", "")
     # SQLALCHEMY_DATABASE_URI = "postgresql://{}:{}@{}/{}".format(
     #     os.environ.get("RDS_USERNAME"),
     #     os.environ.get("RDS_PASSWORD"),
