@@ -4,7 +4,7 @@ import string
 
 from dotenv import load_dotenv
 from invoke import run, task
-from patchwork.files import append, exists
+from patchwork.files import append, exists, contains
 
 load_dotenv()
 
@@ -13,11 +13,15 @@ PYTHON = "python3.7"
 
 
 @task
+def init_server(c):
+    _update_system_dependencies(c)
+
+
+@task
 def deploy(c):
     site_folder = f"/home/{c.user}/sites/{c.host}"
     c.run(f"mkdir -p {site_folder}")
     with c.cd(site_folder):
-        _update_system_dependencies(c)
         _get_latest_source(c)
         _update_virtualenv(c)
         _create_or_update_dotenv(c)
@@ -62,8 +66,7 @@ def _create_or_update_dotenv(connection):
     if not exists(connection, ".env"):
         connection.run("cp .env-deploy .env")
 
-    current_contents = connection.run("cat .env").stdout
-    if "SECRET_KEY" not in current_contents:
+    if not contains(connection, ".env", "SECRET_KEY"):
         new_secret = "".join(
             random.SystemRandom().choices(string.ascii_lowercase + string.digits, k=50)
         )
