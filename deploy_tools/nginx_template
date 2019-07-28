@@ -3,7 +3,6 @@ server {
 	server_name {{ hostname }} www.{{ hostname }};
 
 	location / {
-		proxy_pass http://localhost:{{ port }};
-#		proxy_pass http://unix:/tmp/{{ application_name }}.sock;
+		proxy_pass http://unix:/tmp/{{ hostname }}.sock;
 	}
 }
