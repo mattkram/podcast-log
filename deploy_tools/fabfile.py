@@ -22,7 +22,7 @@ def init_server(c):
 
 
 @task
-def deploy(c):
+def deploy(c, port=8000):
     site_folder = f"/home/{c.user}/sites/{c.host}"
     c.run(f"mkdir -p {site_folder}")
     with c.cd(site_folder):
@@ -30,8 +30,8 @@ def deploy(c):
         _update_virtualenv(c)
         _create_or_update_dotenv(c)
         _update_database(c)
-        _prepare_nginx_config(c)
-        _prepare_gunicorn_config(c)
+        _prepare_nginx_config(c, port=port)
+        _prepare_gunicorn_config(c, port=port)
 
 
 def _update_system_dependencies(connection):
@@ -84,10 +84,10 @@ def _update_database(connection):
         connection.run("python -m flask db upgrade")
 
 
-def _prepare_nginx_config(connection):
+def _prepare_nginx_config(connection, port):
     template = template_env.get_template("nginx_template")
     output_text = template.render(
-        application_name="podcast_log", hostname=connection.host
+        application_name="podcast_log", hostname=connection.host, port=port
     )
     filename = f"nginx-{connection.host}"
     with TemporaryFile(mode="r+") as fp:
@@ -108,13 +108,14 @@ def _prepare_nginx_config(connection):
     connection.run(f"sudo systemctl reload nginx")
 
 
-def _prepare_gunicorn_config(connection):
+def _prepare_gunicorn_config(connection, port):
     template = template_env.get_template("gunicorn_template.service")
     output_text = template.render(
         application_name="podcast_log",
         username=connection.user,
         hostname=connection.host,
         deploy_dir=connection.cwd,
+        port=port,
     )
     service_name = f"gunicorn-{connection.host}-podcast_log"
     filename = f"{service_name}.service"
