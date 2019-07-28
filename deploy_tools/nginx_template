@@ -1,9 +1,9 @@
 server {
 	listen 80;
-	server_name {{ hostname }};
+	server_name {{ hostname }} www.{{ hostname }};
 
-	location /podcast-log {
-		proxy_pass http://localhost:8000;
-#		proxy_pass http://unix:/tmp/{{ application_name }}.sock;
+	location / {
+		proxy_pass http://unix:/tmp/{{ hostname }}.sock;
+		proxy_set_header Host $http_host;
 	}
 }

@@ -70,7 +70,7 @@ def _update_virtualenv(connection):
 
 def _create_or_update_dotenv(connection):
     if not exists(connection, ".env"):
-        connection.run("cp .env-deploy .env")
+        connection.run("cp deploy_tools/.env-deploy .env")
 
     if not contains(connection, ".env", "SECRET_KEY"):
         new_secret = "".join(
@@ -116,7 +116,7 @@ def _prepare_gunicorn_config(connection):
         hostname=connection.host,
         deploy_dir=connection.cwd,
     )
-    service_name = f"gunicorn-{connection.host}-podcast_log"
+    service_name = f"gunicorn-{connection.host}"
     filename = f"{service_name}.service"
     with TemporaryFile(mode="r+") as fp:
         fp.write(output_text)
