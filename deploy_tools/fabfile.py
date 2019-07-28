@@ -70,7 +70,7 @@ def _update_virtualenv(connection):
 
 def _create_or_update_dotenv(connection):
     if not exists(connection, ".env"):
-        connection.run("cp .env-deploy .env")
+        connection.run("cp deploy_tools/.env-deploy .env")
 
     if not contains(connection, ".env", "SECRET_KEY"):
         new_secret = "".join(
