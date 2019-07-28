@@ -7,7 +7,7 @@ User={{ username }}
 WorkingDirectory={{ deploy_dir }}
 EnvironmentFile={{ deploy_dir }}/.env
 
-ExecStart={{ deploy_dir }}/venv/bin/gunicorn --bind unix:/tmp/{{ hostname}}.sock -m 007 podcast_log.wsgi:app
+ExecStart={{ deploy_dir }}/venv/bin/gunicorn --bind unix:/tmp/{{ hostname }}.sock podcast_log.wsgi:app
 
 [Install]
 WantedBy=multi-user.target
