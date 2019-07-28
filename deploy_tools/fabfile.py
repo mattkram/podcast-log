@@ -117,7 +117,7 @@ def _prepare_gunicorn_config(connection, port):
         deploy_dir=connection.cwd,
         port=port,
     )
-    service_name = f"gunicorn-{connection.host}-podcast_log"
+    service_name = f"gunicorn-{connection.host}"
     filename = f"{service_name}.service"
     with TemporaryFile(mode="r+") as fp:
         fp.write(output_text)
