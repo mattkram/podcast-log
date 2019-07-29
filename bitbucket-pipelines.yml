@@ -27,9 +27,13 @@ pipelines:
           - poetry run codecov -t $CODECOV_KEY
 
     - step:
+        caches:
+          - pip
         name: Deploy to staging
         deployment: staging
         # trigger: manual  # Uncomment to make this a manual deployment.
         script:
           - echo "Deploying to staging environment"
-          - poetry run fab -r deploy_tools/fabfile.py -H ubuntu@podcasts-staging.matt-kramer.com deploy
+          - python -m pip install --upgrade pip
+          - python -m pip install fabric patchwork
+          - fab -r deploy_tools/fabfile.py -H ubuntu@podcasts-staging.matt-kramer.com deploy
