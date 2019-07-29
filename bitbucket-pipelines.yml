@@ -38,3 +38,17 @@ pipelines:
           - python -m pip install --upgrade pip
           - python -m pip install fabric patchwork jinja2 python-dotenv
           - fab -r deploy_tools/fabfile.py -H ubuntu@podcasts-staging.matt-kramer.com deploy
+      
+    - step:
+        caches:
+          - pip
+        name: Deploy to production
+        deployment: production
+        trigger: manual
+        script:
+          - echo "Deploying to production environment"
+          - export REPO_URL=http://bitbucket.org/$BITBUCKET_REPO_FULL_NAME
+          - python -m pip install --upgrade pip
+          - python -m pip install fabric patchwork jinja2 python-dotenv
+          - fab -r deploy_tools/fabfile.py -H ubuntu@podcasts.matt-kramer.com deploy
+
