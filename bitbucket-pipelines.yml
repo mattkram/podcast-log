@@ -10,6 +10,7 @@ pipelines:
     - step:
         caches:
           - pip
+        name: Run tests
         script:
           - python -m pip install --upgrade pip
           - python -m pip install poetry
@@ -25,3 +26,10 @@ pipelines:
             tests
           - poetry run codecov -t $CODECOV_KEY
 
+    - step:
+        name: Deploy to staging
+        deployment: staging
+        # trigger: manual  # Uncomment to make this a manual deployment.
+        script:
+          - echo "Deploying to staging environment"
+          - poetry run fab -r deploy_tools/fabfile.py -H ubuntu@podcasts-staging.matt-kramer.com deploy
