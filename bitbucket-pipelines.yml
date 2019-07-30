@@ -6,26 +6,26 @@
 image: python:3.7.2
 
 pipelines:
-  default:
-    - step:
-        caches:
-          - pip
-        name: Run tests
-        script:
-          - python -m pip install --upgrade pip
-          - python -m pip install poetry
-          - poetry install
-          - poetry run black --check
-          - poetry run flake8
-          - poetry run pydocstyle podcast_log tests --add-ignore D105,D107
-          - poetry run mypy
-          - poetry run python -m pytest
-            --junitxml=./test-reports/junit.xml 
-            --cov-report xml:./test-reports/coverage.xml 
-            --cov podcast_log
-            tests
-          - poetry run codecov -t $CODECOV_KEY
   branches:
+    '*':
+      - step:
+          caches:
+            - pip
+          name: Run tests
+          script:
+            - python -m pip install --upgrade pip
+            - python -m pip install poetry
+            - poetry install
+            - poetry run black --check
+            - poetry run flake8
+            - poetry run pydocstyle podcast_log tests --add-ignore D105,D107
+            - poetry run mypy
+            - poetry run python -m pytest
+              --junitxml=./test-reports/junit.xml
+              --cov-report xml:./test-reports/coverage.xml
+              --cov podcast_log
+              tests
+            - poetry run codecov -t $CODECOV_KEY
     '{develop,master}':
       - step:
           caches:
