@@ -129,7 +129,6 @@ def create_new_podcast(feed_url: str, episode_number_pattern: str = None) -> Pod
     dict_ = feedparser.parse(feed_url)
     feed = dict_["feed"]
 
-    podcast = Podcast()
     podcast.title = feed["title"]
     podcast.image_url = feed["image"]["href"]
     podcast.summary = feed["description"]
