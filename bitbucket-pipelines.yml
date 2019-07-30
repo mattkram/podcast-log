@@ -47,7 +47,7 @@ pipelines:
       - step: *build-test
       - step: *deploy
       - step:
-        <<: *deploy
-        name: Deploy to production
-        deployment: production
-        trigger: manual
+          <<: *deploy
+          name: Deploy to production
+          deployment: production
+          trigger: manual
