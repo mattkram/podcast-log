@@ -25,30 +25,33 @@ pipelines:
             --cov podcast_log
             tests
           - poetry run codecov -t $CODECOV_KEY
-
-    - step:
-        caches:
-          - pip
-        name: Deploy to staging
-        deployment: staging
-        # trigger: manual  # Uncomment to make this a manual deployment.
-        script:
-          - echo "Deploying to staging environment"
-          - export REPO_URL=http://bitbucket.org/$BITBUCKET_REPO_FULL_NAME
-          - python -m pip install --upgrade pip
-          - python -m pip install fabric patchwork jinja2 python-dotenv
-          - fab -r deploy_tools/fabfile.py -H ubuntu@podcasts-staging.matt-kramer.com deploy
-      
-    - step:
-        caches:
-          - pip
-        name: Deploy to production
-        deployment: production
-        trigger: manual
-        script:
-          - echo "Deploying to production environment"
-          - export REPO_URL=http://bitbucket.org/$BITBUCKET_REPO_FULL_NAME
-          - python -m pip install --upgrade pip
-          - python -m pip install fabric patchwork jinja2 python-dotenv
-          - fab -r deploy_tools/fabfile.py -H ubuntu@podcasts.matt-kramer.com deploy
+  branches:
+    develop|master:
+      - step:
+          caches:
+            - pip
+          name: Deploy to staging
+          deployment: staging
+          script:
+            - echo "Deploying to staging environment"
+            - export REPO_URL=http://bitbucket.org/$BITBUCKET_REPO_FULL_NAME
+            - python -m pip install --upgrade pip
+            - python -m pip install fabric patchwork jinja2 python-dotenv
+            - fab -r deploy_tools/fabfile.py -H ubuntu@podcasts-staging.matt-kramer.com deploy
+    master:
+      - step:
+          script:
+            - echo "Manually deploy to production"
+      - step:
+          caches:
+            - pip
+          name: Deploy to production
+          deployment: production
+          trigger: manual
+          script:
+            - echo "Deploying to production environment"
+            - export REPO_URL=http://bitbucket.org/$BITBUCKET_REPO_FULL_NAME
+            - python -m pip install --upgrade pip
+            - python -m pip install fabric patchwork jinja2 python-dotenv
+            - fab -r deploy_tools/fabfile.py -H ubuntu@podcasts.matt-kramer.com deploy
 
