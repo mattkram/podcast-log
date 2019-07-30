@@ -26,7 +26,7 @@ pipelines:
             tests
           - poetry run codecov -t $CODECOV_KEY
   branches:
-    develop|master:
+    '{develop,master}':
       - step:
           caches:
             - pip
