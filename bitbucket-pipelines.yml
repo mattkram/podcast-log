@@ -5,53 +5,49 @@
 # You can specify a custom docker image from Docker Hub as your build environment.
 image: python:3.7.2
 
+definitions:
+  steps:
+    - step: &build-test
+        name: Run tests
+        caches:
+          - pip
+        script:
+          - python -m pip install --upgrade pip
+          - python -m pip install poetry
+          - poetry install
+          - poetry run black --check
+          - poetry run flake8
+          - poetry run pydocstyle podcast_log tests --add-ignore D105,D107
+          - poetry run mypy
+          - poetry run python -m pytest
+            --junitxml=./test-reports/junit.xml
+            --cov-report xml:./test-reports/coverage.xml
+            --cov podcast_log
+            tests
+          - poetry run codecov -t $CODECOV_KEY
+    - step: &deploy
+        name: Deploy to staging
+        caches:
+          - pip
+        deployment: staging
+        script:
+          - export REPO_URL=http://bitbucket.org/$BITBUCKET_REPO_FULL_NAME
+          - python -m pip install --upgrade pip
+          - python -m pip install fabric patchwork jinja2 python-dotenv
+          - fab -r deploy_tools/fabfile.py -H ubuntu@$HOSTNAME deploy
+
 pipelines:
   branches:
     '*':
-      - step:
-          caches:
-            - pip
-          name: Run tests
-          script:
-            - python -m pip install --upgrade pip
-            - python -m pip install poetry
-            - poetry install
-            - poetry run black --check
-            - poetry run flake8
-            - poetry run pydocstyle podcast_log tests --add-ignore D105,D107
-            - poetry run mypy
-            - poetry run python -m pytest
-              --junitxml=./test-reports/junit.xml
-              --cov-report xml:./test-reports/coverage.xml
-              --cov podcast_log
-              tests
-            - poetry run codecov -t $CODECOV_KEY
-    '{develop,master}':
-      - step:
-          caches:
-            - pip
-          name: Deploy to staging
-          deployment: staging
-          script:
-            - echo "Deploying to staging environment"
-            - export REPO_URL=http://bitbucket.org/$BITBUCKET_REPO_FULL_NAME
-            - python -m pip install --upgrade pip
-            - python -m pip install fabric patchwork jinja2 python-dotenv
-            - fab -r deploy_tools/fabfile.py -H ubuntu@podcasts-staging.matt-kramer.com deploy
+      - step: *build-test
+    develop:
+      - step: *build-test
+      - step: *deploy
     master:
+      - step: *build-test
+      - step: *deploy
       - step:
-          script:
-            - echo "Manually deploy to production"
-      - step:
-          caches:
-            - pip
-          name: Deploy to production
-          deployment: production
-          trigger: manual
-          script:
-            - echo "Deploying to production environment"
-            - export REPO_URL=http://bitbucket.org/$BITBUCKET_REPO_FULL_NAME
-            - python -m pip install --upgrade pip
-            - python -m pip install fabric patchwork jinja2 python-dotenv
-            - fab -r deploy_tools/fabfile.py -H ubuntu@podcasts.matt-kramer.com deploy
-
+        <<: *deploy
+        name: Deploy to production
+        deployment: production
+        trigger: manual
