@@ -42,15 +42,13 @@ def update_podcast_feed(podcast_id: int, force: bool = False) -> None:
     podcast = Podcast.query.get(podcast_id)
 
     if not podcast.needs_update and not force:
-        logger.info(
-            "Podcast %s has been updated recently, doesn't need update", podcast
-        )
+        logger.info(f"Podcast {podcast} has been updated recently, doesn't need update")
         return
 
     dict_ = feedparser.parse(podcast.url)
 
-    logger.info("Loading podcast '%s' from '%s'", podcast, podcast.url)
-    logger.info("  Parsing %d entries", len(dict_["entries"]))
+    logger.info(f"Loading podcast {podcast} from {podcast.url}")
+    logger.info(f"  Parsing {len(dict_['entries'])} entries")
     logger.debug(dict_["feed"])
 
     # Create a list of new entries, unless forced to process all entries
@@ -96,14 +94,8 @@ def update_podcast_feed(podcast_id: int, force: bool = False) -> None:
                 if match:
                     episode.episode_number = int(match.group(1))
 
-        # try:
+        logger.info(f"Saving episode: {podcast}, {episode}")
         episode.save()
-        # except IntegrityError:
-        #     episode.needs_review = True
-        #     episode.episode_number = None
-        #     episode.save()
-
-        logger.info("Saving episode: %s, %s", podcast, episode)
 
     podcast.last_refreshed = datetime.now()
     podcast.save()
