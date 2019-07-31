@@ -1,4 +1,5 @@
 """Define the main routes and views."""
+from datetime import timedelta
 from typing import Any
 
 from flask import Blueprint, render_template, redirect, url_for, request, Flask
@@ -7,7 +8,7 @@ from werkzeug.wrappers import Response
 from podcast_log.pagination import Paginator
 from .forms import AddPodcastForm, EditPodcastForm, EditEpisodeForm
 from .models import Podcast, Episode, STATUS_CHOICES, Status
-from .tables import PodcastEpisodesTable, AllEpisodesTable
+from .tables import PodcastEpisodesTable, AllEpisodesTable, StatisticsTable
 from .tasks import create_new_podcast, add_podcast_to_update_queue
 
 bp = Blueprint("main", __name__)
@@ -127,6 +128,37 @@ def update_episode_status(episode_id: int) -> Response:
             episode.status = key
             episode.save()
     return redirect(request.referrer)
+
+
+@bp.route("/statistics")
+def statistics() -> str:
+    """Show the  overall statistics for each podcast and the cumulative totals."""
+    podcasts = Podcast.query.order_by(Podcast.title).all()
+    total_progress = ""
+    total_time_listened = timedelta(seconds=0)
+    for podcast in podcasts:
+        total_time_listened += podcast.statistics.time_listened
+
+    items = []
+    for podcast in podcasts:
+        items.append(
+            {
+                "image_url": podcast.image_url,
+                "title": podcast.title,
+                "progress": podcast.statistics.progress,
+                "time_listened": podcast.statistics.time_listened,
+            }
+        )
+    items.append(
+        {
+            "image_url": "",
+            "title": "Total",
+            "progress": total_progress,
+            "time_listened": total_time_listened,
+        }
+    )
+    table = StatisticsTable(items)
+    return render_template("statistics.html", table=table)
 
 
 def init_app(app: Flask) -> None:

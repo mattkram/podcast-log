@@ -69,7 +69,13 @@ all_columns = {
 }
 
 
-class EpisodeTableBase(Table):
+class TableBase(Table):
+    """Base class to apply the table css class to all tables."""
+
+    classes = ["table"]
+
+
+class EpisodeTableBase(TableBase):
     """Base class for episode tables.
 
     Defines all available columns. Specific columns can be removed for specific usages by setting
@@ -114,3 +120,12 @@ class PodcastEpisodesTable(EpisodeTableBase):
     """
 
     hide_cols = ("podcast",)
+
+
+class StatisticsTable(TableBase):
+    """A table showing statistics for each podcast and the cumulative total."""
+
+    image_url = ImageCol("")
+    title = Col("Podcast")
+    progress = Col("Progress")
+    time_listened = Col("Time Listened")
