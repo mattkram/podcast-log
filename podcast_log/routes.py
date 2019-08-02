@@ -1,12 +1,15 @@
 """Define the main routes and views."""
+import tempfile
 from datetime import timedelta
+from pathlib import Path
 from typing import Any
 
 from flask import Blueprint, render_template, redirect, url_for, request, Flask
 from werkzeug.wrappers import Response
 
+from podcast_log.tasks import migrate_csv_file
 from podcast_log.pagination import Paginator
-from .forms import AddPodcastForm, EditPodcastForm, EditEpisodeForm
+from .forms import AddPodcastForm, EditPodcastForm, EditEpisodeForm, FileUploadForm
 from .models import Podcast, Episode, STATUS_CHOICES, Status
 from .tables import PodcastEpisodesTable, AllEpisodesTable, StatisticsTable
 from .tasks import create_new_podcast, add_podcast_to_update_queue
@@ -159,6 +162,21 @@ def statistics() -> str:
     )
     table = StatisticsTable(items)
     return render_template("statistics.html", table=table)
+
+
+@bp.route("/upload-tsv", methods=["GET", "POST"])
+def upload_tsv_file() -> Any:
+    """Hidden form to upload podcast status from TSV file."""
+    form = FileUploadForm()
+    if form.validate_on_submit():
+        fp = form.file.data
+        if Path(fp.filename).suffix == ".tsv":
+            with tempfile.NamedTemporaryFile() as tf:
+                fp.save(tf.name)
+                migrate_csv_file(Path(tf.name))
+            return redirect(url_for("main.statistics"))
+    form = FileUploadForm()
+    return render_template("upload-file.html", form=form)
 
 
 def init_app(app: Flask) -> None:

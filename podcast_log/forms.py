@@ -2,7 +2,8 @@
 from typing import Generator
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, Field
+from flask_wtf.file import FileRequired
+from wtforms import StringField, SubmitField, Field, FileField
 from wtforms.ext.sqlalchemy.orm import model_form
 from wtforms.validators import InputRequired
 
@@ -50,3 +51,10 @@ EditEpisodeForm = model_form(
         "needs_review",
     ],
 )
+
+
+class FileUploadForm(FlaskForm):
+    """A simple form to upload a file."""
+
+    file = FileField(label="Choose file:", validators=[FileRequired()])
+    submit = SubmitField()

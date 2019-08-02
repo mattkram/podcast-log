@@ -2,14 +2,16 @@
 import re
 import time
 from datetime import timedelta, datetime
+from pathlib import Path
 from queue import Queue
 from threading import Thread
 
 import feedparser
 from flask import current_app
-from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
+from typing import Dict, Any
 
-from .models import Podcast, Episode
+from .models import Episode, Podcast, Status
 
 
 # TODO: Refactor to combine some functionality in update and add functions
@@ -152,3 +154,133 @@ def parse_duration(string: str) -> timedelta:
     parts = [int(i) for i in string.split(":")[::-1]]  # s, m, [h]
     kwargs = dict(zip(["seconds", "minutes", "hours"], parts))
     return timedelta(**kwargs)
+
+
+def get_episode(
+    podcast: Podcast, episode_number: int = None, publication_date: datetime = None
+) -> Episode:
+    """Find a matching episode, or create a new one."""
+    # Try to find an episode by episode number first
+    if episode_number is not None:
+        episode = Episode.query.filter_by(
+            podcast=podcast, episode_number=episode_number
+        ).first()
+        if episode is not None:
+            return episode
+
+    # Then try to find the episode by publication date
+    if publication_date is not None:
+        episode = Episode.query.filter_by(
+            podcast=podcast, publication_date=publication_date
+        ).first()
+        if episode is not None:
+            return episode
+
+    # Otherwise, create a new episode
+    return Episode(podcast=podcast)
+
+
+def find_podcast_containing(podcast_title: str) -> Podcast:
+    """Find the podcast whose title contains the provided text."""
+    try:
+        return Podcast.query.filter(Podcast.title.contains(podcast_title)).one()
+    except NoResultFound:
+        print(f"No podcast found containing {podcast_title}, skipping")
+        raise
+    except MultipleResultsFound:
+        print(
+            f"Multiple results found for podcast containing {podcast_title}, skipping"
+        )
+        raise
+
+
+def update_episode_data(episode: Episode, episode_data: Dict[str, Any]) -> None:
+    """Update the attributes of an episode from a dictionary without overwriting existing values."""
+    for key, value in episode_data.items():
+        old_value = getattr(episode, key)
+        if not old_value:
+            try:
+                setattr(episode, key, value)
+            except AttributeError:
+                print(episode, key, value)
+
+    if "status" in episode_data:
+        episode.status = getattr(Status, episode_data["status"])
+
+    episode.save()
+
+
+def process_episode(episode_data: Dict[str, Any]) -> None:
+    """Given the input data, try to find a matching episode to update the status.
+
+    Otherwise, add to the database.
+
+    """
+    podcast_title = episode_data.pop("podcast")
+    podcast = find_podcast_containing(podcast_title)
+
+    filter_dict = {"podcast": podcast}
+    for key in ["episode_number", "publication_date"]:
+        if key in episode_data:
+            filter_dict[key] = episode_data[key]
+    # print(filter_dict)
+
+    episode = get_episode(**filter_dict)
+
+    update_episode_data(episode, episode_data)
+
+
+def clean_episode_data(episode_data: Dict[str, Any]) -> Dict[str, Any]:
+    """Perform data conversions."""
+    try:
+        episode_data["episode_number"] = int(episode_data.pop("episode_number"))
+    except (KeyError, ValueError):
+        pass
+
+    try:
+        episode_data["duration"] = parse_duration(episode_data["duration"])
+    except KeyError:
+        pass
+    try:
+        episode_data["status"] = episode_data["status"].upper().replace(" ", "_")
+    except KeyError:
+        pass
+
+    try:
+        episode_data["publication_timestamp"] = datetime.strptime(
+            episode_data["publication_timestamp"], "%m/%d/%Y"
+        )
+    except ValueError:
+        episode_data["publication_timestamp"] = datetime.strptime(
+            episode_data["publication_timestamp"], "%m/%d/%y"
+        )
+    except KeyError:
+        pass
+    return episode_data
+
+
+def migrate_csv_file(filename: Path) -> None:
+    """Migrate from TSV file loaded from Google Sheets. Use TSV since some values have commas."""
+    with filename.open() as fp:
+        fp.readline()  # Read first line to skip header
+        for line in fp:
+            # Construct a data dict for the row, skipping blanks
+            data = {}
+            for key, value in zip(
+                [
+                    "podcast",
+                    "episode_number",
+                    "status",
+                    "duration",
+                    "publication_timestamp",
+                    "title",
+                ],
+                line.split("\t"),
+            ):
+                if value:
+                    data[key] = value
+
+            try:
+                process_episode(clean_episode_data(data))
+            except (NoResultFound, MultipleResultsFound):
+                pass
