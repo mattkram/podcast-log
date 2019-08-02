@@ -1,14 +1,21 @@
 """Define the main routes and views."""
-import tempfile
 from datetime import timedelta
 from pathlib import Path
 from typing import Any
 
-from flask import Blueprint, render_template, redirect, url_for, request, Flask
+from flask import (
+    Blueprint,
+    render_template,
+    redirect,
+    url_for,
+    request,
+    Flask,
+    current_app,
+)
 from werkzeug.wrappers import Response
 
-from podcast_log.tasks import migrate_csv_file
 from podcast_log.pagination import Paginator
+from podcast_log.tasks import migrate_csv_file
 from .forms import AddPodcastForm, EditPodcastForm, EditEpisodeForm, FileUploadForm
 from .models import Podcast, Episode, STATUS_CHOICES, Status
 from .tables import PodcastEpisodesTable, AllEpisodesTable, StatisticsTable
@@ -171,9 +178,11 @@ def upload_tsv_file() -> Any:
     if form.validate_on_submit():
         fp = form.file.data
         if Path(fp.filename).suffix == ".tsv":
-            with tempfile.NamedTemporaryFile() as tf:
-                fp.save(tf.name)
-                migrate_csv_file(Path(tf.name))
+            upload_path = Path(current_app.instance_path, "upload")
+            upload_path.mkdir(exist_ok=True)
+            file_path = (upload_path / fp.filename).resolve()
+            fp.save(str(file_path))
+            migrate_csv_file(file_path)
             return redirect(url_for("main.statistics"))
     form = FileUploadForm()
     return render_template("upload-file.html", form=form)
