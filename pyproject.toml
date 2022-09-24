@@ -28,6 +28,9 @@ patchwork = "^1.0"
 pytest = "^5.0"
 pytest-cov = "^2.7"
 
+[tool.isort]
+profile = "black"
+
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"

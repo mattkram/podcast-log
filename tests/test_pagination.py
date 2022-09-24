@@ -1,6 +1,6 @@
 import random
 from functools import partial
-from typing import Any, List, Callable
+from typing import Any, Callable, List
 
 import pytest
 

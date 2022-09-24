@@ -1,5 +1,5 @@
 """Simple pagination utilities."""
-from typing import Any, List, Dict
+from typing import Any, Dict, List
 
 from flask import request
 from flask_sqlalchemy import BaseQuery

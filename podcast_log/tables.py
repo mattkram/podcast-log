@@ -1,8 +1,8 @@
 """Table classes."""
-from typing import List, Dict, Tuple, Any
+from typing import Any, Dict, List, Tuple
 
 from flask import url_for
-from flask_table import Table, Col, OptCol, LinkCol
+from flask_table import Col, LinkCol, OptCol, Table
 from flask_table.html import element
 
 from podcast_log.models import STATUS_CHOICES, Episode

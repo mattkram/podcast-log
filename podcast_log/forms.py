@@ -3,11 +3,11 @@ from typing import Generator
 
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileRequired
-from wtforms import StringField, SubmitField, Field, FileField
+from wtforms import Field, FileField, StringField, SubmitField
 from wtforms.validators import InputRequired
 from wtforms_sqlalchemy.orm import model_form
 
-from podcast_log.models import db, Podcast, Episode
+from podcast_log.models import Episode, Podcast, db
 
 
 class ModelFormBase(FlaskForm):

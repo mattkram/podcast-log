@@ -1,18 +1,17 @@
 """Background tasks for updating podcast feeds."""
 import re
 import time
-from datetime import timedelta, datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from queue import Queue
 from threading import Thread
+from typing import Any, Dict
 
 import feedparser
 from flask import current_app
-from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
-from typing import Dict, Any
+from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
 from .models import Episode, Podcast, Status
-
 
 # TODO: Refactor to combine some functionality in update and add functions
 # TODO: Consider update_or_create when updating episodes

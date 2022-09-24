@@ -1,10 +1,10 @@
-from typing import Generator, Any
+from datetime import datetime, timedelta
+from typing import Any, Generator
 
 import pytest
-from datetime import timedelta, datetime
 from flask import Flask
 
-from podcast_log.models import Podcast, Episode, Status
+from podcast_log.models import Episode, Podcast, Status
 
 
 @pytest.fixture()

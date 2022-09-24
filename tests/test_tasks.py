@@ -6,7 +6,7 @@ import pytest
 from _pytest.monkeypatch import MonkeyPatch
 
 import podcast_log.tasks
-from podcast_log.models import Podcast, Episode, Status
+from podcast_log.models import Episode, Podcast, Status
 from podcast_log.tasks import create_new_podcast, update_podcast_feed
 
 

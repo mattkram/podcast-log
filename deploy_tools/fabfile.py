@@ -6,7 +6,7 @@ from tempfile import TemporaryFile
 import jinja2
 from dotenv import load_dotenv
 from invoke import run, task
-from patchwork.files import append, exists, contains
+from patchwork.files import append, contains, exists
 
 load_dotenv()
 
