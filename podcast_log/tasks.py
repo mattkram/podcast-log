@@ -36,7 +36,7 @@ update_thread.start()
 def add_podcast_to_update_queue(podcast_id: int, force: bool = False) -> None:
     """Queue a podcast to be updated."""
     # noinspection PyProtectedMember
-    queue.put((current_app._get_current_object(), podcast_id, force))
+    queue.put((current_app._get_current_object(), podcast_id, force))  # type: ignore
 
 
 def update_podcast_feed(podcast_id: int, force: bool = False) -> None:
@@ -195,7 +195,7 @@ def find_podcast_containing(podcast_title: str) -> Podcast:
         raise
 
 
-def update_episode_data(episode: Episode, episode_data: dict[str, Any]) -> None:
+def update_episode_data(episode: "Episode", episode_data: dict[str, Any]) -> None:
     """Update the attributes of an episode from a dictionary without overwriting existing values."""
     for key, value in episode_data.items():
         old_value = getattr(episode, key)

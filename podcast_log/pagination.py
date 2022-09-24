@@ -54,7 +54,7 @@ class Paginator:
 
         def make_url(page_num: int) -> str:
             args = request.args.copy()
-            args["page"] = page_num
+            args["page"] = str(page_num)
             return f"{request.path}?{url_encode(args)}"
 
         page_buttons = [{"url": make_url(previous_page), "text": "Previous"}]
