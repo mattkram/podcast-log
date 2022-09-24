@@ -192,11 +192,14 @@ testing = ["mock (>=2.0.0,<3.0)"]
 
 [[package]]
 name = "feedparser"
-version = "5.2.1"
+version = "6.0.10"
 description = "Universal feed parser, handles RSS 0.9x, RSS 1.0, RSS 2.0, CDF, Atom 0.3, and Atom 1.0 feeds"
 category = "main"
 optional = false
-python-versions = "*"
+python-versions = ">=3.6"
+
+[package.dependencies]
+sgmllib3k = "*"
 
 [[package]]
 name = "flake8"
@@ -730,6 +733,14 @@ socks = ["PySocks (>=1.5.6,!=1.5.7)"]
 use_chardet_on_py3 = ["chardet (>=3.0.2,<6)"]
 
 [[package]]
+name = "sgmllib3k"
+version = "1.0.0"
+description = "Py3k port of sgmllib."
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "six"
 version = "1.16.0"
 description = "Python 2 and 3 compatibility utilities"
@@ -864,7 +875,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "cd6f406efbe072505cf68c6eab044179adbc6cac995e9b96ec92c95bb3ec3b16"
+content-hash = "1b8b496b70542a4aadd95c21aa95e2d4e313374331096428522ddcc7d340fcfd"
 
 [metadata.files]
 alembic = []
@@ -883,11 +894,7 @@ colorama = []
 coverage = []
 cryptography = []
 fabric = []
-feedparser = [
-    {file = "feedparser-5.2.1.tar.bz2", hash = "sha256:ce875495c90ebd74b179855449040003a1beb40cd13d5f037a0654251e260b02"},
-    {file = "feedparser-5.2.1.tar.gz", hash = "sha256:bd030652c2d08532c034c27fcd7c85868e7fa3cb2b17f230a44a6bbc92519bf9"},
-    {file = "feedparser-5.2.1.zip", hash = "sha256:cd2485472e41471632ed3029d44033ee420ad0b57111db95c240c9160a85831c"},
-]
+feedparser = []
 flake8 = []
 flask = []
 flask-babel = []
@@ -934,6 +941,7 @@ pytest-mypy = []
 python-dotenv = []
 pytz = []
 requests = []
+sgmllib3k = []
 six = []
 snowballstemmer = []
 sqlalchemy = []
