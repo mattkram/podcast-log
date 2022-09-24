@@ -27,14 +27,7 @@ jobs:
         version: 1.2.1
         virtualenvs-create: true
         virtualenvs-in-project: true
-    - name: Load cached venv
-      id: cached-poetry-dependencies
-      uses: actions/cache@v2
-      with:
-        path: .venv
-        key: venv-${{ matrix.os }}-python${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
     - name: Install library and dependencies
-      if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
       run: poetry install --no-interaction
     - name: Static type checking
       run: |
