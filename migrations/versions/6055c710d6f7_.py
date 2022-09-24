@@ -1,7 +1,7 @@
 """empty message
 
 Revision ID: 6055c710d6f7
-Revises: 
+Revises:
 Create Date: 2019-05-31 21:49:49.079125
 
 """
