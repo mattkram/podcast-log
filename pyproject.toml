@@ -7,16 +7,17 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.7"
-feedparser = "^5.2"
-flask = "^1.1"
-flask-migrate = "^2.5"
-flask-sqlalchemy = "^2.4"
+feedparser = "^6.0.10"
+flask = "^2.2.2"
+flask-migrate = "^3.1.0"
+flask-sqlalchemy = "^2.5.1"
 flask-table = "^0.5.0"
-flask-wtf = "^0.14.2"
+flask-wtf = "^1.0.1"
 gunicorn = "^19.9"
 marshmallow = "=3.0.0rc8"
 psycopg2-binary = "^2.8"
 python-dotenv = "^0.10.3"
+wtforms-sqlalchemy = "^0.3"
 
 [tool.poetry.dev-dependencies]
 black = "=19.3b0"
@@ -24,12 +25,8 @@ codecov = "^2.0"
 fabric = "^2.4"
 mypy = "^0.720.0"
 patchwork = "^1.0"
-pydocstyle = "^4.0"
 pytest = "^5.0"
 pytest-cov = "^2.7"
-pytest-docstyle = "^1.5"
-pytest-flake8 = "^1.0"
-pytest-mypy = "^0.3.3"
 
 [build-system]
 requires = ["poetry>=0.12"]
