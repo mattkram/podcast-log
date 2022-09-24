@@ -1,5 +1,7 @@
 """Table classes."""
-from typing import Any, Dict, List, Tuple
+from __future__ import annotations
+
+from typing import Any
 
 from flask import url_for
 from flask_table import Col, LinkCol, OptCol, Table
@@ -19,7 +21,7 @@ class ImageCol(Col):
 class SelectStatusCol(OptCol):
     """A custom table column to select table status and update the database."""
 
-    def td_contents(self, item: Episode, attr_list: List[str]) -> str:
+    def td_contents(self, item: Episode, attr_list: list[str]) -> str:
         """Construct an HTML form for updating the episode status in the database."""
         content = self.td_format(self.from_attr_list(item, attr_list))
         post_url = url_for("main.update_episode_status", episode_id=item.id)
@@ -44,7 +46,7 @@ class SelectStatusCol(OptCol):
 class PodcastLinkCol(LinkCol):
     """Custom link column to show text as podcast title."""
 
-    def text(self, item: Episode, attr_list: List[str]) -> str:
+    def text(self, item: Episode, attr_list: list[str]) -> str:
         """Format the cell contents to include a link to edit the episode."""
         return item.podcast.title
 
@@ -84,7 +86,7 @@ class EpisodeTableBase(TableBase):
     """
 
     allow_sort = False
-    hide_cols: Tuple[str, ...] = tuple()
+    hide_cols: tuple[str, ...] = tuple()
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         """Override constructor to dynamically add columns to handle hidden columns."""
@@ -97,7 +99,7 @@ class EpisodeTableBase(TableBase):
         """Provide a url for each column which will be called when the header is clicked to sort."""
         pass
 
-    def get_tr_attrs(self, item: Episode) -> Dict[str, str]:
+    def get_tr_attrs(self, item: Episode) -> dict[str, str]:
         """Assign attributes to the table row by assigning a CSS class."""
         return {"class": f"row-episode-{str(item.status).lower()}"}
 

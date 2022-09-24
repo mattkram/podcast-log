@@ -1,5 +1,7 @@
 """Simple pagination utilities."""
-from typing import Any, Dict, List
+from __future__ import annotations
+
+from typing import Any
 
 from flask import request
 from flask_sqlalchemy import BaseQuery
@@ -31,7 +33,7 @@ class Paginator:
         self.reverse_sort = reverse_sort
 
     @property
-    def items(self) -> List[Any]:
+    def items(self) -> list[Any]:
         """Retrieve a list of items for a specific page, optionally sorted by a model column."""
         items = self.query
         if self.sort_column:
@@ -44,7 +46,7 @@ class Paginator:
         return items.paginate(self.page, self.items_per_page, False).items
 
     @property
-    def pages(self) -> List[Dict[str, str]]:
+    def pages(self) -> list[dict[str, str]]:
         """Construct pagination buttons."""
         total_pages = len(self.query.all()) // self.items_per_page + 1
         previous_page = max(self.page - 1, 1)

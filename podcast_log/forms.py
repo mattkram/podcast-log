@@ -1,5 +1,7 @@
 """Forms for interacting with database models."""
-from typing import Generator
+from __future__ import annotations
+
+from collections.abc import Generator
 
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileRequired

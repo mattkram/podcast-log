@@ -1,5 +1,8 @@
 """Global fixtures for tests."""
-from typing import Any, Generator
+from __future__ import annotations
+
+from collections.abc import Generator
+from typing import Any
 
 import pytest
 from click.testing import CliRunner
