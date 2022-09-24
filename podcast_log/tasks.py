@@ -11,7 +11,7 @@ import feedparser
 from flask import current_app
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
-from .models import Episode, Podcast, Status
+from podcast_log.models import Episode, Podcast, Status
 
 # TODO: Refactor to combine some functionality in update and add functions
 # TODO: Consider update_or_create when updating episodes

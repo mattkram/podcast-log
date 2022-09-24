@@ -14,13 +14,20 @@ from flask import (
 )
 from werkzeug.wrappers import Response
 
+from podcast_log.forms import (
+    AddPodcastForm,
+    EditEpisodeForm,
+    EditPodcastForm,
+    FileUploadForm,
+)
+from podcast_log.models import STATUS_CHOICES, Episode, Podcast, Status
 from podcast_log.pagination import Paginator
-from podcast_log.tasks import migrate_csv_file
-
-from .forms import AddPodcastForm, EditEpisodeForm, EditPodcastForm, FileUploadForm
-from .models import STATUS_CHOICES, Episode, Podcast, Status
-from .tables import AllEpisodesTable, PodcastEpisodesTable, StatisticsTable
-from .tasks import add_podcast_to_update_queue, create_new_podcast
+from podcast_log.tables import AllEpisodesTable, PodcastEpisodesTable, StatisticsTable
+from podcast_log.tasks import (
+    add_podcast_to_update_queue,
+    create_new_podcast,
+    migrate_csv_file,
+)
 
 bp = Blueprint("main", __name__)
 

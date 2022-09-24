@@ -3,9 +3,8 @@ from typing import Tuple
 
 from flask import Blueprint, Flask, Response, jsonify
 
+from podcast_log.models import Episode, Podcast
 from podcast_log.schemata import EpisodeSchema, PodcastSchema
-
-from .models import Episode, Podcast
 
 bp = Blueprint("api", __name__, url_prefix="/api")
 
