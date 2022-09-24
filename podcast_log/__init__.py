@@ -7,7 +7,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from flask import Flask
 
-from .__version__ import __version__  # noqa: F401
+from podcast_log.__version__ import __version__  # noqa: F401
 
 load_dotenv()
 
@@ -38,15 +38,15 @@ def create_app() -> Flask:
 
     Path(app.instance_path).mkdir(exist_ok=True)
 
-    from . import models
+    from podcast_log import models
 
     models.init_app(app)
 
-    from . import routes
+    from podcast_log import routes
 
     routes.init_app(app)
 
-    from . import api
+    from podcast_log import api
 
     api.init_app(app)
 

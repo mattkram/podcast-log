@@ -5,21 +5,29 @@ from typing import Any
 
 from flask import (
     Blueprint,
-    render_template,
-    redirect,
-    url_for,
-    request,
     Flask,
     current_app,
+    redirect,
+    render_template,
+    request,
+    url_for,
 )
 from werkzeug.wrappers import Response
 
+from podcast_log.forms import (
+    AddPodcastForm,
+    EditEpisodeForm,
+    EditPodcastForm,
+    FileUploadForm,
+)
+from podcast_log.models import STATUS_CHOICES, Episode, Podcast, Status
 from podcast_log.pagination import Paginator
-from podcast_log.tasks import migrate_csv_file
-from .forms import AddPodcastForm, EditPodcastForm, EditEpisodeForm, FileUploadForm
-from .models import Podcast, Episode, STATUS_CHOICES, Status
-from .tables import PodcastEpisodesTable, AllEpisodesTable, StatisticsTable
-from .tasks import create_new_podcast, add_podcast_to_update_queue
+from podcast_log.tables import AllEpisodesTable, PodcastEpisodesTable, StatisticsTable
+from podcast_log.tasks import (
+    add_podcast_to_update_queue,
+    create_new_podcast,
+    migrate_csv_file,
+)
 
 bp = Blueprint("main", __name__)
 

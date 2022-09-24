@@ -1,6 +1,9 @@
+from __future__ import annotations
+
 import random
+from collections.abc import Callable
 from functools import partial
-from typing import Any, List, Callable
+from typing import Any, List
 
 import pytest
 

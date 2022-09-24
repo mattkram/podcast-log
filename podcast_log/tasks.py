@@ -1,18 +1,19 @@
 """Background tasks for updating podcast feeds."""
+from __future__ import annotations
+
 import re
 import time
-from datetime import timedelta, datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from queue import Queue
 from threading import Thread
+from typing import Any
 
 import feedparser
 from flask import current_app
-from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
-from typing import Dict, Any
+from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
-from .models import Episode, Podcast, Status
-
+from podcast_log.models import Episode, Podcast, Status
 
 # TODO: Refactor to combine some functionality in update and add functions
 # TODO: Consider update_or_create when updating episodes
@@ -35,7 +36,7 @@ update_thread.start()
 def add_podcast_to_update_queue(podcast_id: int, force: bool = False) -> None:
     """Queue a podcast to be updated."""
     # noinspection PyProtectedMember
-    queue.put((current_app._get_current_object(), podcast_id, force))
+    queue.put((current_app._get_current_object(), podcast_id, force))  # type: ignore
 
 
 def update_podcast_feed(podcast_id: int, force: bool = False) -> None:
@@ -194,7 +195,7 @@ def find_podcast_containing(podcast_title: str) -> Podcast:
         raise
 
 
-def update_episode_data(episode: Episode, episode_data: Dict[str, Any]) -> None:
+def update_episode_data(episode: "Episode", episode_data: dict[str, Any]) -> None:
     """Update the attributes of an episode from a dictionary without overwriting existing values."""
     for key, value in episode_data.items():
         old_value = getattr(episode, key)
@@ -210,7 +211,7 @@ def update_episode_data(episode: Episode, episode_data: Dict[str, Any]) -> None:
     episode.save()
 
 
-def process_episode(episode_data: Dict[str, Any]) -> None:
+def process_episode(episode_data: dict[str, Any]) -> None:
     """Given the input data, try to find a matching episode to update the status.
 
     Otherwise, add to the database.
@@ -230,7 +231,7 @@ def process_episode(episode_data: Dict[str, Any]) -> None:
     update_episode_data(episode, episode_data)
 
 
-def clean_episode_data(episode_data: Dict[str, Any]) -> Dict[str, Any]:
+def clean_episode_data(episode_data: dict[str, Any]) -> dict[str, Any]:
     """Perform data conversions."""
     try:
         episode_data["episode_number"] = int(episode_data.pop("episode_number"))

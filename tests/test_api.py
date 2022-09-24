@@ -3,7 +3,7 @@ from flask import Response
 from flask.testing import FlaskClient
 from marshmallow import Schema
 
-from podcast_log.models import Podcast, Episode
+from podcast_log.models import Episode, Podcast
 from podcast_log.schemata import EpisodeSchema, PodcastSchema
 
 

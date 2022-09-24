@@ -6,7 +6,7 @@ from tempfile import TemporaryFile
 import jinja2
 from dotenv import load_dotenv
 from invoke import run, task
-from patchwork.files import append, exists, contains
+from patchwork.files import append, contains, exists
 
 load_dotenv()
 
@@ -63,8 +63,8 @@ def _update_virtualenv(connection):
         connection.run(f"{PYTHON} -m virtualenv venv")
 
     with connection.prefix(". venv/bin/activate"):
-        connection.run(f"python -m pip install --upgrade pip")
-        connection.run(f"python -m pip install --upgrade poetry")
+        connection.run("python -m pip install --upgrade pip")
+        connection.run("python -m pip install --upgrade poetry")
         connection.run("poetry install")
 
 
@@ -104,8 +104,8 @@ def _prepare_nginx_config(connection):
             ]
         )
     )
-    connection.run(f"sudo systemctl start nginx")
-    connection.run(f"sudo systemctl reload nginx")
+    connection.run("sudo systemctl start nginx")
+    connection.run("sudo systemctl reload nginx")
 
 
 def _prepare_gunicorn_config(connection):

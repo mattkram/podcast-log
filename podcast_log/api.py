@@ -1,10 +1,10 @@
 """API route definitions."""
-from typing import Tuple
+from __future__ import annotations
 
-from flask import Blueprint, jsonify, Response, Flask
+from flask import Blueprint, Flask, Response, jsonify
 
-from podcast_log.schemata import PodcastSchema, EpisodeSchema
-from .models import Podcast, Episode
+from podcast_log.models import Episode, Podcast
+from podcast_log.schemata import EpisodeSchema, PodcastSchema
 
 bp = Blueprint("api", __name__, url_prefix="/api")
 
@@ -19,7 +19,7 @@ def get_podcasts() -> Response:
 
 
 @bp.route("/podcasts/<int:pk>")
-def get_podcast(pk: int) -> Tuple[Response, int]:
+def get_podcast(pk: int) -> tuple[Response, int]:
     """Get a single podcast by ID."""
     podcast_object = Podcast.query.get(pk)
     if podcast_object is None:
@@ -40,7 +40,7 @@ def get_episodes() -> Response:
 
 
 @bp.route("/episodes/<int:pk>")
-def get_episode(pk: int) -> Tuple[Response, int]:
+def get_episode(pk: int) -> tuple[Response, int]:
     """Get a single episode by ID."""
     episode_object = Episode.query.get(pk)
     if episode_object is None:

@@ -1,11 +1,11 @@
 """Database model definitions."""
 import enum
-from datetime import timedelta, datetime
+from datetime import datetime, timedelta
 from typing import Any, Optional
 
 from flask import Flask
 from flask_migrate import Migrate
-from flask_sqlalchemy import SQLAlchemy, Model
+from flask_sqlalchemy import Model, SQLAlchemy
 
 
 class ModelBase(Model):

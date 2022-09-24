@@ -1,5 +1,8 @@
 """Global fixtures for tests."""
-from typing import Any, Generator
+from __future__ import annotations
+
+from collections.abc import Generator
+from typing import Any
 
 import pytest
 from click.testing import CliRunner
@@ -7,7 +10,7 @@ from flask import Flask
 from flask.testing import FlaskClient
 
 from podcast_log import create_app
-from podcast_log.models import db, Podcast, Episode
+from podcast_log.models import Episode, Podcast, db
 
 
 @pytest.fixture(autouse=True)
