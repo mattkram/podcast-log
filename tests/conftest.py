@@ -43,7 +43,8 @@ def app(_app: Flask) -> Generator[Flask, None, None]:
 def app_with_data(app: Flask) -> Generator[Flask, None, None]:
     """Create an application with pre-filled database."""
     podcast = Podcast(title="Test Podcast")
-    [Episode(podcast=podcast) for _ in range(3)]
+    for _ in range(3):
+        _ = Episode(podcast=podcast)
     podcast.save()
     yield app
 
