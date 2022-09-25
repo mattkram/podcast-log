@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 from collections.abc import Generator
-from typing import Any
 
 import pytest
 from click.testing import CliRunner
@@ -13,19 +12,30 @@ from podcast_log import create_app
 from podcast_log.models import Episode, Podcast, db
 
 
+@pytest.fixture(scope="session")
+def _app() -> Generator[Flask, None, None]:
+    """Construct an app with test configuration. Only happens once per-session."""
+    from _pytest.monkeypatch import MonkeyPatch
+
+    monkeypatch = MonkeyPatch()
+    monkeypatch.setenv("APP_SETTINGS", "podcast_log.config.TestingConfig")
+    yield create_app()
+    monkeypatch.undo()
+
+
 @pytest.fixture(autouse=True)
-def app(monkeypatch: Any) -> Generator[Flask, None, None]:
-    """Create an application with test settings.
+def app(_app: Flask) -> Generator[Flask, None, None]:
+    """Create an application with test settings and empty database.
+
+    Database is cleared after each test.
 
     Yields:
         The application object with application context.
 
     """
-    monkeypatch.setenv("APP_SETTINGS", "podcast_log.config.TestingConfig")
-    app = create_app()
-    with app.app_context():
+    with _app.app_context():
         db.create_all()
-        yield app
+        yield _app
         db.drop_all()
 
 
