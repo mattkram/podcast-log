@@ -7,8 +7,6 @@ from pathlib import Path
 from dotenv import load_dotenv
 from flask import Flask
 
-from podcast_log.__version__ import __version__  # noqa: F401
-
 load_dotenv()
 
 APP_ROOT = Path(__file__).parents[1]
