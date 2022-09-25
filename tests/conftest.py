@@ -4,7 +4,6 @@ from __future__ import annotations
 from collections.abc import Generator
 
 import pytest
-from click.testing import CliRunner
 from flask import Flask
 from flask.testing import FlaskClient
 
@@ -53,9 +52,3 @@ def app_with_data(app: Flask) -> Generator[Flask, None, None]:
 def client(app_with_data: Flask) -> FlaskClient:
     """Test client for testing HTTP responses."""
     return app_with_data.test_client()
-
-
-@pytest.fixture
-def runner(app: Flask) -> CliRunner:
-    """Command-line runner for flask application."""
-    return app.test_cli_runner()
