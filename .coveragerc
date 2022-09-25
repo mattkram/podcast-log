@@ -1,2 +1,5 @@
 [run]
-source=podcast_log
+source =
+    podcast_log
+omit =
+    podcast_log/wsgi.py
