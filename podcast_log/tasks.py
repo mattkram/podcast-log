@@ -35,7 +35,6 @@ update_thread.start()
 
 def add_podcast_to_update_queue(podcast_id: int, force: bool = False) -> None:
     """Queue a podcast to be updated."""
-    # noinspection PyProtectedMember
     queue.put((current_app._get_current_object(), podcast_id, force))  # type: ignore
 
 
