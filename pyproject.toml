@@ -28,6 +28,10 @@ pytest = "^7.0.0"
 pytest-cov = "^4.0.0"
 types-invoke = "^2.0.0.8"
 
+[tool.coverage.run]
+source = [ "podcast_log" ]
+omit = [ "podcast_log/wsgi.py" ]
+
 [tool.isort]
 profile = "black"
 
