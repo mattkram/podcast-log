@@ -97,7 +97,7 @@ class EpisodeTableBase(TableBase):
 
     def sort_url(self, col_id: str, reverse: bool = False) -> str:
         """Provide a url for each column which will be called when the header is clicked to sort."""
-        pass
+        raise NotImplementedError
 
     def get_tr_attrs(self, item: Episode) -> dict[str, str]:
         """Assign attributes to the table row by assigning a CSS class."""

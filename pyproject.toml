@@ -22,10 +22,12 @@ wtforms-sqlalchemy = "^0.3"
 
 [tool.poetry.group.dev.dependencies]
 fabric = "^2.4"
-mypy = "^0.971"
+mypy = "^1.0.0"
 patchwork = "^1.0"
 pytest = "^7.0.0"
 pytest-cov = "^4.0.0"
+types-invoke = "^2.0.0.8"
+
 
 [tool.isort]
 profile = "black"
