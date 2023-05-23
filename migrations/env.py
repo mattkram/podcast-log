@@ -12,7 +12,7 @@ config = context.config
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
-fileConfig(config.config_file_name)
+fileConfig(str(config.config_file_name))
 logger = logging.getLogger("alembic.env")
 
 # add your model's MetaData object here
@@ -23,7 +23,7 @@ from flask import current_app  # noqa: E402
 
 config.set_main_option(
     "sqlalchemy.url",
-    current_app.config.get("SQLALCHEMY_DATABASE_URI").replace("%", "%%"),
+    current_app.config["SQLALCHEMY_DATABASE_URI"].replace("%", "%%"),
 )
 target_metadata = current_app.extensions["migrate"].db.metadata
 

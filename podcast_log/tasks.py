@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from queue import Queue
 from threading import Thread
-from typing import Any
+from typing import Any, Optional
 
 import feedparser
 from flask import current_app
@@ -106,7 +106,9 @@ def update_podcast_feed(podcast_id: int, force: bool = False) -> None:
     logger.info("Completed loading podcast")
 
 
-def create_new_podcast(feed_url: str, episode_number_pattern: str = None) -> Podcast:
+def create_new_podcast(
+    feed_url: str, episode_number_pattern: Optional[str] = None
+) -> Podcast:
     """If a podcast doesn't already exist with the same feed URL, create it by parsing the feed."""
     # If the podcast already exists, return out of this function, else continue/pass
     try:
@@ -158,7 +160,9 @@ def parse_duration(string: str) -> timedelta:
 
 
 def get_episode(
-    podcast: Podcast, episode_number: int = None, publication_date: datetime = None
+    podcast: Podcast,
+    episode_number: Optional[int] = None,
+    publication_date: Optional[datetime] = None,
 ) -> Episode:
     """Find a matching episode, or create a new one."""
     # Try to find an episode by episode number first
