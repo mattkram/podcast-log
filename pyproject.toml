@@ -26,6 +26,8 @@ mypy = "^1.0.0"
 patchwork = "^1.0"
 pytest = "^7.0.0"
 pytest-cov = "^4.0.0"
+types-invoke = "^2.0.0.8"
+
 
 [tool.isort]
 profile = "black"
