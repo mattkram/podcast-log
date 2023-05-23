@@ -1,6 +1,5 @@
 import pytest
-from flask import Response
-from flask.testing import FlaskClient
+from flask.testing import FlaskClient, TestResponse
 from marshmallow import Schema
 
 from podcast_log.models import Episode, Podcast
@@ -8,15 +7,15 @@ from podcast_log.schemata import EpisodeSchema, PodcastSchema
 
 
 @pytest.fixture()
-def get_podcasts_response(client: FlaskClient) -> Response:
+def get_podcasts_response(client: FlaskClient) -> TestResponse:
     return client.get("/api/podcasts")
 
 
-def test_get_podcasts_status_200(get_podcasts_response: Response) -> None:
+def test_get_podcasts_status_200(get_podcasts_response: TestResponse) -> None:
     assert get_podcasts_response.status_code == 200
 
 
-def test_get_podcasts_data(get_podcasts_response: Response) -> None:
+def test_get_podcasts_data(get_podcasts_response: TestResponse) -> None:
     json_data = get_podcasts_response.get_json()
     assert len(json_data) == len(Podcast.query.all())
 
@@ -30,15 +29,15 @@ def test_get_podcast_status_codes(
 
 
 @pytest.fixture()
-def get_episodes_response(client: FlaskClient) -> Response:
+def get_episodes_response(client: FlaskClient) -> TestResponse:
     return client.get("/api/episodes")
 
 
-def test_get_episodes_status_200(get_episodes_response: Response) -> None:
+def test_get_episodes_status_200(get_episodes_response: TestResponse) -> None:
     assert get_episodes_response.status_code == 200
 
 
-def test_get_episodes_data(get_episodes_response: Response) -> None:
+def test_get_episodes_data(get_episodes_response: TestResponse) -> None:
     json_data = get_episodes_response.get_json()
     assert len(json_data) == len(Episode.query.all())
 
