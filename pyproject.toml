@@ -25,7 +25,7 @@ fabric = "^2.4"
 mypy = "^0.971"
 patchwork = "^1.0"
 pytest = "^7.0.0"
-pytest-cov = "^2.7"
+pytest-cov = "^4.0.0"
 
 [tool.isort]
 profile = "black"
