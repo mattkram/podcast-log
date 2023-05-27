@@ -21,6 +21,7 @@ from podcast_log.models import Episode, Podcast, Status
 
 def _update_queued_podcasts(q: Queue) -> None:
     """Infinite loop that will update podcasts in a queue in worker thread."""
+    # TODO: Replace this hot loop with a proper task handler
     while True:
         app, podcast_id, force = q.get()
         with app.app_context():
@@ -35,7 +36,6 @@ update_thread.start()
 
 def add_podcast_to_update_queue(podcast_id: int, force: bool = False) -> None:
     """Queue a podcast to be updated."""
-    # noinspection PyProtectedMember
     queue.put((current_app._get_current_object(), podcast_id, force))  # type: ignore
 
 

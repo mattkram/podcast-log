@@ -28,9 +28,69 @@ pytest = "^7.0.0"
 pytest-cov = "^4.0.0"
 types-invoke = "^2.0.0.8"
 
+[tool.coverage.run]
+source = [ "podcast_log" ]
+omit = [ "podcast_log/wsgi.py" ]
 
 [tool.isort]
 profile = "black"
+
+[tool.mypy]
+python_version = "3.9"
+disallow_untyped_defs = true
+files = [ "podcast_log/**/*.py" ]
+exclude = [ "deploy_tools/fabfile.py" ]
+
+[[tool.mypy.overrides]]
+module = "feedparser.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "flask_migrate.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "flask_sqlalchemy.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "flask_table.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "flask_wtf.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "marshmallow"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "patchwork.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "pytest"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "_pytest.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "sqlalchemy.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "wtforms.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "wtforms_sqlalchemy.*"
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+files = "tests"
 
 [build-system]
 requires = ["poetry>=0.12"]

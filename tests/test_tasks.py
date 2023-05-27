@@ -1,13 +1,17 @@
+from __future__ import annotations
+
 from datetime import datetime, timedelta
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import feedparser
 import pytest
-from _pytest.monkeypatch import MonkeyPatch
 
 import podcast_log.tasks
 from podcast_log.models import Episode, Podcast, Status
 from podcast_log.tasks import create_new_podcast, update_podcast_feed
+
+if TYPE_CHECKING:
+    from _pytest.monkeypatch import MonkeyPatch
 
 
 @pytest.fixture(autouse=True)

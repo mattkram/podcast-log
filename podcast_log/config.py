@@ -2,7 +2,7 @@
 import os
 
 
-class ConfigBase:
+class DefaultConfig:
     """Base configuration storing default values."""
 
     DEVELOPMENT = False
@@ -14,7 +14,7 @@ class ConfigBase:
     SQLALCHEMY_DATABASE_URI: str  # Set in __init__.py or in config class.
 
 
-class ProductionConfig(ConfigBase):
+class ProductionConfig(DefaultConfig):
     """Configuration for production deployment."""
 
     SECRET_KEY = os.environ.get("SECRET_KEY", "")
@@ -26,20 +26,20 @@ class ProductionConfig(ConfigBase):
     # )
 
 
-class StagingConfig(ConfigBase):
+class StagingConfig(DefaultConfig):
     """Configuration for staging deployment."""
 
     DEBUG = True
 
 
-class DevelopmentConfig(ConfigBase):
+class DevelopmentConfig(DefaultConfig):
     """Configuration for local development."""
 
     DEVELOPMENT = True
     DEBUG = True
 
 
-class TestingConfig(ConfigBase):
+class TestingConfig(DefaultConfig):
     """Configuration for testing."""
 
     TESTING = True
