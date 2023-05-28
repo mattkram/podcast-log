@@ -70,8 +70,11 @@ def run_migrations_online() -> None:
                 directives[:] = []
                 logger.info("No changes in schema detected.")
 
+    configuration = config.get_section(config.config_ini_section)
+    if configuration is None:
+        raise ValueError("Missing configuration")
     connectable = engine_from_config(
-        config.get_section(config.config_ini_section),
+        configuration,
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
     )

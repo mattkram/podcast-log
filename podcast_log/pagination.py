@@ -1,7 +1,7 @@
 """Simple pagination utilities."""
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Optional
 
 from flask import request
 from flask_sqlalchemy import BaseQuery
@@ -21,7 +21,7 @@ class Paginator:
         self,
         query: BaseQuery,
         *,
-        sort_column: Column = None,
+        sort_column: Optional[Column] = None,
         reverse_sort: bool = False,
         page: int = 1,
         items_per_page: int = 20,
