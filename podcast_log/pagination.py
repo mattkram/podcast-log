@@ -43,7 +43,9 @@ class Paginator:
                 o = self.sort_column.asc()
             items = items.order_by(o)
 
-        return items.paginate(self.page, self.items_per_page, False).items
+        return items.paginate(
+            page=self.page, per_page=self.items_per_page, count=False
+        ).items
 
     @property
     def pages(self) -> list[dict[str, str]]:
