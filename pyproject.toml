@@ -21,9 +21,7 @@ sqlalchemy = "^1.4.48"
 wtforms-sqlalchemy = "^0.3"
 
 [tool.poetry.group.dev.dependencies]
-fabric = "^3.0.0"
 mypy = "^1.0.0"
-patchwork = "^1.0"
 pytest = "^7.0.0"
 pytest-cov = "^4.0.0"
 types-invoke = "^2.0.0.8"
