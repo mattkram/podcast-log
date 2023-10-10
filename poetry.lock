@@ -158,16 +158,16 @@ Flask-Babel = "*"
 
 [[package]]
 name = "flask-wtf"
-version = "1.1.1"
+version = "1.2.1"
 description = "Form rendering, validation, and CSRF protection for Flask with WTForms."
 category = "main"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 
 [package.dependencies]
-Flask = "*"
+flask = "*"
 itsdangerous = "*"
-WTForms = "*"
+wtforms = "*"
 
 [package.extras]
 email = ["email-validator"]
@@ -622,8 +622,8 @@ flask-table = [
     {file = "Flask-Table-0.5.0.tar.gz", hash = "sha256:320e5756cd7252e902e03b6cd1087f2c7ebc31364341b482f41f30074d10a770"},
 ]
 flask-wtf = [
-    {file = "Flask-WTF-1.1.1.tar.gz", hash = "sha256:41c4244e9ae626d63bed42ae4785b90667b885b1535d5a4095e1f63060d12aa9"},
-    {file = "Flask_WTF-1.1.1-py3-none-any.whl", hash = "sha256:7887d6f1ebb3e17bf648647422f0944c9a469d0fcf63e3b66fb9a83037e38b2c"},
+    {file = "flask_wtf-1.2.1-py3-none-any.whl", hash = "sha256:fa6793f2fb7e812e0fe9743b282118e581fb1b6c45d414b8af05e659bd653287"},
+    {file = "flask_wtf-1.2.1.tar.gz", hash = "sha256:8bb269eb9bb46b87e7c8233d7e7debdf1f8b74bf90cc1789988c29b37a97b695"},
 ]
 greenlet = [
     {file = "greenlet-2.0.2-cp27-cp27m-macosx_10_14_x86_64.whl", hash = "sha256:bdfea8c661e80d3c1c99ad7c3ff74e6e87184895bbaca6ee8cc61209f8b9b85d"},
