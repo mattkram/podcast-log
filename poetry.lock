@@ -480,29 +480,29 @@ watchdog = ["watchdog (>=2.3)"]
 
 [[package]]
 name = "wtforms"
-version = "3.0.1"
+version = "3.1.1"
 description = "Form validation and rendering for Python web development."
 category = "main"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 
 [package.dependencies]
-MarkupSafe = "*"
+markupsafe = "*"
 
 [package.extras]
 email = ["email-validator"]
 
 [[package]]
 name = "wtforms-sqlalchemy"
-version = "0.3"
+version = "0.4.0"
 description = "SQLAlchemy tools for WTForms"
 category = "main"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.8"
 
 [package.dependencies]
-SQLAlchemy = ">=0.7.10"
-WTForms = ">=1.0.5"
+SQLAlchemy = ">=1.4"
+WTForms = ">=3.1"
 
 [[package]]
 name = "zipp"
@@ -519,7 +519,7 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "3b8b7d91bc2f547cb974df1b89688a18306c2cbea277b5a3eba2e71459a5683d"
+content-hash = "46d4138e2adb261ac51394b84ed77e0adc9dfe390026b19be533c2e92c1810be"
 
 [metadata.files]
 alembic = [
@@ -966,12 +966,12 @@ werkzeug = [
     {file = "werkzeug-2.3.7.tar.gz", hash = "sha256:2b8c0e447b4b9dbcc85dd97b6eeb4dcbaf6c8b6c3be0bd654e25553e0a2157d8"},
 ]
 wtforms = [
-    {file = "WTForms-3.0.1-py3-none-any.whl", hash = "sha256:837f2f0e0ca79481b92884962b914eba4e72b7a2daaf1f939c890ed0124b834b"},
-    {file = "WTForms-3.0.1.tar.gz", hash = "sha256:6b351bbb12dd58af57ffef05bc78425d08d1914e0fd68ee14143b7ade023c5bc"},
+    {file = "wtforms-3.1.1-py3-none-any.whl", hash = "sha256:ae7c54b29806c70f7bce8eb9f24afceb10ca5c32af3d9f04f74d2f66ccc5c7e0"},
+    {file = "wtforms-3.1.1.tar.gz", hash = "sha256:5e51df8af9a60f6beead75efa10975e97768825a82146a65c7cbf5b915990620"},
 ]
 wtforms-sqlalchemy = [
-    {file = "WTForms-SQLAlchemy-0.3.tar.gz", hash = "sha256:7ca42824ad7c453a036f502b42d9c17d4ad8398ff9248a62ed538d1ce0bc41c3"},
-    {file = "WTForms_SQLAlchemy-0.3-py3-none-any.whl", hash = "sha256:90195d7592bf256d82498c42c79d416832e4a4e6fbca4f1e745a018f66d26c47"},
+    {file = "WTForms-SQLAlchemy-0.4.0.tar.gz", hash = "sha256:39f3437617ae4f9aaa826806168a3089067b020e03d3fe45af4c31520ec42c8e"},
+    {file = "WTForms_SQLAlchemy-0.4.0-py3-none-any.whl", hash = "sha256:feeb2e11b1ae31fd23c483f7a6a6ab4d1a675566d40b83b201ae539b23ac94aa"},
 ]
 zipp = [
     {file = "zipp-3.15.0-py3-none-any.whl", hash = "sha256:48904fc76a60e542af151aded95726c1a5c34ed43ab4134b597665c86d7ad556"},
