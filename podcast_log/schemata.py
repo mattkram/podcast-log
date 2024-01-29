@@ -1,4 +1,5 @@
 """JSON schemata for serializing database models."""
+
 from marshmallow import Schema, fields
 
 

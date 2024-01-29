@@ -1,4 +1,5 @@
 """Background tasks for updating podcast feeds."""
+
 from __future__ import annotations
 
 import re

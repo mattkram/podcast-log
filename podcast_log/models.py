@@ -1,4 +1,5 @@
 """Database model definitions."""
+
 import enum
 from datetime import datetime, timedelta
 from typing import Any, Optional

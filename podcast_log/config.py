@@ -1,4 +1,5 @@
 """Various application configurations."""
+
 import os
 
 
