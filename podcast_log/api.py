@@ -1,4 +1,5 @@
 """API route definitions."""
+
 from __future__ import annotations
 
 from flask import Blueprint, Flask, Response, jsonify

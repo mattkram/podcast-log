@@ -1,4 +1,5 @@
 """Forms for interacting with database models."""
+
 from __future__ import annotations
 
 from collections.abc import Generator
