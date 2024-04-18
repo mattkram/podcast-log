@@ -1,8 +1,10 @@
+# type: ignore
 from babel.dates import format_date, format_datetime
 from flask import url_for
 from flask_babel import gettext as _
 from markupsafe import Markup
-from matt_kramer.vendor.flask_table.html import element
+
+from podcast_log.vendor.flask_table.html import element
 
 
 def _single_get(item, key):

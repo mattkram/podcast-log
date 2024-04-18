@@ -1,3 +1,4 @@
+# type: ignore
 from functools import partial  # noqa: F401
 
 from markupsafe import Markup

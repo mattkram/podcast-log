@@ -1,10 +1,12 @@
+# type: ignore
 from collections import OrderedDict
 
 from flask_babel import gettext as _
 from markupsafe import Markup
-from matt_kramer.vendor.flask_table.columns import Col
-from matt_kramer.vendor.flask_table.compat import with_metaclass
-from matt_kramer.vendor.flask_table.html import element
+
+from podcast_log.vendor.flask_table.columns import Col
+from podcast_log.vendor.flask_table.compat import with_metaclass
+from podcast_log.vendor.flask_table.html import element
 
 
 class TableMeta(type):
