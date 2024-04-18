@@ -37,7 +37,7 @@ profile = "black"
 python_version = "3.9"
 disallow_untyped_defs = true
 files = [ "podcast_log/**/*.py" ]
-exclude = [ "deploy_tools/fabfile.py" ]
+exclude = [ "deploy_tools/fabfile.py", "podcast_log/vendor/**" ]
 
 [[tool.mypy.overrides]]
 module = "feedparser.*"
