@@ -5,10 +5,10 @@ from __future__ import annotations
 from typing import Any
 
 from flask import url_for
-from flask_table import Col, LinkCol, OptCol, Table
-from flask_table.html import element
 
 from podcast_log.models import STATUS_CHOICES, Episode
+from podcast_log.vendor.flask_table import Col, LinkCol, OptCol, Table  # type: ignore
+from podcast_log.vendor.flask_table.html import element  # type: ignore
 
 
 class ImageCol(Col):
