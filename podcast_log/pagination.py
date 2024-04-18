@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from typing import Any, Optional
-from urllib.parse import quote_plus
+from urllib.parse import urlencode
 
 from flask import request
 from flask_sqlalchemy import BaseQuery
@@ -58,7 +58,7 @@ class Paginator:
         def make_url(page_num: int) -> str:
             args = request.args.copy()
             args["page"] = str(page_num)
-            return f"{request.path}?{quote_plus(args)}"
+            return f"{request.path}?{urlencode(args)}"
 
         page_buttons = [{"url": make_url(previous_page), "text": "Previous"}]
         for page in range(1, total_pages + 1):
