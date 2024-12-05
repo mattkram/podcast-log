@@ -39,7 +39,7 @@ jobs:
           --cov-report xml:./test-reports/coverage.xml \
           --cov podcast_log \
           tests
-    - uses: codecov/codecov-action@v5.0.7
+    - uses: codecov/codecov-action@v5.1.1
       with:
         files: ./test-reports/coverage.xml
         env_vars: OS,PYTHON
