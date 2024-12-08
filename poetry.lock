@@ -496,15 +496,15 @@ email = ["email-validator"]
 
 [[package]]
 name = "wtforms-sqlalchemy"
-version = "0.4.1"
+version = "0.4.2"
 description = "SQLAlchemy tools for WTForms"
 category = "main"
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.9"
 
 [package.dependencies]
-SQLAlchemy = ">=1.4"
-WTForms = ">=3.1"
+sqlalchemy = ">=1.4"
+wtforms = ">=3.1"
 
 [[package]]
 name = "zipp"
@@ -991,8 +991,8 @@ wtforms = [
     {file = "wtforms-3.1.1.tar.gz", hash = "sha256:5e51df8af9a60f6beead75efa10975e97768825a82146a65c7cbf5b915990620"},
 ]
 wtforms-sqlalchemy = [
-    {file = "WTForms-SQLAlchemy-0.4.1.tar.gz", hash = "sha256:370f52b738527cf6d8ab78d3488afb9342666144da2637e0cf8b5ae522e8a4db"},
-    {file = "WTForms_SQLAlchemy-0.4.1-py3-none-any.whl", hash = "sha256:df3965015b60de172f4b35e691a47d9913d56bb0abb62c620edd04c1376979e3"},
+    {file = "wtforms_sqlalchemy-0.4.2-py3-none-any.whl", hash = "sha256:5dfa6b9cd8c0fab644178af6a90adc057c1c2695a17c20a074f1f3c4d49a434d"},
+    {file = "wtforms_sqlalchemy-0.4.2.tar.gz", hash = "sha256:638f23372e654eded3c19ea605a2d318062e26234772977b9bb1619160eed798"},
 ]
 zipp = [
     {file = "zipp-3.15.0-py3-none-any.whl", hash = "sha256:48904fc76a60e542af151aded95726c1a5c34ed43ab4134b597665c86d7ad556"},
