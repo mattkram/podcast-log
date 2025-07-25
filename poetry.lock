@@ -138,15 +138,15 @@ docs = ["sphinx"]
 
 [[package]]
 name = "flask-sqlalchemy"
-version = "3.0.5"
+version = "3.1.1"
 description = "Add SQLAlchemy support to your Flask application."
 category = "main"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 
 [package.dependencies]
 flask = ">=2.2.5"
-sqlalchemy = ">=1.4.18"
+sqlalchemy = ">=2.0.16"
 
 [[package]]
 name = "flask-table"
@@ -642,8 +642,8 @@ flask-migrate = [
     {file = "flask_migrate-4.1.0.tar.gz", hash = "sha256:1a336b06eb2c3ace005f5f2ded8641d534c18798d64061f6ff11f79e1434126d"},
 ]
 flask-sqlalchemy = [
-    {file = "flask_sqlalchemy-3.0.5-py3-none-any.whl", hash = "sha256:cabb6600ddd819a9f859f36515bb1bd8e7dbf30206cc679d2b081dff9e383283"},
-    {file = "flask_sqlalchemy-3.0.5.tar.gz", hash = "sha256:c5765e58ca145401b52106c0f46178569243c5da25556be2c231ecc60867c5b1"},
+    {file = "flask_sqlalchemy-3.1.1-py3-none-any.whl", hash = "sha256:4ba4be7f419dc72f4efd8802d69974803c37259dd42f3913b0dcf75c9447e0a0"},
+    {file = "flask_sqlalchemy-3.1.1.tar.gz", hash = "sha256:e4b68bb881802dda1a7d878b2fc84c06d1ee57fb40b874d3dc97dabfa36b8312"},
 ]
 flask-table = [
     {file = "Flask-Table-0.5.0.tar.gz", hash = "sha256:320e5756cd7252e902e03b6cd1087f2c7ebc31364341b482f41f30074d10a770"},
